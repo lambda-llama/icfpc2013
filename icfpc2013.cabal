@@ -24,7 +24,9 @@ library
     , Language.BV.Eval
     , Language.BV.Util
     , Language.BV.Parser
+    , Language.BV.Gen
 
   build-depends:       base == 4.6.*
                      , bytestring == 0.10.*
                      , attoparsec == 0.10.4.*
+                     , containers

@@ -2,14 +2,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Language.BV.Parser
-  -- ( bvProgramP
-  -- , bvExprP
-  -- )
-  where
+  ( bvProgramP
+  , bvExprP
+  ) where
 
 import Control.Applicative ((<$>), (<*>), (<*), (*>), pure)
 import Control.Monad (void)
-import Data.Char (isAlphaNum)
+import Data.Char (isSpace)
 import qualified Data.ByteString.Char8 as S
 
 import Data.Attoparsec.ByteString.Char8 (Parser, choice, takeWhile1,
@@ -20,7 +19,7 @@ import Language.BV.Types
 
 
 bvIdP :: Parser BVId
-bvIdP = S.unpack <$> takeWhile1 isAlphaNum
+bvIdP = S.unpack <$> takeWhile1 (not . isSpace)
 
 bvFoldP :: Parser BVFold
 bvFoldP = between '(' ')' $ do

@@ -2,13 +2,13 @@
 
 module Language.BV.Gen where
 
+import Control.Monad (forM_)
 import Data.Maybe (mapMaybe)
 import qualified Data.IntMap as IntMap
 import qualified Data.Map as Map
 
 import Language.BV.Types
 import Language.BV.Util
-import Control.Monad(forM_)
 
 genExpr :: [String] -> Int -> [BVExpr]
 genExpr ops =
@@ -18,15 +18,18 @@ genExpr ops =
         ifs     = mapMaybe ifByTag ops
         folds   = mapMaybe foldByTag ops
         tfolds  = mapMaybe tfoldByTag ops
-        m       = Map.fromList [((i, f), go i f) | i <- [1..42], f <- [0, 1, 2]]
+        m       = Map.fromList [ ((i, f), go i f)
+                               | i <- [1..42], f <- [0, 1, 2]
+                               ]
         -- go _ 0 -> exprs without fold with x, y, z ids
         -- go _ 1 -> exprs without fold with x ids
         -- go _ 2 -> exprs with fold with x ids
+        go :: Int -> Int -> [BVExpr]
         go 1 0  = [Zero, One, Id "x", Id "y", Id "z"]
         go 1 _  = [Zero, One, Id "x"]
         go i f  = [ Op1 op1 x
                   | op1 <- op1s
-                  , x   <- specgen (i - 1, f) 
+                  , x   <- specgen (i - 1, f)
                   ] ++
                   [ Op2 op2 x y
                   | op2    <- op2s

@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -funbox-strict-fields #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module Language.BV.Types
@@ -8,7 +9,6 @@ module Language.BV.Types
   , BVFold(..)
   , BVOp1(..)
   , BVOp2(..)
-  , BVOpTag(..)
 
   , op1ByTag
   , op2ByTag
@@ -24,9 +24,9 @@ import qualified Data.Map as Map
 
 type BVId = String
 
-data BVFold = BVFold { bvfArg    :: BVExpr
-                     , bvfInit   :: BVExpr
-                     , bvfLambda :: (BVId, BVId, BVExpr)
+data BVFold = BVFold { bvfArg    :: !BVExpr
+                     , bvfInit   :: !BVExpr
+                     , bvfLambda :: !(BVId, BVId, BVExpr)
                      }
     deriving (Eq, Ord)
 
@@ -51,11 +51,11 @@ instance Show BVOp2 where
 
 data BVExpr = Zero
             | One
-            | Id BVId
-            | If0 BVExpr BVExpr BVExpr
-            | Fold BVFold
-            | Op1 BVOp1 BVExpr
-            | Op2 BVOp2 BVExpr BVExpr
+            | Id !BVId
+            | If0 !BVExpr !BVExpr !BVExpr
+            | Fold !BVFold
+            | Op1 !BVOp1 !BVExpr
+            | Op2 !BVOp2 !BVExpr !BVExpr
     deriving (Eq, Ord)
 
 
@@ -77,20 +77,6 @@ newtype BVProgram = BVProgram (BVId, BVExpr)
 instance Show BVProgram where
     show (BVProgram (arg, e)) = printf "(lambda (%s) %s)" arg (show e)
 
-data BVOpTag = Op1Tag BVOp1
-             | Op2Tag BVOp2
-             | If0Tag
-             | TFoldTag
-             | FoldTag
-    deriving (Eq, Ord)
-
-instance Show BVOpTag where
-    show (Op1Tag op1) = show op1
-    show (Op2Tag op2) = show op2
-    show If0Tag       = "if0"
-    show TFoldTag     = "tfold"
-    show FoldTag      = "fold"
-
 op1ByTag :: String -> Maybe BVOp1
 op1ByTag s = let m = Map.fromList [("not", Not)
                                   , ("shl1", Shl1)
@@ -107,7 +93,7 @@ op2ByTag s = let m = Map.fromList [("and", And)
              in Map.lookup s m
 
 -- Note(matklad): this is if0 type V
-ifByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr) 
+ifByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr)
 ifByTag s = if s == "if0" then Just If0 else Nothing
 
 foldByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr)

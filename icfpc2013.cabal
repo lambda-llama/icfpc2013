@@ -27,6 +27,7 @@ library
     , Language.BV.Util
     , Language.BV.Parser
     , Language.BV.Gen
+    , Language.BV.Simplifier
 
   build-depends:       base       == 4.6.*
                      , bytestring == 0.10.*

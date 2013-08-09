@@ -10,22 +10,20 @@ import Language.BV.Types
 -- (or e 0)                = (or 0 e)  = e
 -- (and e 1)               = (and 1 e) = e
 -- (xor e e)               = 0
--- (shl1 (shr1 e))         = e
--- (shr1 (shl1 e))         = e
 -- (plus e 0) = (plus 0 e) = e
--- (shr4 (shr4 (shr4 e)))        = e
--- (shr1 (shr1 (shr1 (shr1 e)))) = e
+-- (shr4 (shr4 (shr4 (shr4 e)))) = (shr16 e)
+-- (shr1 (shr1 (shr1 (shr1 e)))) = (shr4 e)
 
 simplify :: BVExpr -> Either BVExpr BVExpr
 simplify (Op1 Not (Op1 Not e))   = Right e
 simplify (Op2 Or e Zero)         = Right e
+simplify (Op2 Or Zero e)         = Right e
 simplify (Op2 And e One)         = Right e
-simplify (Op1 Shl1 (Op1 Shr1 e)) = Right e
-simplify (Op1 Shr1 (Op1 Shl1 e)) = Right e
+simplify (Op2 And One e)         = Right e
 simplify (Op2 Plus e Zero)       = Right e
 simplify (Op2 Plus Zero e)       = Right e
-simplify (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 e))) = Right e
-simplify (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 e)))) = Right e
+simplify (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 e)))) = Right (Op1 Shr16 e)
+simplify (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 e)))) = Right (Op1 Shr4 e)
 simplify e = mix e
 
 mix :: BVExpr -> Either BVExpr BVExpr

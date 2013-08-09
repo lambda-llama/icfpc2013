@@ -41,23 +41,27 @@ simplify expr = case go expr of
   where
     go (Op1 Not (Op1 Not e))   = Right e
     go (Op2 And _e Zero)       = Right Zero
-    go (Op2 And (Op1 Not e0) e1) | e0 == e1 = Right Zero
-    go (Op2 Or (Op1 Not e0) e1)  | e0 == e1 = Right (Op1 Not Zero)
+    go (Op2 And (Op1 Not e0) e1) | e0 `like` e1 = Right Zero
+    go (Op2 Or (Op1 Not e0) e1)  | e0 `like` e1 = Right (Op1 Not Zero)
     go (Op2 Or e Zero)         = Right e
-    go (Op2 And e0 e1) | e0 == e1 = Right e0
-    go (Op2 Or e0 e1)  | e0 == e1 = Right e0
-    go (Op2 Xor e0 e1) | e0 == e1 = Right Zero
+    go (Op2 And e0 e1) | e0 `like` e1 = Right e0
+    go (Op2 Or e0 e1)  | e0 `like` e1 = Right e0
+    go (Op2 Xor e0 e1) | e0 `like` e1 = Right Zero
     go (Op2 Plus Zero e)       = Right e
     go (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 e)))) = Right (Op1 Shr16 e)
     go (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 e)))) = Right (Op1 Shr4 e)
     go (Op2 And (Op1 Not e0) (Op1 Not e1)) = Right (Op1 Not (Op2 And e0 e1))
     go (Op2 Or (Op1 Not e0) (Op1 Not e1))  = Right (Op1 Not (Op2 Or e0 e1))
-    go (If0 _e0 e1 e2) | e1 == e2 = Right e1
+    go (If0 _e0 e1 e2) | e1 `like` e2 = Right e1
     go (Op2 And e (Op1 Not Zero)) = Right e
     go (Op2 Or _e (Op1 Not Zero)) = Right (Op1 Not Zero)
     go (Op2 Xor e (Op1 Not Zero)) = Right (Op1 Not e)
-    go (Op2 Plus e0 e1) | e0 == e1 = Right (Op1 Shl1 e0)
+    go (Op2 Plus e0 e1) | e0 `like` e1 = Right (Op1 Shl1 e0)
     go e = mix e
+
+    like e0 e1 =
+        e0 == e1 ||
+        (isClosed e0 && isClosed e1 && evalExpr e0 [] == evalExpr e1 [])
 
 mix :: BVExpr -> Either BVExpr BVExpr
 mix (If0 Zero e1 _e2) = Right e1

@@ -22,8 +22,7 @@ genExpr ops =
         -- go _ 1 -> exprs without fold with x ids
         -- go _ 2 -> exprs with fold with x ids
         go 1 0  = [Zero, One, Id "x", Id "y", Id "z"]
-        go 1 1  = [Zero, One, Id "x"]
-        go 1 2  = []
+        go 1 _  = [Zero, One, Id "x"]
         go i f  = [ Op1 op1 x
                   | op1 <- op1s
                   , x   <- specgen (i - 1, f) 
@@ -46,13 +45,13 @@ genExpr ops =
                       1 -> []
                       2 -> [f e1 e2 e3
                            |f <- folds
-                           , (j, k, l) <- partitions3 (pred . pred $ i)
+                           , (j, k, l) <- partitions3 (i - 2)
                            , e1 <- specgen (j, 0)
                            , e2 <- specgen (k, 1)
                            , e3 <- specgen (l, 1)
                            ] ++
                            [f <- tfolds
-                           , (j, k, l) <- partitions3 (pred . pred $ i)
+                           , (j, k, l) <- partitions3 (i - 2)
                            , e1 <- specgen (j, 0)
                            , e2 <- specgen (k, 1)
                            , e3 <- specgen (l, 1)

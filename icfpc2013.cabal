@@ -1,0 +1,22 @@
+name:                bv
+version:             0.1.0.0
+cabal-version:       >= 1.12
+build-type:          Custom
+
+executable bvi
+  hs-source-dirs:      bin
+  default-language:    Haskell2010
+  ghc-options:         -Wall -fno-warn-orphans
+  main-is:             Main.hs
+  other-modules:
+
+  build-depends:       base == 4.6.*
+                     , bv
+
+library
+  hs-source-dirs:      bin
+  default-language:    Haskell2010
+  ghc-options:         -Wall -fno-warn-orphans
+  exposed-modules:
+
+  build-depends:       base == 4.6.*

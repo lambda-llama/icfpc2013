@@ -22,6 +22,10 @@ import Language.BV.Types
 -- (and (not e1) (not e2)) = (not (or e1 e2))
 -- (if e0 e1 e1)           = e1
 
+-- (and e (not 0))         = e
+-- (or e (not 0))          = (not 0)
+-- (xor e (not 0))         = (not e)
+
 simplify :: BVExpr -> Either BVExpr BVExpr
 simplify (Op1 Not (Op1 Not e))   = Right e
 simplify (Op2 And _e Zero)       = Right Zero
@@ -39,6 +43,12 @@ simplify (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 e)))) = Right (Op1 Shr4 e)
 simplify (Op2 And (Op1 Not e0) (Op1 Not e1)) = Right (Op1 Not (Op2 And e0 e1))
 simplify (Op2 Or (Op1 Not e0) (Op1 Not e1))  = Right (Op1 Not (Op2 Or e0 e1))
 simplify (If0 _e0 e1 e2) | e1 == e2 = Right e1
+simplify (Op2 And e (Op1 Not Zero)) = Right e
+simplify (Op2 And (Op1 Not Zero) e) = Right e
+simplify (Op2 Or e (Op1 Not Zero)) = Right (Op1 Not Zero)
+simplify (Op2 Or (Op1 Not Zero) e) = Right (Op1 Not Zero)
+simplify (Op2 Xor e (Op1 Not Zero)) = Right (Op1 Not e)
+simplify (Op2 Xor (Op1 Not Zero) e) = Right (Op1 Not e)
 simplify e = mix e
 
 mix :: BVExpr -> Either BVExpr BVExpr

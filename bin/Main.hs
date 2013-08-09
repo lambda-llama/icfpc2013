@@ -7,6 +7,7 @@ import Data.List (intercalate)
 import Data.Word (Word64)
 import Numeric (showHex)
 import System.Random (getStdGen, randoms)
+import qualified Data.Set as Set
 
 import Language.BV.Eval (evalExpr)
 import Language.BV.Gen (genExpr)
@@ -14,7 +15,7 @@ import Language.BV.Types (BVProgram(..))
 
 
 meaningfulInputs :: [Word64]
-meaningfulInputs = map bit [1..63]
+meaningfulInputs = 42 : map bit [1..63]
 
 main :: IO ()
 main = do
@@ -26,6 +27,11 @@ main = do
                  (take (256 - length meaningfulInputs) $ randoms r)
 
     print $ length exprs
+    print $ Set.size $ Set.fromList
+        [ [evalExpr expr [("x", x)] | x <- inputs]
+        | expr <- exprs
+        ]
+
     printHex inputs
     forM_ exprs $ \expr -> do
         print $ BVProgram ("x", expr)

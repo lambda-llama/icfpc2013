@@ -50,11 +50,11 @@ genExpr ops =
                            , e2 <- specgen (k, 1)
                            , e3 <- specgen (l, 1)
                            ] ++
-                           [f <- tfolds
+                           [f e1 e2
+                           |f <- tfolds
                            , (j, k, l) <- partitions3 (i - 2)
                            , e1 <- specgen (j, 0)
                            , e2 <- specgen (k, 1)
-                           , e3 <- specgen (l, 1)
                            ]
     in \size -> specgen (size, 2)
 

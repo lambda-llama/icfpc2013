@@ -20,5 +20,6 @@ library
   exposed-modules:
       Language.BV.Types
     , Language.BV.Eval
+    , Language.BV.Util
 
   build-depends:       base == 4.6.*

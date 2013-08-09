@@ -20,6 +20,7 @@ simplify (Op2 Or e Zero)         = Right e
 simplify (Op2 Or Zero e)         = Right e
 simplify (Op2 And e One)         = Right e
 simplify (Op2 And One e)         = Right e
+simplify (Op2 Xor e0 e1) | e0 == e1 = Right Zero
 simplify (Op2 Plus e Zero)       = Right e
 simplify (Op2 Plus Zero e)       = Right e
 simplify (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 e)))) = Right (Op1 Shr16 e)
@@ -32,5 +33,6 @@ mix (If0 One _e1 e2)  = Right e2
 mix (Op1 Not One)     = Right Zero
 mix (Op1 Not Zero)    = Right One
 mix (Op2 Plus Zero One)  = Right One
+mix (Op2 Plus One Zero)  = Right One
 mix (Op2 Plus Zero Zero) = Right Zero
 mix e = Left e  -- Note(superbobry): add boolean expression!

@@ -2,9 +2,8 @@
 
 module Language.BV.Gen where
 
-import Control.Monad (forM_)
 import Data.Maybe (mapMaybe)
-import Data.Either(lefts, rights)
+import Data.Either (lefts, rights)
 import qualified Data.Set as Set
 import qualified Data.IntMap as IntMap
 import qualified Data.Map as Map

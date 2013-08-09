@@ -16,7 +16,7 @@ main = do
     size <- read <$> getLine
     ops  <- read <$> getLine
     r    <- getStdGen
-    let exprs  = genExpr ops size
+    let exprs  = genExpr ops (pred size)
         inputs = take 256 $ randoms r
 
     printHex inputs

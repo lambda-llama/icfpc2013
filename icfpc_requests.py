@@ -1,5 +1,6 @@
 __author__ = 'mactep'
 
+import os
 import requests
 import json
 
@@ -54,6 +55,24 @@ def dump_problems_list():
     fd.close()
 
 
+def load(size=None):
+    fd = open("problems.txt", "rt")
+    r = []
+    for line in fd:
+        if line.startswith("#"):
+            continue
+        p = json.loads(line)
+        if "solved" in p:
+            continue
+        if not size:
+            size = p["size"]
+        if p["size"] != size:
+            break
+        r.append((p["id"], p["size"], p["operators"]))
+    fd.close()
+    return r
+
+
 def solve_3():
     fd = open("problems.txt", "rt")
     r = []
@@ -66,4 +85,14 @@ def solve_3():
         if p["size"] > 3:
             break
         r.append((p["id"], "(lambda (x) (%s x))" % p["operators"][0], p))
+    fd.close()
     return r
+
+
+def generate_inputs(out, size=None):
+    results = load(size)
+    for id_s, size, oper in results:
+        fd = open(os.path.join(out, id_s), "wt")
+        fd.write(str(size) + "\n")
+        fd.write(str(oper).replace("'", "\"") + "\n")
+        fd.close()

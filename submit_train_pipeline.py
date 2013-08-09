@@ -57,6 +57,9 @@ def main(id_s, inp):
                             newlines.append(variant)
                     lines = newlines
                     result = guess(id_s, lines[0])
+                    while not result:
+                        time.sleep(2)
+                        result = guess(id_s, lines[0])
                 print("WIN! %s" % id_s)
                 break
     else:
@@ -90,7 +93,7 @@ def train(k):
 
 if __name__ == "__main__":
     #run("problems")
-    train(9)
+    train(10)
     # id_s = "PfTVWO3WTdUXIVG6Bo0OGRFO"
     # inp = "9\n[\"and\", \"if0\", \"shr16\"]\n"
     # main(id_s, inp)

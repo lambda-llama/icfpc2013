@@ -9,9 +9,14 @@ module Language.BV.Types
   , BVOp1(..)
   , BVOp2(..)
   , BVOpTag(..)
+
+  , op1ByTag
+  , op2ByTag
+  , ifByTag
   ) where
 
 import Text.Printf (printf)
+import qualified Data.Map as Map
 
 
 type BVId = String
@@ -82,3 +87,24 @@ instance Show BVOpTag where
     show If0Tag       = "if0"
     show TFoldTag     = "tfold"
     show FoldTag      = "fold"
+
+op1ByTag :: String -> Maybe BVOp1
+op1ByTag s = let m = Map.fromList [("not", Not)
+                                  , ("shl1", Shl1)
+                                  , ("shr1", Shr1)
+                                  , ("shr4", Shr4)
+                                  , ("shr16", Shr16)]
+             in
+              Map.lookup s m
+
+op2ByTag :: String -> Maybe BVOp2
+op2ByTag s = let m = Map.fromList [("and", And)
+                                  ,("or", Or)
+                                  ,("xor", Xor)
+                                  ,("plus", Plus)]
+            in
+             Map.lookup s m
+
+-- Note(matklas): this is if0 type V
+ifByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr) 
+ifByTag s = if s == "if0" then Just If0 else Nothing

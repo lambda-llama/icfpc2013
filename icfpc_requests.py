@@ -41,3 +41,29 @@ def get_train(size=None, operators=None):
     if operators:
         d['operators'] = operators
     return send_request("train", d)
+
+
+def dump_problems_list():
+    d = get_problem()
+    d = sorted(d, key=(lambda i: 0 if "solved" in i and i["solved"] == True else i["size"]))
+    fd = open("problems.txt", "wt")
+    for p in d:
+        if "solved" in p and p["solved"] == True:
+            fd.write("#")
+        fd.write(json.dumps(p) + "\n")
+    fd.close()
+
+
+def solve_3():
+    fd = open("problems.txt", "rt")
+    r = []
+    for line in fd:
+        if line.startswith("#"):
+            continue
+        p = json.loads(line)
+        if "solved" in p:
+            continue
+        if p["size"] > 3:
+            break
+        r.append((p["id"], "(lambda (x) (%s x))" % p["operators"][0], p))
+    return r

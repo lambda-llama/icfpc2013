@@ -59,7 +59,7 @@ def main(id_s, inp):
                 print("WIN! %s" % id_s)
                 break
     else:
-        print("Loosers!!!")
+        print("Loobsters!!!")
 
 if __name__ == "__main__":
     while True:

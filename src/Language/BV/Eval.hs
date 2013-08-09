@@ -1,7 +1,8 @@
 module Language.BV.Eval where
 
 import Data.Word (Word64)
-import Data.Bits
+import Data.Bits ((.&.), (.|.), complement, shift, xor)
+
 import Language.BV.Types
 
 
@@ -21,18 +22,19 @@ evalBvExpr e env = case e of
             v2 = evalBvExpr e2 env
         in if v0 == 0 then v1 else v2
     Fold f        -> undefined
-    Op1 op1 e1    -> evalOp1 op1 (evalBvExpr e1 env)
-    Op2 op2 e1 e2 -> evalOp2 op2 (evalBvExpr e1 env) (evalBvExpr e2 env)
-
-evalOp1 :: BVOp1 -> Word64 -> Word64
-evalOp1 Not e = complement e
-evalOp1 Shl1 e = shift e 1
-evalOp1 Shr1 e = shift e (-1)
-evalOp1 Shr4 e = shift e (-4)
-evalOp1 Shr16 e = shift e (-16)
-
-evalOp2 :: BVOp2 -> Word64 -> Word64 -> Word64
-evalOp2 And e1 e2 = e1 .&. e2
-evalOp2 Or e1 e2 = e1 .|. e2
-evalOp2 Xor e1 e2 = xor e1 e2
-evalOp2 Plus e1 e2 = e1 + e2
+    Op1 op1 e0    ->
+        let v0 = evalBvExpr e0 env in
+        case op1 of
+            Not   -> complement v0
+            Shl1  -> shift v0 1
+            Shr1  -> shift v0 (-1)
+            Shr4  -> shift v0 (-4)
+            Shr16 -> shift v0 (-16)
+    Op2 op2 e0 e1 ->
+        let v0 = evalBvExpr e0 env
+            v1 = evalBvExpr e1 env
+        in case op2 of
+            And  -> v0 .&. v1
+            Or   -> v0 .|. v1
+            Xor  -> v0 `xor` v1
+            Plus -> v0 + v1

@@ -61,10 +61,11 @@ bvExprP = choice
           , zeroOne
           ]
   where
-    if0 = between '(' ')' $
-          If0 <$> spaced bvExprP
-              <*> spaced bvExprP
-              <*> spaced bvExprP
+    if0 = between '(' ')' $ do
+        token "if0"
+        If0 <$> spaced bvExprP
+            <*> spaced bvExprP
+            <*> spaced bvExprP
 
     op1 = between '(' ')' $ Op1 <$> bvOp1P <*> spaced bvExprP
     op2 = between '(' ')' $ Op2 <$> bvOp2P <*> spaced bvExprP <*> spaced bvExprP

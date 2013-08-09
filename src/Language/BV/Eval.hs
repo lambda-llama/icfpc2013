@@ -21,18 +21,18 @@ evalBvExpr e env = case e of
             v2 = evalBvExpr e2 env
         in if v0 == 0 then v1 else v2
     Fold f        -> undefined
-    Op1 op1 e1    -> evalOp1 op1 e1 env
-    Op2 op2 e1 e2 -> evalOp2 op2 e1 e2 env
+    Op1 op1 e1    -> evalOp1 op1 (evalBvExpr e1 env)
+    Op2 op2 e1 e2 -> evalOp2 op2 (evalBvExpr e1 env) (evalBvExpr e2 env)
 
-evalOp1 :: BVOp1 -> BVExpr -> [(BVId, Word64)] -> Word64
-evalOp1 Not e env = complement $ evalBvExpr e env
-evalOp1 Shl1 e env = shift (evalBvExpr e env) 1
-evalOp1 Shr1 e env = shift (evalBvExpr e env) (-1)
-evalOp1 Shr4 e env = shift (evalBvExpr e env) (-4)
-evalOp1 Shr16 e env = shift (evalBvExpr e env) (-16)
+evalOp1 :: BVOp1 -> Word64 -> Word64
+evalOp1 Not e = complement e
+evalOp1 Shl1 e = shift e 1
+evalOp1 Shr1 e = shift e (-1)
+evalOp1 Shr4 e = shift e (-4)
+evalOp1 Shr16 e = shift e (-16)
 
-evalOp2 :: BVOp2 -> BVExpr -> BVExpr -> [(BVId, Word64)] -> Word64
-evalOp2 And e1 e2 env = (evalBvExpr e1 env) .&. (evalBvExpr e2 env)
-evalOp2 Or e1 e2 env = (evalBvExpr e1 env) .|. (evalBvExpr e2 env)
-evalOp2 Xor e1 e2 env = xor (evalBvExpr e1 env) (evalBvExpr e2 env)
-evalOp2 Plus e1 e2 env = (evalBvExpr e1 env) + (evalBvExpr e2 env)
+evalOp2 :: BVOp2 -> Word64 -> Word64 -> Word64
+evalOp2 And e1 e2 = e1 .&. e2
+evalOp2 Or e1 e2 = e1 .|. e2
+evalOp2 Xor e1 e2 = xor e1 e2
+evalOp2 Plus e1 e2 = e1 + e2

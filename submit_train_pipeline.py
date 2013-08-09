@@ -50,11 +50,10 @@ def main(id_s, inp):
                     for variant in lines:
                         child = subprocess.Popen("./dist/build/bvi/bvi", stdin=subprocess.PIPE, 
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-                        to_send = (variant + "\n" + str(vin) + "\n")
-                        m_out, m_err = child.communicate(bytes(to_send, "utf8"))
-                        print(m_out)
+                        to_send = variant + "\n" + str(vin) + "\n"
+                        m_out, m_err = child.communicate(to_send.encode())
                         anss = m_out.decode().splitlines()[0]
-                        if int(anss[ii]) == vout:
+                        if int(anss) == vout:
                             newlines.append(variant)
                     lines = newlines
                     result = guess(id_s, lines[0])
@@ -62,15 +61,29 @@ def main(id_s, inp):
                 break
     else:
         print("Loobsters!!!")
+        return False
+    return True
+
+def run(dirname):
+    for id_s in os.listdir(dirname):
+        fd = open(os.path.join(dirname, id_s), "rt")
+        inp = fd.readline() + fd.readline().replace("'", "\"")
+        if not main(id_s, inp):
+            return
+        time.sleep(5)
+
+def train(k):
+    while True:
+        t = get_train(k)
+        if t == None:
+            continue
+        inp = str(t["size"]) + "\n"
+        inp += str(t["operators"]).replace("'", "\"") + "\n"
+        print(t["operators"], t["id"])
+        if not main(t["id"], inp):
+            return
+        time.sleep(5)
 
 if __name__ == "__main__":
-    # while True:
-    #     t = get_train(8)
-    #     if t == None:
-    #         continue
-    #     inp = str(t["size"]) + "\n"
-    #     inp += str(t["operators"]).replace("'", "\"") + "\n"
-    #     print(t["operators"], t["id"])
-    #     main(t["id"], inp)
-    #     time.sleep(5)
-    main("4yABwc9Gpff6t1fBMP9WUiVa", "8\n[\"and\", \"if0\", \"shr16\"]")
+    #run("problems")
+    train(9)

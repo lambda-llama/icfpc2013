@@ -25,7 +25,7 @@ main = do
     ops  <- read <$> getLine
     r    <- getStdGen
     let inputs = meaningfulInputs ++
-                 (take (512 - length meaningfulInputs) $ randoms r)
+                 (take (256 - length meaningfulInputs) $ randoms r)
         eqCls  = HashMap.fromListWith (++) $
                  [ ([evalExpr expr [("x", x)] | x <- inputs], [expr])
                  | expr <- genExpr ops (pred size)

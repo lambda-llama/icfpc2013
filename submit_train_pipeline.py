@@ -73,13 +73,17 @@ def run(dirname):
         time.sleep(5)
 
 def train(k):
+    i = 1
     while True:
+        print("Test:", i)
+        i += 1
         t = get_train(k)
         if t == None:
             continue
         inp = str(t["size"]) + "\n"
         inp += str(t["operators"]).replace("'", "\"") + "\n"
         print(t["operators"], t["id"])
+        print(t["challenge"])
         if not main(t["id"], inp):
             return
         time.sleep(5)
@@ -87,3 +91,6 @@ def train(k):
 if __name__ == "__main__":
     #run("problems")
     train(9)
+    # id_s = "PfTVWO3WTdUXIVG6Bo0OGRFO"
+    # inp = "9\n[\"and\", \"if0\", \"shr16\"]\n"
+    # main(id_s, inp)

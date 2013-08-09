@@ -12,6 +12,7 @@ executable bvi
 
   build-depends:       base == 4.6.*
                      , bytestring == 0.10.*
+                     , containers == 0.5.*
                      , attoparsec == 0.10.4.*
                      , random     == 1.0.*
                      , bv

@@ -17,7 +17,7 @@ import Language.BV.Types (BVProgram(..))
 
 
 meaningfulInputs :: [Word64]
-meaningfulInputs = 42 : map bit [1..63]
+meaningfulInputs = 42 : map bit [0..64]
 
 main :: IO ()
 main = do
@@ -25,7 +25,7 @@ main = do
     ops  <- read <$> getLine
     r    <- getStdGen
     let inputs = meaningfulInputs ++
-                 (take (256 - length meaningfulInputs) $ randoms r)
+                 (take (512 - length meaningfulInputs) $ randoms r)
         eqCls  = HashMap.fromListWith (++) $
                  [ ([evalExpr expr [("x", x)] | x <- inputs], [expr])
                  | expr <- genExpr ops (pred size)

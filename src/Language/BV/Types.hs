@@ -78,18 +78,20 @@ instance Show BVProgram where
     show (BVProgram (arg, e)) = printf "(lambda (%s) %s)" arg (show e)
 
 op1ByTag :: String -> Maybe BVOp1
-op1ByTag s = let m = Map.fromList [("not", Not)
+op1ByTag s = let m = Map.fromList [ ("not", Not)
                                   , ("shl1", Shl1)
                                   , ("shr1", Shr1)
                                   , ("shr4", Shr4)
-                                  , ("shr16", Shr16)]
+                                  , ("shr16", Shr16)
+                                  ]
              in Map.lookup s m
 
 op2ByTag :: String -> Maybe BVOp2
-op2ByTag s = let m = Map.fromList [("and", And)
-                                  ,("or", Or)
-                                  ,("xor", Xor)
-                                  ,("plus", Plus)]
+op2ByTag s = let m = Map.fromList [ ("and", And)
+                                  , ("or", Or)
+                                  , ("xor", Xor)
+                                  , ("plus", Plus)
+                                  ]
              in Map.lookup s m
 
 -- Note(matklad): this is if0 type V
@@ -107,4 +109,4 @@ tfoldByTag s = if s == "tfold"
                else Nothing
 
 lambda2 :: BVExpr -> BVExpr -> BVExpr -> BVExpr
-lambda2 e1 bvfArg bvfInit = Fold $ BVFold {bvfLambda=("y", "z", e1), ..}
+lambda2 e1 bvfArg bvfInit = Fold $ BVFold {bvfLambda = ("y", "z", e1), ..}

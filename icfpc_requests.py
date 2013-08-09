@@ -96,3 +96,28 @@ def generate_inputs(out, size=None):
         fd.write(str(size) + "\n")
         fd.write(str(oper).replace("'", "\"") + "\n")
         fd.close()
+
+def find_solution(sdir, id_s):
+    fd = open(os.path.join(sdir, id_s), "rt")
+    args = fd.readline().split()
+    r = []
+    for line in fd:
+        if line.startswith("("):
+            r.append(line)
+        else:
+            r.append(line.split())
+    s = [i.lower() for i in eval_id(id_s, args)["outputs"]]
+    for i, c in enumerate(r):
+        if not i % 2:
+            continue
+        for j in range(len(c)):
+            if int(c[j], 16) != int(s[j], 16):
+                break
+        else:
+            print("solution found: %s" % r[i-1])
+            print(guess(id_s, r[i-1]))
+            break
+    else:
+        print("solution was not found")
+    fd.close()
+    return r, s

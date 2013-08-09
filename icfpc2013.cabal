@@ -13,6 +13,7 @@ executable bvi
   build-depends:       base == 4.6.*
                      , bytestring == 0.10.*
                      , attoparsec == 0.10.4.*
+                     , random     == 1.0.*
                      , bv
 
 library
@@ -26,7 +27,7 @@ library
     , Language.BV.Parser
     , Language.BV.Gen
 
-  build-depends:       base == 4.6.*
+  build-depends:       base       == 4.6.*
                      , bytestring == 0.10.*
                      , attoparsec == 0.10.4.*
-                     , containers
+                     , containers == 0.5.*

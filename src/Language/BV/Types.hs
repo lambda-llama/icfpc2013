@@ -13,6 +13,8 @@ module Language.BV.Types
   , op1ByTag
   , op2ByTag
   , ifByTag
+  , foldByTag
+  , tfoldByTag
   ) where
 
 import Text.Printf (printf)
@@ -108,3 +110,15 @@ op2ByTag s = let m = Map.fromList [("and", And)
 -- Note(matklas): this is if0 type V
 ifByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr) 
 ifByTag s = if s == "if0" then Just If0 else Nothing
+
+foldByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr)
+foldByTag s = if s == "fold"
+              then (Just $ \e1 bvfArg bvfInit ->
+                                    Fold $ BVFold {bvfLambda=("y", "z", e1), ..})
+              else Nothing
+
+tfoldByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr)
+tfoldByTag s = if s == "tfold"
+               then (Just $ \e1 bvfInit ->
+                      Fold $ BVFold {bvfLambda=("y", "z", e1), bvfArg=Zero, ..})
+               else Nothing

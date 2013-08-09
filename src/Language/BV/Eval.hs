@@ -47,3 +47,7 @@ evalBvExpr e env = case e of
             Or   -> v0 .|. v1
             Xor  -> v0 `xor` v1
             Plus -> v0 + v1
+
+
+check :: BVProgram -> [Word64] -> [Word64] -> Bool
+check bv inlist outlist = all (\(x,y) -> x == y) $ zip (map (\i -> evalBv bv i) inlist) outlist 

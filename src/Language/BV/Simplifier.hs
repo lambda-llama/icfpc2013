@@ -8,8 +8,9 @@ import Language.BV.Types
 -- Transformations:
 --
 -- not (not e)             = e
--- (or e 0)                = (or 0 e)  = e
--- (and e 1)               = (and 1 e) = e
+-- (or e 0)  = (or 0 e)    = e
+-- (and e e)               = e
+-- (or e e)                = e
 -- (xor e e)               = 0
 -- (plus e 0) = (plus 0 e) = e
 -- (shr4 (shr4 (shr4 (shr4 e)))) = (shr16 e)
@@ -19,8 +20,8 @@ simplify :: BVExpr -> Either BVExpr BVExpr
 simplify (Op1 Not (Op1 Not e))   = Right e
 simplify (Op2 Or e Zero)         = Right e
 simplify (Op2 Or Zero e)         = Right e
-simplify (Op2 And e One)         = Right e
-simplify (Op2 And One e)         = Right e
+simplify (Op2 And e0 e1) | e0 == e1 = Right e0
+simplify (Op2 Or e0 e1)  | e0 == e1 = Right e0
 simplify (Op2 Xor e0 e1) | e0 == e1 = Right Zero
 simplify (Op2 Plus e Zero)       = Right e
 simplify (Op2 Plus Zero e)       = Right e

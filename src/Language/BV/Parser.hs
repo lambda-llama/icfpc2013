@@ -19,7 +19,8 @@ import Language.BV.Types
 
 
 bvIdP :: Parser BVId
-bvIdP = S.unpack <$> takeWhile1 (not . isSpace)
+bvIdP = S.unpack <$>
+        takeWhile1 (\ch -> not (isSpace ch || ch == '(' || ch == ')'))
 
 bvFoldP :: Parser BVFold
 bvFoldP = between '(' ')' $ do
@@ -37,9 +38,9 @@ bvOp1P :: Parser BVOp1
 bvOp1P = choice
          [ "not"   *> pure Not
          , "shl1"  *> pure Shl1
+         , "shr16" *> pure Shr16
          , "shr1"  *> pure Shr1
          , "shr4"  *> pure Shr4
-         , "shr16" *> pure Shr16
          ]
 
 bvOp2P :: Parser BVOp2
@@ -54,8 +55,8 @@ bvExprP :: Parser BVExpr
 bvExprP = choice
           [ if0
           , Fold <$> bvFoldP
-          , op1
           , op2
+          , op1
           , Id <$> bvIdP
           , zeroOne
           ]
@@ -77,8 +78,8 @@ bvExprP = choice
 bvProgramP :: Parser BVProgram
 bvProgramP = between '(' ')' $ do
     token "lambda"
-    arg <- between '(' ')' bvIdP
-    e   <- bvExprP
+    arg <- between '(' ')' $ spaced bvIdP
+    e   <- spaced bvExprP
     return $ BVProgram (arg, e)
 
 

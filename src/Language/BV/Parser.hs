@@ -6,21 +6,24 @@ module Language.BV.Parser
   , bvExprP
   ) where
 
+import Prelude hiding (takeWhile)
+
 import Control.Applicative ((<$>), (<*>), (<*), (*>), pure)
 import Control.Monad (void)
-import Data.Char (isSpace)
+import Data.Char (isAlpha, isSpace)
 import qualified Data.ByteString.Char8 as S
 
-import Data.Attoparsec.ByteString.Char8 (Parser, choice, takeWhile1,
+import Data.Attoparsec.ByteString.Char8 (Parser, choice, takeWhile, satisfy,
                                          char, string, skipSpace)
 
 import Language.BV.Types
 
 
-
 bvIdP :: Parser BVId
-bvIdP = S.unpack <$>
-        takeWhile1 (\ch -> not (isSpace ch || ch == '(' || ch == ')'))
+bvIdP = do
+    first <- satisfy isAlpha
+    rest  <- takeWhile (\ch -> not (isSpace ch || ch == '(' || ch == ')'))
+    return $ S.unpack $ S.cons first rest
 
 bvFoldP :: Parser BVFold
 bvFoldP = between '(' ')' $ do

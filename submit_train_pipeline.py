@@ -44,16 +44,18 @@ def main(id_s, inp):
                 lines = eq[1]
                 while result["status"] != "win":
                     print("Mismatch, another try")
-                    vin, vout, _ = [int(jj, 16) for jj in result["values"].split()]
-                    child = subprocess.Popen("./dist/build/bvi/bvi", stdin=subprocess.PIPE, 
-                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-                    to_send = bytes("\n".join(ii + "\n" + vin for ii in lines) + "\n", "utf8")
-                    m_out, m_err = child.communicate(bytes(to_send, "utf8"))
-                    anss = str(m_out)[2:-1].split(r"\n")
+                    vin, vout, _ = [int(jj, 16) for jj in result["values"]]
+                    
                     newlines = []
-                    for ii in range(len(anss)):
+                    for variant in lines:
+                        child = subprocess.Popen("./dist/build/bvi/bvi", stdin=subprocess.PIPE, 
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+                        to_send = (variant + "\n" + str(vin) + "\n")
+                        m_out, m_err = child.communicate(bytes(to_send, "utf8"))
+                        print(m_out)
+                        anss = m_out.decode().splitlines()[0]
                         if int(anss[ii]) == vout:
-                            newlines.append(lines[ii])
+                            newlines.append(variant)
                     lines = newlines
                     result = guess(id_s, lines[0])
                 print("WIN! %s" % id_s)
@@ -62,12 +64,13 @@ def main(id_s, inp):
         print("Loosers!!!")
 
 if __name__ == "__main__":
-    while True:
-        t = get_train(8)
-        if t == None:
-            continue
-        inp = str(t["size"]) + "\n"
-        inp += str(t["operators"]).replace("'", "\"") + "\n"
-        print(t["operators"])
-        main(t["id"], inp)
-        time.sleep(5)
+    # while True:
+    #     t = get_train(8)
+    #     if t == None:
+    #         continue
+    #     inp = str(t["size"]) + "\n"
+    #     inp += str(t["operators"]).replace("'", "\"") + "\n"
+    #     print(t["operators"])
+    #     main(t["id"], inp)
+    #     time.sleep(5)
+    main("4yABwc9Gpff6t1fBMP9WUiVa", "8\n[\"and\", \"if0\", \"shr16\"]")

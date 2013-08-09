@@ -1,9 +1,12 @@
+{-# LANGUAGE RecordWildCards #-}
+
 module Language.BV.Eval where
 
 import Data.Word (Word64)
-import Data.Bits ((.&.), (.|.), complement, shift, xor)
+import Data.Bits ((.&.), (.|.), complement, shift, xor, shiftR)
 
 import Language.BV.Types
+
 
 
 evalBv :: BVProgram -> Word64 -> Word64
@@ -21,7 +24,13 @@ evalBvExpr e env = case e of
             v1 = evalBvExpr e1 env
             v2 = evalBvExpr e2 env
         in if v0 == 0 then v1 else v2
-    Fold f        -> undefined
+    Fold (BVFold { bvfLambda = (larg0, larg1, le0), .. }) ->
+        let init_ = evalBvExpr bvfInit env
+            arg = evalBvExpr bvfArg env
+            byte = 0xff
+            bytes = [ (shiftR arg shift) .&. byte | shift <- [0,8..56]]
+            aux a b = evalBvExpr le0 ((larg0, a):(larg1, b):env)
+        in foldl aux init_ bytes
     Op1 op1 e0    ->
         let v0 = evalBvExpr e0 env in
         case op1 of

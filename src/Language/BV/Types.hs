@@ -97,16 +97,14 @@ op1ByTag s = let m = Map.fromList [("not", Not)
                                   , ("shr1", Shr1)
                                   , ("shr4", Shr4)
                                   , ("shr16", Shr16)]
-             in
-              Map.lookup s m
+             in Map.lookup s m
 
 op2ByTag :: String -> Maybe BVOp2
 op2ByTag s = let m = Map.fromList [("and", And)
                                   ,("or", Or)
                                   ,("xor", Xor)
                                   ,("plus", Plus)]
-            in
-             Map.lookup s m
+             in Map.lookup s m
 
 -- Note(matklad): this is if0 type V
 ifByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr) 

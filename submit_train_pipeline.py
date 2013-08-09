@@ -43,7 +43,7 @@ def main(id_s, inp):
                 eq_id = i + 1
                 lines = eq[1]
                 while result["status"] != "win":
-                    print("Mismatch, another try")
+                    print("Mismatch, another try %s" % id_s)
                     vin, vout, _ = [int(jj, 16) for jj in result["values"]]
                     
                     newlines = []
@@ -70,8 +70,7 @@ if __name__ == "__main__":
     #         continue
     #     inp = str(t["size"]) + "\n"
     #     inp += str(t["operators"]).replace("'", "\"") + "\n"
-    #     print(t["operators"])
+    #     print(t["operators"], t["id"])
     #     main(t["id"], inp)
     #     time.sleep(5)
     main("4yABwc9Gpff6t1fBMP9WUiVa", "8\n[\"and\", \"if0\", \"shr16\"]")
-    

@@ -25,11 +25,11 @@ evalBvExpr e env = case e of
     Op2 op2 e1 e2 -> evalOp2 op2 e1 e2 env
 
 evalOp1 :: BVOp1 -> BVExpr -> [(BVId, Word64)] -> Word64
-evalOp1 Not e env = 
-evalOp1 Shl1 e env = .
-evalOp1 Shr1 e env = .
-evalOp1 Shr4 e env = .
-evalOp1 Shr8 e env = .
+evalOp1 Not e env = complement $ evalByExpr e env
+evalOp1 Shl1 e env = shift (evalByExpr e env) 1
+evalOp1 Shr1 e env = shift (evalByExpr e env) (-1)
+evalOp1 Shr4 e env = shift (evalByExpr e env) (-4)
+evalOp1 Shr8 e env = shift (evalByExpr e env) (-8)
 
 evalOp2 :: BVOp2 -> BVExpr -> BVExpr -> [(BVId, Word64)] -> Word64
 evalOp2 And e1 e2 env = (evalByExpr e1 env) .&. (evalByExpr e2 env)

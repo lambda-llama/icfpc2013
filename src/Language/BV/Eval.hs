@@ -29,7 +29,7 @@ evalBvExpr e env = case e of
             arg = evalBvExpr bvfArg env
             byte = 0xff
             bytes = [ (shiftR arg shift) .&. byte | shift <- [0,8..56]]
-            aux a b = evalBvExpr le0 ((larg0, a):(larg1, b):env)
+            aux b a = evalBvExpr le0 ((larg0, a):(larg1, b):env)
         in foldl aux init_ bytes
     Op1 op1 e0    ->
         let v0 = evalBvExpr e0 env in

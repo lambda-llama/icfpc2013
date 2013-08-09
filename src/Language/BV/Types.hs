@@ -59,7 +59,7 @@ instance Show BVExpr where
         printf "(if0 %s %s %s)" (show e0) (show e1) (show e2)
     show (Fold (BVFold { bvfLambda = (larg0, larg1, le0), .. })) =
         printf "(fold %s %s (lambda (%s %s) %s))"
-        (show bvfArg) (show bvfInit) (show larg0) (show larg1) (show le0)
+        (show bvfArg) (show bvfInit) larg0 larg1 (show le0)
     show (Op1 op1 e0) = printf "(%s %s)" (show op1) (show e0)
     show (Op2 op2 e0 e1) = printf "(%s %s %s)" (show op2) (show e0) (show e1)
 
@@ -67,7 +67,7 @@ instance Show BVExpr where
 newtype BVProgram = BVProgram (BVId, BVExpr)
 
 instance Show BVProgram where
-    show (BVProgram (arg, e)) = printf "(lambda (%s) %s)" (show arg) (show e)
+    show (BVProgram (arg, e)) = printf "(lambda (%s) %s)" arg (show e)
 
 data BVOpTag = Op1Tag BVOp1
              | Op2Tag BVOp2

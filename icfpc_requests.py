@@ -1,6 +1,7 @@
 __author__ = 'mactep'
 
 import os
+import time
 import requests
 import json
 
@@ -98,6 +99,7 @@ def generate_inputs(out, size=None):
         fd.close()
 
 def find_solution(sdir, id_s):
+    flag = true
     fd = open(os.path.join(sdir, id_s), "rt")
     args = fd.readline().split()
     r = []
@@ -114,10 +116,14 @@ def find_solution(sdir, id_s):
             if int(c[j], 16) != int(s[j], 16):
                 break
         else:
-            print("solution found: %s" % r[i-1])
-            print(guess(id_s, r[i-1]))
+            result = guess(id_s, r[i-1])
+            if not result or isinstance(result, str):
+                time.sleep(5)
+                result = guess(id_s, r[i-1])
+            if result["status"] != "win":
+                continue
             break
     else:
-        print("solution was not found")
+        flag = false
     fd.close()
-    return r, s
+    return r, s, flag

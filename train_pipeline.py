@@ -1,13 +1,13 @@
+import time
 import os
 import sys
+import random
 import json
 import subprocess
 from icfpc_requests import *
 
 
-def main():
-	size = int(sys.argv[1])
-
+def main(size):
 	t = get_train(size)
 	#t = {"size": 4, "operators": ['and', 'shr1'], "id": "1111111111111111111111"}
 	print(json.dumps(t))
@@ -17,8 +17,16 @@ def main():
 	child = subprocess.Popen("./dist/build/bvi/bvi > train/%s" % t["id"], stdin=subprocess.PIPE, 
 		stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 	child.communicate(bytes(s, "utf8"))
-	r, s = find_solution("train", t["id"])
+	r, s, flag = find_solution("train", t["id"])
 	os.unlink("train/%s" % t["id"])
+	return flag
 
 if __name__ == "__main__":
-	main()
+	total = 0
+	false = 0
+	while True:
+		f = main(random.randint(4, 7))
+		total += 1
+		false += int(not f)
+		print("Total: %i, False: %i" % (total, false))
+		time.sleep(10)

@@ -61,7 +61,7 @@ def main(id_s, inp):
                 print("WIN! %s" % id_s)
                 break
     else:
-        print("Loosers!!!")
+        print("Loobsters!!!")
 
 if __name__ == "__main__":
     # while True:
@@ -74,3 +74,4 @@ if __name__ == "__main__":
     #     main(t["id"], inp)
     #     time.sleep(5)
     main("4yABwc9Gpff6t1fBMP9WUiVa", "8\n[\"and\", \"if0\", \"shr16\"]")
+    

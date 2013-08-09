@@ -12,10 +12,7 @@ executable bvi
 
   build-depends:       base == 4.6.*
                      , bytestring == 0.10.*
-                     , unordered-containers == 0.2.*
                      , attoparsec == 0.10.4.*
-                     , random     == 1.0.*
-                     , temporary  == 1.1.*
                      , bv
 
 executable bvgen
@@ -27,7 +24,6 @@ executable bvgen
 
   build-depends:       base == 4.6.*
                      , unordered-containers == 0.2.*
-                     , attoparsec == 0.10.4.*
                      , random     == 1.0.*
                      , bv
 

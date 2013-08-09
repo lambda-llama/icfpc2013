@@ -30,6 +30,9 @@ import Language.BV.Types
 -- (and e (not 0))         = e
 -- (or e (not 0))          = (not 0)
 -- (xor e (not 0))         = (not e)
+--
+-- Multiple-2 law
+-- (plus e e)              = (shl1 e)
 
 simplify :: BVExpr -> Either BVExpr BVExpr
 simplify expr = case go expr of
@@ -53,6 +56,7 @@ simplify expr = case go expr of
     go (Op2 And e (Op1 Not Zero)) = Right e
     go (Op2 Or _e (Op1 Not Zero)) = Right (Op1 Not Zero)
     go (Op2 Xor e (Op1 Not Zero)) = Right (Op1 Not e)
+    go (Op2 Plus e0 e1) | e0 == e1 = Right (Op1 Shl1 e0)
     go e = mix e
 
 mix :: BVExpr -> Either BVExpr BVExpr

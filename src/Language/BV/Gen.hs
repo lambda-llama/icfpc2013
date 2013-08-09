@@ -11,7 +11,7 @@ import Language.BV.Util
 genExpr :: [String] -> Int -> [BVExpr]
 genExpr ops =
     let
-        specgen = genExpr ops
+        specgen = \size -> m Map.! size
         op1s = catMaybes $ map op1ByTag ops
         op2s = catMaybes $ map op2ByTag ops
         ifs = catMaybes $ map ifByTag ops

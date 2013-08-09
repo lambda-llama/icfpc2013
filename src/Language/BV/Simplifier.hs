@@ -18,38 +18,42 @@ import Language.BV.Types
 -- (plus e 0) = (plus 0 e) = e
 -- (shr4 (shr4 (shr4 (shr4 e)))) = (shr16 e)
 -- (shr1 (shr1 (shr1 (shr1 e)))) = (shr4 e)
+--
+-- De'Morgan laws
 -- (or (not e1) (not e2))  = (not (and e1 e2))
 -- (and (not e1) (not e2)) = (not (or e1 e2))
+--
+-- Equivalent-if-branches
 -- (if e0 e1 e1)           = e1
-
+--
+-- Not-0-laws
 -- (and e (not 0))         = e
 -- (or e (not 0))          = (not 0)
 -- (xor e (not 0))         = (not e)
 
 simplify :: BVExpr -> Either BVExpr BVExpr
-simplify (Op1 Not (Op1 Not e))   = Right e
-simplify (Op2 And _e Zero)       = Right Zero
-simplify (Op2 And (Op1 Not e0) e1) | e0 == e1 = Right Zero
-simplify (Op2 Or (Op1 Not e0) e1)  | e0 == e1 = Right (Op1 Not Zero)
-simplify (Op2 Or e Zero)         = Right e
-simplify (Op2 Or Zero e)         = Right e
-simplify (Op2 And e0 e1) | e0 == e1 = Right e0
-simplify (Op2 Or e0 e1)  | e0 == e1 = Right e0
-simplify (Op2 Xor e0 e1) | e0 == e1 = Right Zero
-simplify (Op2 Plus e Zero)       = Right e
-simplify (Op2 Plus Zero e)       = Right e
-simplify (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 e)))) = Right (Op1 Shr16 e)
-simplify (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 e)))) = Right (Op1 Shr4 e)
-simplify (Op2 And (Op1 Not e0) (Op1 Not e1)) = Right (Op1 Not (Op2 And e0 e1))
-simplify (Op2 Or (Op1 Not e0) (Op1 Not e1))  = Right (Op1 Not (Op2 Or e0 e1))
-simplify (If0 _e0 e1 e2) | e1 == e2 = Right e1
-simplify (Op2 And e (Op1 Not Zero)) = Right e
-simplify (Op2 And (Op1 Not Zero) e) = Right e
-simplify (Op2 Or e (Op1 Not Zero)) = Right (Op1 Not Zero)
-simplify (Op2 Or (Op1 Not Zero) e) = Right (Op1 Not Zero)
-simplify (Op2 Xor e (Op1 Not Zero)) = Right (Op1 Not e)
-simplify (Op2 Xor (Op1 Not Zero) e) = Right (Op1 Not e)
-simplify e = mix e
+simplify expr = case go expr of
+    Left (Op2 op e0 e1) -> go (Op2 op e1 e0)
+    res                 -> res
+  where
+    go (Op1 Not (Op1 Not e))   = Right e
+    go (Op2 And _e Zero)       = Right Zero
+    go (Op2 And (Op1 Not e0) e1) | e0 == e1 = Right Zero
+    go (Op2 Or (Op1 Not e0) e1)  | e0 == e1 = Right (Op1 Not Zero)
+    go (Op2 Or e Zero)         = Right e
+    go (Op2 And e0 e1) | e0 == e1 = Right e0
+    go (Op2 Or e0 e1)  | e0 == e1 = Right e0
+    go (Op2 Xor e0 e1) | e0 == e1 = Right Zero
+    go (Op2 Plus Zero e)       = Right e
+    go (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 e)))) = Right (Op1 Shr16 e)
+    go (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 e)))) = Right (Op1 Shr4 e)
+    go (Op2 And (Op1 Not e0) (Op1 Not e1)) = Right (Op1 Not (Op2 And e0 e1))
+    go (Op2 Or (Op1 Not e0) (Op1 Not e1))  = Right (Op1 Not (Op2 Or e0 e1))
+    go (If0 _e0 e1 e2) | e1 == e2 = Right e1
+    go (Op2 And e (Op1 Not Zero)) = Right e
+    go (Op2 Or _e (Op1 Not Zero)) = Right (Op1 Not Zero)
+    go (Op2 Xor e (Op1 Not Zero)) = Right (Op1 Not e)
+    go e = mix e
 
 mix :: BVExpr -> Either BVExpr BVExpr
 mix (If0 Zero e1 _e2) = Right e1

@@ -99,8 +99,9 @@ def generate_inputs(out, size=None):
         fd.close()
 
 def find_solution(sdir, id_s):
-    flag = true
+    flag = True
     fd = open(os.path.join(sdir, id_s), "rt")
+    leftnumber = int(fd.readline())
     args = fd.readline().split()
     r = []
     for line in fd:
@@ -120,6 +121,7 @@ def find_solution(sdir, id_s):
             if not result or isinstance(result, str):
                 time.sleep(5)
                 result = guess(id_s, r[i-1])
+            print(result)
             if result["status"] != "win":
                 continue
             break

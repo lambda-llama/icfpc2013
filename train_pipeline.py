@@ -29,4 +29,4 @@ if __name__ == "__main__":
 		total += 1
 		false += int(not f)
 		print("Total: %i, False: %i" % (total, false))
-		time.sleep(10)
+		time.sleep(5)

@@ -8,6 +8,7 @@ import qualified Data.Map as Map
 
 import Language.BV.Types
 import Language.BV.Util
+import Control.Monad(forM_)
 
 genExpr :: [String] -> Int -> [BVExpr]
 genExpr ops =
@@ -84,3 +85,7 @@ countExpr ops =
                            , j + k + l == i - 1
                            ]
     in \size -> m IntMap.! size
+
+main = do
+    let exprs = genExpr ["if0", "shr16", "tfold"] 10
+    forM_ exprs print

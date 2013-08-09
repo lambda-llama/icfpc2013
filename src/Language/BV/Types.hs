@@ -108,7 +108,7 @@ op2ByTag s = let m = Map.fromList [("and", And)
             in
              Map.lookup s m
 
--- Note(matklas): this is if0 type V
+-- Note(matklad): this is if0 type V
 ifByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr) 
 ifByTag s = if s == "if0" then Just If0 else Nothing
 
@@ -119,7 +119,7 @@ foldByTag s = if s == "fold"
 
 tfoldByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr)
 tfoldByTag s = if s == "tfold"
-               then Just $ \e1 e2 -> lambda2 e1 Zero e2
+               then Just $ \e1 e2 -> lambda2 e1 e2 Zero
                else Nothing
 
 lambda2 :: BVExpr -> BVExpr -> BVExpr -> BVExpr

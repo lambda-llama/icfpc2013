@@ -8,8 +8,6 @@ import qualified Data.IntMap as IntMap
 import Language.BV.Types
 import Language.BV.Util
 
-import Debug.Trace(trace)
-
 genExpr :: [String] -> Int -> [BVExpr]
 genExpr ops =
     let specgen = \size -> m IntMap.! size
@@ -18,25 +16,16 @@ genExpr ops =
         ifs     = mapMaybe ifByTag ops
         m       = IntMap.fromList [(i, go i) | i <- [1..42]]
         go 1 = [Zero, One, Id "x"]
-        go i = trace ("\n" ++ show i) $ [ Op1 op1 x
+        go i = [ Op1 op1 x
                | op1 <- op1s
                , x   <- specgen (i - 1)
                ] ++
                [ Op2 op2 x y
-<<<<<<< HEAD
                | op2    <- op2s
                , (j, k) <- partitions2 (pred i)
                , x <- specgen j
                , y <- specgen k
                , x >= y
-=======
-               | op2 <- op2s
-               , j  <- [1..i-1]
-               , k  <- [1..i-1]
-               , x  <- specgen j
-               , y  <- specgen k
-               , j + k == i - 1, x >= y
->>>>>>> [t]foldByTag
                ] ++
                [ if_ x y z
                | if_ <- ifs

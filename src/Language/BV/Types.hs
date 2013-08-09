@@ -1,5 +1,6 @@
 {-# OPTIONS_GHC -funbox-strict-fields #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE BangPatterns #-}
 
 module Language.BV.Types
   ( BVProgram(..)
@@ -10,8 +11,7 @@ module Language.BV.Types
   , BVOp1(..)
   , BVOp2(..)
 
-  , op1ByTag
-  , op2ByTag
+  , enumFromShow
   , ifByTag
   , foldByTag
   , tfoldByTag
@@ -31,7 +31,7 @@ data BVFold = BVFold { bvfArg    :: !BVExpr
     deriving (Eq, Ord)
 
 data BVOp1 = Not | Shl1 | Shr1 | Shr4 | Shr16
-    deriving (Eq, Ord)
+    deriving (Eq, Ord, Enum, Bounded)
 
 instance Show BVOp1 where
     show Not   = "not"
@@ -41,7 +41,7 @@ instance Show BVOp1 where
     show Shr16 = "shr16"
 
 data BVOp2 = And | Or | Xor | Plus
-    deriving (Eq, Ord)
+    deriving (Eq, Ord, Enum, Bounded)
 
 instance Show BVOp2 where
     show And  = "and"
@@ -77,22 +77,12 @@ newtype BVProgram = BVProgram (BVId, BVExpr)
 instance Show BVProgram where
     show (BVProgram (arg, e)) = printf "(lambda (%s) %s)" arg (show e)
 
-op1ByTag :: String -> Maybe BVOp1
-op1ByTag s = let m = Map.fromList [ ("not", Not)
-                                  , ("shl1", Shl1)
-                                  , ("shr1", Shr1)
-                                  , ("shr4", Shr4)
-                                  , ("shr16", Shr16)
-                                  ]
-             in Map.lookup s m
-
-op2ByTag :: String -> Maybe BVOp2
-op2ByTag s = let m = Map.fromList [ ("and", And)
-                                  , ("or", Or)
-                                  , ("xor", Xor)
-                                  , ("plus", Plus)
-                                  ]
-             in Map.lookup s m
+enumFromShow :: (Show a, Enum a, Bounded a) => String -> a
+enumFromShow =
+    let !m = Map.fromList [(show op, op) | op <- [minBound..]]
+    in (m Map.!)
+{-# SPECIALIZE INLINE enumFromShow :: String -> BVOp1 #-}
+{-# SPECIALIZE INLINE enumFromShow :: String -> BVOp2 #-}
 
 -- Note(matklad): this is if0 type V
 ifByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr)
@@ -109,4 +99,5 @@ tfoldByTag s = if s == "tfold"
                else Nothing
 
 lambda2 :: BVExpr -> BVExpr -> BVExpr -> BVExpr
-lambda2 e1 bvfArg bvfInit = Fold $ BVFold {bvfLambda = ("y", "z", e1), ..}
+lambda2 e1 bvfArg bvfInit = Fold $ BVFold { bvfLambda = ("y", "z", e1), .. }
+{-# INLINE lambda2 #-}

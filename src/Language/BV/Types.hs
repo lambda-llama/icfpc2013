@@ -15,6 +15,7 @@ module Language.BV.Types
   , ifByTag
   , foldByTag
   , tfoldByTag
+  , lambda2
   ) where
 
 import Text.Printf (printf)
@@ -96,29 +97,28 @@ op1ByTag s = let m = Map.fromList [("not", Not)
                                   , ("shr1", Shr1)
                                   , ("shr4", Shr4)
                                   , ("shr16", Shr16)]
-             in
-              Map.lookup s m
+             in Map.lookup s m
 
 op2ByTag :: String -> Maybe BVOp2
 op2ByTag s = let m = Map.fromList [("and", And)
                                   ,("or", Or)
                                   ,("xor", Xor)
                                   ,("plus", Plus)]
-            in
-             Map.lookup s m
+             in Map.lookup s m
 
--- Note(matklas): this is if0 type V
+-- Note(matklad): this is if0 type V
 ifByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr) 
 ifByTag s = if s == "if0" then Just If0 else Nothing
 
 foldByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr)
 foldByTag s = if s == "fold"
-              then (Just $ \e1 bvfArg bvfInit ->
-                                    Fold $ BVFold {bvfLambda=("y", "z", e1), ..})
+              then Just lambda2
               else Nothing
 
 tfoldByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr)
 tfoldByTag s = if s == "tfold"
-               then (Just $ \e1 bvfInit ->
-                      Fold $ BVFold {bvfLambda=("y", "z", e1), bvfArg=Zero, ..})
+               then Just $ \e1 e2 -> lambda2 e1 e2 Zero
                else Nothing
+
+lambda2 :: BVExpr -> BVExpr -> BVExpr -> BVExpr
+lambda2 e1 bvfArg bvfInit = Fold $ BVFold {bvfLambda=("y", "z", e1), ..}

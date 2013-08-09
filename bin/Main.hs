@@ -5,9 +5,8 @@ import qualified Data.ByteString.Char8 as S
 
 import Data.Attoparsec.ByteString.Char8 (parseTest)
 
-import Language.BV.Parser (bvExprP)
+import Language.BV.Parser (bvProgramP)
 
 
 main :: IO ()
-main = forever $ do
-    parseTest bvExprP =<< S.getLine
+main = forever $ parseTest bvProgramP =<< S.getLine

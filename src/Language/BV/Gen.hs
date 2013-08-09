@@ -10,7 +10,7 @@ import qualified Data.Map as Map
 
 import Language.BV.Types
 import Language.BV.Util
-import Language.BV.Simplifier(simplify)
+import Language.BV.Simplifier (simplify)
 
 genExpr :: [String] -> Int -> [BVExpr]
 genExpr ops =

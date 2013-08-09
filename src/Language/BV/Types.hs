@@ -15,6 +15,7 @@ module Language.BV.Types
   , ifByTag
   , foldByTag
   , tfoldByTag
+  , lambda2
   ) where
 
 import Text.Printf (printf)
@@ -113,12 +114,13 @@ ifByTag s = if s == "if0" then Just If0 else Nothing
 
 foldByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr)
 foldByTag s = if s == "fold"
-              then (Just $ \e1 bvfArg bvfInit ->
-                                    Fold $ BVFold {bvfLambda=("y", "z", e1), ..})
+              then Just lambda2
               else Nothing
 
 tfoldByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr)
 tfoldByTag s = if s == "tfold"
-               then (Just $ \e1 bvfInit ->
-                      Fold $ BVFold {bvfLambda=("y", "z", e1), bvfArg=Zero, ..})
+               then Just $ \e1 e2 -> lambda2 e1 Zero e2
                else Nothing
+
+lambda2 :: BVExpr -> BVExpr -> BVExpr -> BVExpr
+lambda2 e1 bvfArg bvfInit = Fold $ BVFold {bvfLambda=("y", "z", e1), ..}

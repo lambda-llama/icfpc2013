@@ -43,16 +43,16 @@ genExpr ops =
                   ] ++ case f of
                       0 -> []
                       1 -> []
-                      2 -> [f e1 e2 e3
-                           |f <- folds
+                      2 -> [ f e1 e2 e3
+                           | f <- folds
                            , (j, k, l) <- partitions3 (i - 2)
                            , e1 <- specgen (j, 0)
                            , e2 <- specgen (k, 1)
                            , e3 <- specgen (l, 1)
                            ] ++
-                           [f e1 e2
-                           |f <- tfolds
-                           , (j, k, l) <- partitions3 (i - 2)
+                           [ f e1 e2
+                           | f <- tfolds
+                           , (j, k) <- partitions2 (i - 3)
                            , e1 <- specgen (j, 0)
                            , e2 <- specgen (k, 1)
                            ]

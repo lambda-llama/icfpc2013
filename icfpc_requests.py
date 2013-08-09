@@ -42,6 +42,7 @@ def get_train(size=None, operators=None):
         d['size'] = size
     if operators:
         d['operators'] = operators
+    print(d)
     return send_request("train", d)
 
 

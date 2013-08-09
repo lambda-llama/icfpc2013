@@ -11,6 +11,8 @@ executable bvi
   other-modules:
 
   build-depends:       base == 4.6.*
+                     , bytestring == 0.10.*
+                     , attoparsec == 0.10.4.*
                      , bv
 
 library
@@ -21,5 +23,8 @@ library
       Language.BV.Types
     , Language.BV.Eval
     , Language.BV.Util
+    , Language.BV.Parser
 
   build-depends:       base == 4.6.*
+                     , bytestring == 0.10.*
+                     , attoparsec == 0.10.4.*

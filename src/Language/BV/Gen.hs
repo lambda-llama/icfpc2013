@@ -4,11 +4,14 @@ module Language.BV.Gen where
 
 import Control.Monad (forM_)
 import Data.Maybe (mapMaybe)
+import Data.Either(lefts, rights)
+import qualified Data.Set as Set
 import qualified Data.IntMap as IntMap
 import qualified Data.Map as Map
 
 import Language.BV.Types
 import Language.BV.Util
+import Language.BV.Simplifier(simplify)
 
 genExpr :: [String] -> Int -> [BVExpr]
 genExpr ops =
@@ -18,7 +21,7 @@ genExpr ops =
         ifs     = mapMaybe ifByTag ops
         folds   = mapMaybe foldByTag ops
         tfolds  = mapMaybe tfoldByTag ops
-        m       = Map.fromList [ ((i, f), go i f)
+        m       = Map.fromList [ ((i, f), undup (go i f))
                                | i <- [1..42], f <- [0, 1, 2]
                                ]
         -- go _ 0 -> exprs without fold with x, y, z ids
@@ -89,6 +92,9 @@ countExpr ops =
                            ]
     in \size -> m IntMap.! size
 
-main = do
-    let exprs = genExpr ["if0", "shr16", "tfold"] 10
-    forM_ exprs print
+undup :: [BVExpr] -> [BVExpr]
+undup exprs =
+    let simplified = map simplify exprs
+        ls = Set.fromList $ lefts simplified
+        rs = Set.fromList $ rights simplified
+    in Set.toList $ ls `Set.union` rs

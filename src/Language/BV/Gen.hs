@@ -4,11 +4,12 @@
 module Language.BV.Gen where
 
 import qualified Data.Map as Map
+import qualified Data.Set as Set
 
 import Language.BV.Types
 import Language.BV.Util
 import Language.BV.Simplifier (simplify)
-import Language.BV.Symbolic.SEval (seval, stdcontext)
+import Language.BV.Symbolic.SEval (sevalExpr, stdContext)
 import Language.BV.Symbolic.Types (Sbit(..))
 
 genExpr :: [String] -> Int -> [BVExpr]
@@ -64,7 +65,7 @@ genExpr ops =
 
 undup :: [BVExpr] -> [BVExpr]
 undup exprs =
-    let simplifiedExprs = do
+    let simplifiedExprs = Set.toList . Set.fromList $ do
             -- Note(superbobry): we don't distinguish between Left-Right at
             -- the moment.
             expr <- exprs
@@ -73,7 +74,7 @@ undup exprs =
                 Right simplified -> simplified
         m = Map.fromListWithKey
             (\k [x] acc -> if any (== Bot) k then x : acc else acc) $
-            [(seval expr stdcontext, [expr]) | expr <- simplifiedExprs]
+            [(sevalExpr stdContext expr, [expr]) | expr <- simplifiedExprs]
     in Map.foldlWithKey'
        (\mergedExprs k acc ->
          if any (== Bot) k then acc ++ mergedExprs else head acc : mergedExprs)

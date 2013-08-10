@@ -12,15 +12,14 @@ import Language.BV.Types
 
 
 evalProgram :: BVProgram -> Word64 -> Word64
-evalProgram (BVProgram (x, e)) v = evalExpr e [(x, v)]
+evalProgram (BVProgram (x, e)) v = evalExpr [(x, v)] e
 
-evalExpr :: BVExpr -> [(BVId, Word64)] -> Word64
-evalExpr e !env = go e where
+evalExpr :: [(BVId, Word64)] -> BVExpr -> Word64
+evalExpr !env = go where
   go Zero   = 0
   go One    = 1
   go (Id x) = case lookup x env of
-      Nothing -> error (x : " is not defined in " ++ show e ++
-                        ", env: " ++ show env)
+      Nothing -> error $ x : " is not defined!"
       Just v  -> v
   go (If0 e0 e1 e2) =
       let !v0 = go e0
@@ -35,7 +34,7 @@ evalExpr e !env = go e where
               !arg    = go bvfArg
               !bytes  = VU.fromList
                         [(shiftR arg offset) .&. 0xff | offset <- [0,8..56]]
-          in VU.foldl' (\b a -> evalExpr le ((larg0, a):(larg1, b):env)) i bytes
+          in VU.foldl' (\b a -> evalExpr ((larg0, a):(larg1, b):env) le) i bytes
   go (Op1 op1 e0) =
       let !v0 = go e0 in
       case op1 of

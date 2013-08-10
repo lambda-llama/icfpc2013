@@ -3,11 +3,13 @@
 
 module Language.BV.Symbolic.SEval where
 
+import Data.Function (on)
+
 import Language.BV.Symbolic.Types
 import Language.BV.Types
 
-seval :: BVExpr -> [(BVId, Sword)] -> Sword
-seval e !env = go e where
+sevalExpr :: [(BVId, Sword)] -> BVExpr -> Sword
+sevalExpr !env = go where
   go Zero = zero
   go One  = one
   go (Id x) = case lookup x env of
@@ -23,7 +25,7 @@ seval e !env = go e where
           _ -> v1 `merge` v2
   go (Fold _bvf)  = bot
   go (Op1 op1 e0) =
-      let !v0 = seval e0 env in
+      let !v0 = go e0 in
       case op1 of
           Not   -> snot v0
           Shl1  -> sshl1 v0
@@ -31,14 +33,13 @@ seval e !env = go e where
           Shr4  -> sshr4 v0
           Shr16 -> sshr16 v0
   go (Op2 op2 e0 e1) =
-      let !v0 = seval e0 env
-          !v1 = seval e1 env
+      let !v0 = go e0
+          !v1 = go e1
       in case op2 of
           And  -> v0 `sand` v1
           Or   -> v0 `sor` v1
           Xor  -> v0 `sxor` v1
           Plus -> v0 `splus` v1
-
 
 zero :: Sword
 zero = take 64 $ repeat Szero
@@ -50,22 +51,16 @@ bot:: Sword
 bot = take 64 $ repeat Bot
 
 isZero :: Sword -> Bool
-isZero = (==zero)
+isZero = (== zero)
 
 isNotZero :: Sword -> Bool
-isNotZero = any (==Sone)
+isNotZero = any (== Sone)
 
-input :: Sword
-input = [B i | i <- [1..64]]
-
-inputy :: Sword
-inputy = [B (65 + i) | i <- [0..63]]
-
-inputz :: Sword
-inputz = [B (130 + i) | i <- [0..63]]
-
-stdcontext :: [(BVId, Sword)]
-stdcontext = [('x', input), ('y', inputy), ('z', inputz)]
+stdContext :: [(BVId, Sword)]
+stdContext = [('x', inputx), ('y', inputy), ('z', inputz)] where
+  inputx = [B i | i <- [1..64]]
+  inputy = [B (65 + i) | i <- [0..63]]
+  inputz = [B (130 + i) | i <- [0..63]]
 
 merge :: Sword -> Sword -> Sword
 merge a b = map (uncurry lb) (zip a b)
@@ -138,9 +133,7 @@ sxor :: Sword -> Sword -> Sword
 sxor a b = map xor_bit $ zip a b
 
 splus :: Sword -> Sword -> Sword
-splus a b = fst . foldr plus_bit ([], Szero)$ zip a b
+splus a b = fst . foldr plus_bit ([], Szero) $ zip a b
 
 like :: BVExpr -> BVExpr -> Bool
-like e0 e1 =
-    e0 == e1 ||
-    slike (seval e0 stdcontext) (seval e1 stdcontext)
+like e0 e1 = e0 == e1 || (slike `on` sevalExpr stdContext) e0 e1

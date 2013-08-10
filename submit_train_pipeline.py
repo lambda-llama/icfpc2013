@@ -93,13 +93,12 @@ def get_new_funcs_batch(vin, vout, funcs):
     to_send = ""
     for variant in funcs:
         to_send += variant.strip() + "\n" + str(vin) + "\n"
-        
     child = subprocess.Popen("./dist/build/bvi/bvi", stdin=subprocess.PIPE, 
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     m_out, m_err = child.communicate(to_send.encode())
     anss = m_out.decode().splitlines()
     for i, a in enumerate(anss):
-        if a == vout:
+        if int(a) == vout:
             newfuncs.append(funcs[i])
     logging.debug("searching stderr log: %s" % m_err)
     logging.debug("END: searching [batch] for pair (%i -> %i)" % (vin, vout))
@@ -198,5 +197,5 @@ if __name__ == "__main__":
     #prepare("problems", "preprocessed")
     #run_prepared("problems", "preprocessed")
     #run("problems")
-    #train(9)
+    train(11)
     #test_current("C434BFwU7gVLbeKAtQXXIu83", 9, ['if0', 'plus', 'shl1', 'shr1'])

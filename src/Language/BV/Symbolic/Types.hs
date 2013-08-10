@@ -1,6 +1,8 @@
 module Language.BV.Symbolic.Types where
 
 import Data.Int(Int8)
+import Data.Word(Word64)
+import Data.Bits(testBit)
 
 type Sword = [Sbit]
            
@@ -18,3 +20,6 @@ comp a = case a of
     Sone -> Szero
     B i -> B (-i)
     Bot -> Bot
+
+word2sword :: Word64 -> Sword
+word2sword w = [if testBit w i then Sone else Szero |i <- [63,62..0]]

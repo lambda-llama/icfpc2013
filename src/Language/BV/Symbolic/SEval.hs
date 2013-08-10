@@ -6,6 +6,8 @@ module Language.BV.Symbolic.SEval where
 import Data.Function (on)
 import Data.List (foldl')
 
+import qualified Data.Vector as V
+
 import Language.BV.Symbolic.Types
 import Language.BV.Symbolic.Operations
 import Language.BV.Types
@@ -28,7 +30,7 @@ sevalExpr env0 expr = go env0 expr where
   go !env (Fold (BVFold { bvfLambda = (larg0, larg1, le0), .. })) =
       let !i     = go env bvfInit
           !arg   = go env bvfArg
-          !bytes = [ (drop 8 zero) ++ take 8 (drop (64 - 8 - shift) arg)
+          !bytes = [ V.drop 8 zero V.++ V.take 8 (V.drop (64 - 8 - shift) arg)
                    | shift <- [0,8..56]
                    ]
       in foldl' (\b a -> sevalExpr ((larg0, a):(larg1, b):env) le0) i bytes
@@ -52,9 +54,9 @@ sevalExpr env0 expr = go env0 expr where
 
 stdContext :: [(BVId, Sword)]
 stdContext = [('x', inputx), ('y', inputy), ('z', inputz)] where
-  inputx = [B i | i <- [1..64]]
-  inputy = [B (65 + i) | i <- [0..63]]
-  inputz = [B (130 + i) | i <- [0..63]]
+  inputx = V.fromList [B i | i <- [1..64]]
+  inputy = V.fromList [B (65 + i) | i <- [0..63]]
+  inputz = V.fromList [B (130 + i) | i <- [0..63]]
 {-# INLINE stdContext #-}
 
 like :: BVExpr -> BVExpr -> Bool

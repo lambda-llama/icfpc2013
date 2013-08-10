@@ -18,7 +18,7 @@ executable bvi
 executable bvgen
   hs-source-dirs:      bin
   default-language:    Haskell2010
-  ghc-options:         -Wall -fno-warn-orphans -O2 -threaded
+  ghc-options:         -Wall -fno-warn-orphans -optc-O3 -O2 -threaded
   main-is:             Generator.hs
   other-modules:
 
@@ -33,7 +33,7 @@ executable bvgen
 library
   hs-source-dirs:      src
   default-language:    Haskell2010
-  ghc-options:         -Wall -fno-warn-orphans -O2
+  ghc-options:         -Wall -fno-warn-orphans -optc-O3 -O2
   exposed-modules:
       Language.BV.Types
     , Language.BV.Eval

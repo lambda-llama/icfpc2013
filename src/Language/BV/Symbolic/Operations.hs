@@ -2,18 +2,20 @@
 
 module Language.BV.Symbolic.Operations where
 
+import qualified Data.Vector as V
+
 import Language.BV.Symbolic.Types (Sword, Sbit(..))
 
 zero :: Sword
-zero = take 64 $ repeat Szero
+zero = V.replicate 64 Szero
 {-# INLINE zero #-}
 
 one :: Sword
-one = tail zero ++ [Sone]
+one = V.snoc (V.tail zero) Sone
 {-# INLINE one #-}
 
 bot:: Sword
-bot = take 64 $ repeat Bot
+bot = V.replicate 64 Bot
 {-# INLINE bot #-}
 
 
@@ -22,55 +24,57 @@ isZero = (== zero)
 {-# INLINE isZero #-}
 
 isNotZero :: Sword -> Bool
-isNotZero = any (== Sone)
+isNotZero = V.any (== Sone)
 {-# INLINE isNotZero #-}
 
+isCombinat :: Sword -> Bool
+isCombinat = V.any (== Bot)
+{-# INLINE isCombinat #-}
+
 merge :: Sword -> Sword -> Sword
-merge a b = [if ab == bb then ab else Bot | !(ab, bb) <- zip a b]
+merge = V.zipWith (\a b -> if a == b then a else Bot)
 {-# INLINE merge #-}
 
 
 snot :: Sword -> Sword
-snot = map complementSbit
+snot = V.map complementSbit
 {-# INLINE snot #-}
 
 sshl1 :: Sword -> Sword
-sshl1 (_bit:sw) = sw ++ [Szero]
-sshl1 _sw       = error "sshl1: the impossible happened!"
+sshl1 !sw = if V.null sw
+            then error "sshl1: the impossible happened!"
+            else V.snoc (V.tail sw) Szero
 {-# INLINE sshl1 #-}
 
 sshr1 :: Sword -> Sword
-sshr1 !sw = Szero : init sw
+sshr1 = V.cons Szero . V.init
 {-# INLINE sshr1 #-}
 
 sshr4 :: Sword -> Sword
-sshr4 !sw = Szero : Szero : Szero : Szero : take (64 - 4) sw
+sshr4 = sshr1 . sshr1 . sshr1 . sshr1
 {-# INLINE sshr4 #-}
 
 sshr16 :: Sword -> Sword
-sshr16 !sw = Szero : Szero : Szero : Szero :
-             Szero : Szero : Szero : Szero :
-             Szero : Szero : Szero : Szero :
-             Szero : Szero : Szero : Szero : take (64 - 16) sw
+sshr16 = sshr4 . sshr4 . sshr4 . sshr4
 {-# INLINE sshr16 #-}
 
 sand :: Sword -> Sword -> Sword
-sand a b = [andBit aa bb | !(aa, bb) <- zip a b]
+sand = V.zipWith andBit
 {-# INLINE sand #-}
 
 sor :: Sword -> Sword -> Sword
-sor a b = [orBit aa bb | !(aa, bb) <- zip a b]
+sor = V.zipWith orBit
 {-# INLINE sor #-}
 
 sxor :: Sword -> Sword -> Sword
-sxor a b = [xorBit aa bb | !(aa, bb) <- zip a b]
+sxor = V.zipWith xorBit
 {-# INLINE sxor #-}
 
 splus :: Sword -> Sword -> Sword
-splus a0 b0 = case foldr plusBit ([], Szero) $ zip a0 b0 of
+splus a0 b0 = case V.foldr plusBit (V.empty, Szero) $ V.zip a0 b0 of
     (sw, _) -> sw
   where
-    plusBit (a, b) (acc, t) = (xorBit xab t : acc, orBit oa abt)
+    plusBit (a, b) (acc, t) = (xorBit xab t `V.cons` acc, orBit oa abt)
       where
         !xab = xorBit a b
         !aab = andBit a b

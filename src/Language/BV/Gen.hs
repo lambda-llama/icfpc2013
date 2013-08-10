@@ -9,8 +9,8 @@ import qualified Data.Map as Map
 import Language.BV.Types
 import Language.BV.Util
 import Language.BV.Simplifier (simplify)
+import Language.BV.Symbolic.Operations (isCombinat)
 import Language.BV.Symbolic.SEval (sevalExpr, stdContext)
-import Language.BV.Symbolic.Types (Sbit(..))
 
 genExpr :: [String] -> Int -> [BVExpr]
 genExpr ops =
@@ -74,10 +74,10 @@ undup exprs =
                 Left _e          -> expr
                 Right simplified -> simplified
         m = Map.fromListWithKey
-            (\k [x] acc -> if any (== Bot) k then x : acc else acc) $
+            (\k [x] acc -> if isCombinat k then x : acc else acc) $
             [(sevalExpr stdContext expr, [expr]) | expr <- simplifiedExprs]
     in Map.foldlWithKey'
        (\mergedExprs k acc ->
-         if any (== Bot) k then acc ++ mergedExprs else head acc : mergedExprs)
+         if isCombinat k then acc ++ mergedExprs else head acc : mergedExprs)
        [] m
 {-# INLINE undup #-}

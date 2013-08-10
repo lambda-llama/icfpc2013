@@ -1,6 +1,9 @@
 module Language.BV.Symbolic.Types where
 
-type Sword = [Sbit]
+import Data.Vector (Vector)
+import qualified Data.Vector as V
+
+type Sword = Vector Sbit
 
 data Sbit = Szero
           | Sone
@@ -9,7 +12,7 @@ data Sbit = Szero
     deriving (Eq, Show, Ord)
 
 slike :: Sword -> Sword -> Bool
-slike sw1 sw2 = and $ zipWith eq sw1 sw2 where
+slike sw1 sw2 = V.and $ V.zipWith eq sw1 sw2 where
   eq Bot _ = False
   eq _ Bot = False
   eq a b   = a == b

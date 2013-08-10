@@ -50,8 +50,6 @@ simplify expr = case go expr of
     go (Op2 Or e0 e1)  | e0 `like` e1 = Right e0
     go (Op2 Xor e0 e1) | e0 `like` e1 = Right Zero
     go (Op2 Plus Zero e)       = Right e
-    go (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 e)))) = Right (Op1 Shr16 e)
-    go (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 e)))) = Right (Op1 Shr4 e)
     go (Op2 And (Op1 Not e0) (Op1 Not e1)) = Right (Op1 Not (Op2 And e0 e1))
     go (Op2 Or (Op1 Not e0) (Op1 Not e1))  = Right (Op1 Not (Op2 Or e0 e1))
     go (If0 _e0 e1 e2) | e1 `like` e2 = Right e1
@@ -245,6 +243,10 @@ simplify expr = case go expr of
     go (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr16 (Op1 Shr16 e))))) = Right (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr16 (Op1 Shr16 e)))))
     go (Op1 Shr1 (Op1 Shr1 (Op1 Shr4 (Op1 Shr4 (Op1 Shr16 e))))) = Right (Op1 Shr1 (Op1 Shr1 (Op1 Shr4 (Op1 Shr4 (Op1 Shr16 e)))))
     go (Op1 Shr1 (Op1 Shr16 (Op1 Shr16 (Op1 Shr16 (Op1 Shr16 e))))) = Right (Op1 Shr1 (Op1 Shr16 (Op1 Shr16 (Op1 Shr16 (Op1 Shr16 e)))))
+    
+    go (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 e)))) = Right (Op1 Shr16 e)
+    go (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 e)))) = Right (Op1 Shr4 e)
+
     go (Op1 Shr1 (Op1 Shr1 (Op1 Shr4 (Op1 Shr16 e)))) = Right (Op1 Shr1 (Op1 Shr1 (Op1 Shr4 (Op1 Shr16 e))))
     go (Op1 Shr1 (Op1 Shr1 (Op1 Shr16 (Op1 Shr16 e)))) = Right (Op1 Shr1 (Op1 Shr1 (Op1 Shr16 (Op1 Shr16 e))))
     go (Op1 Shr1 (Op1 Shr16 (Op1 Shr16 (Op1 Shr16 e)))) = Right (Op1 Shr1 (Op1 Shr16 (Op1 Shr16 (Op1 Shr16 e))))

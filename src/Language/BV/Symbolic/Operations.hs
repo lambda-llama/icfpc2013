@@ -2,7 +2,7 @@
 
 module Language.BV.Symbolic.Operations where
 
-import Language.BV.Symbolic.Types
+import Language.BV.Symbolic.Types (Sword, Sbit(..))
 
 zero :: Sword
 zero = take 64 $ repeat Szero
@@ -19,13 +19,15 @@ bot = take 64 $ repeat Bot
 
 isZero :: Sword -> Bool
 isZero = (== zero)
+{-# INLINE isZero #-}
 
 isNotZero :: Sword -> Bool
 isNotZero = any (== Sone)
-
+{-# INLINE isNotZero #-}
 
 merge :: Sword -> Sword -> Sword
-merge a b = map (uncurry lb) (zip a b)
+merge a b = [if ab == bb then ab else Bot | !(ab, bb) <- zip a b]
+{-# INLINE merge #-}
 
 
 snot :: Sword -> Sword
@@ -47,9 +49,9 @@ sshr4 !sw = Szero : Szero : Szero : Szero : take (64 - 4) sw
 
 sshr16 :: Sword -> Sword
 sshr16 !sw = Szero : Szero : Szero : Szero :
-            Szero : Szero : Szero : Szero :
-            Szero : Szero : Szero : Szero :
-            Szero : Szero : Szero : Szero : take (64 - 16) sw
+             Szero : Szero : Szero : Szero :
+             Szero : Szero : Szero : Szero :
+             Szero : Szero : Szero : Szero : take (64 - 16) sw
 {-# INLINE sshr16 #-}
 
 sand :: Sword -> Sword -> Sword

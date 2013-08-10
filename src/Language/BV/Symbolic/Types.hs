@@ -8,10 +8,6 @@ data Sbit = Szero
           | Bot
     deriving (Eq, Show, Ord)
 
-lb :: Sbit -> Sbit -> Sbit
-lb a b = if a == b then a else Bot
-{-# INLINE lb #-}
-
 slike :: Sword -> Sword -> Bool
 slike sw1 sw2 = and $ zipWith eq sw1 sw2 where
   eq Bot _ = False

@@ -2,7 +2,7 @@
 
 module Language.BV.Symbolic.SEval where
 
-import Data.List
+import Data.List()
 
 import Language.BV.Symbolic.Types
 import Language.BV.Types
@@ -115,8 +115,8 @@ xor_bit ((B i), (B j)) | i == j    = Szero
 xor_bit (_, Bot)     = Bot
 xor_bit (Bot, _)     = Bot
 
-plus_bit :: (Sword, Sbit) -> (Sbit, Sbit) -> (Sword, Sbit)
-plus_bit (acc, t) (a, b) = ((xor_bit (xab, t)) : acc, or_bit (oa, abt))
+plus_bit :: (Sbit, Sbit) -> (Sword, Sbit) -> (Sword, Sbit)
+plus_bit (a, b) (acc, t) = ((xor_bit (xab, t)) : acc, or_bit (oa, abt))
     where xab = xor_bit (a, b)
           aab = and_bit (a, b)
           aat = and_bit (a, t)
@@ -133,4 +133,4 @@ sxor :: Sword -> Sword -> Sword
 sxor a b= map xor_bit $ zip a b
 
 splus :: Sword -> Sword -> Sword
-splus a b = fst . foldl' plus_bit ([], Szero)$ zip a b
+splus a b = fst . foldr plus_bit ([], Szero)$ zip a b

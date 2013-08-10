@@ -62,6 +62,15 @@ isNotZero = any (==Sone)
 input :: Sword
 input = [B i | i <- [1..64]]
 
+inputy :: Sword
+inputy = [B (65 + i) | i <- [0..63]]
+
+inputz :: Sword
+inputz = [B (130 + i) | i <- [0..63]]
+
+stdcontext :: [(BVId, Sword)]
+stdcontext = [('x', input), ('y', inputy), ('z', inputz)]
+
 merge :: Sword -> Sword -> Sword
 merge a b = map (uncurry lb) (zip a b)
 

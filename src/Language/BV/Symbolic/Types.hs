@@ -1,12 +1,11 @@
 module Language.BV.Symbolic.Types where
 
-import Data.Int(Int8)
 import Data.Word(Word64)
 import Data.Bits(testBit)
 
 type Sword = [Sbit]
            
-data Sbit = Szero|Sone|B Int8|Bot
+data Sbit = Szero|Sone|B Int|Bot
           deriving (Eq, Show, Ord)
 
 lb :: Sbit -> Sbit -> Sbit

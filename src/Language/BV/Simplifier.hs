@@ -65,11 +65,11 @@ simplify expr = case go expr of
     like e0 e1 =
         e0 == e1 ||
         (isClosed e0 && isClosed e1 && evalExpr e0 [] == evalExpr e1 []) ||
-        slike (seval e0 [('x', input)]) (seval e1 [('x', input)])
+        slike (seval e0 stdcontext) (seval e1 stdcontext)
 
 mix :: BVExpr -> Either BVExpr BVExpr
-mix (If0 cond e1 e2) | isNotZero $ seval cond [('x', input)] = Right e2
-                     | isZero $ seval cond [('x', input)] = Right e1
+mix (If0 cond e1 e2) | isNotZero $ seval cond stdcontext = Right e2
+                     | isZero $ seval cond stdcontext = Right e1
 mix (If0 Zero e1 _e2) = Right e1
 mix (If0 One _e1 e2)  = Right e2
 mix e =

@@ -27,7 +27,7 @@ main = do
     let inputs = meaningfulInputs ++
                  (take (256 - length meaningfulInputs) $ randoms r)
         eqCls  = HashMap.fromListWith (++) $
-                 [ ([evalExpr expr [("x", x)] | x <- inputs], [expr])
+                 [ ([evalExpr expr [('x', x)] | x <- inputs], [expr])
                  | expr <- genExpr ops (pred size)
                  ]
 
@@ -37,7 +37,7 @@ main = do
         print $ (eqId :: Int) -- eq. class ID
         print $ length exprs  -- nr. of elements in eq. class
         printHex res          -- program output
-        forM_ exprs $ \expr -> print $ BVProgram ("x", expr)
+        forM_ exprs $ \expr -> print $ BVProgram ('x', expr)
   where
     printHex xs =
         putStrLn . intercalate " " $ ["0x" ++ showHex x "" | x <- xs]

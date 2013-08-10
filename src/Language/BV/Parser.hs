@@ -10,20 +10,22 @@ import Prelude hiding (takeWhile)
 
 import Control.Applicative ((<$>), (<*>), (<*), (*>), pure)
 import Control.Monad (void)
-import Data.Char (isAlpha, isSpace)
+import Data.Char (isAlpha, isAlphaNum)
 import qualified Data.ByteString.Char8 as S
 
-import Data.Attoparsec.ByteString.Char8 (Parser, choice, takeWhile, satisfy,
-                                         char, string, skipSpace)
+import Data.Attoparsec.ByteString.Char8 (Parser, choice, satisfy,
+                                         peekChar, char, string, skipSpace)
 
 import Language.BV.Types
 
 
 bvIdP :: Parser BVId
 bvIdP = do
-    first <- satisfy isAlpha
-    rest  <- takeWhile (\ch -> not (isSpace ch || ch == '(' || ch == ')'))
-    return $ S.unpack $ S.cons first rest
+    ch   <- satisfy isAlpha
+    next <- peekChar
+    case next of
+        Just other | isAlphaNum other -> error "bvIdP: id too long"
+        _ -> return ch
 
 bvFoldP :: Parser BVFold
 bvFoldP = between '(' ')' $ do

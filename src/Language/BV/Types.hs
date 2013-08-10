@@ -22,7 +22,7 @@ import Text.Printf (printf)
 import qualified Data.Map as Map
 
 
-type BVId = String
+type BVId = Char
 
 data BVFold = BVFold { bvfArg    :: !BVExpr
                      , bvfInit   :: !BVExpr
@@ -62,11 +62,11 @@ data BVExpr = Zero
 instance Show BVExpr where
     show Zero = "0"
     show One  = "1"
-    show (Id bvid) = bvid
+    show (Id bvid) = [bvid]
     show (If0 e0 e1 e2) =
         printf "(if0 %s %s %s)" (show e0) (show e1) (show e2)
     show (Fold (BVFold { bvfLambda = (larg0, larg1, le0), .. })) =
-        printf "(fold %s %s (lambda (%s %s) %s))"
+        printf "(fold %s %s (lambda (%c %c) %s))"
         (show bvfArg) (show bvfInit) larg0 larg1 (show le0)
     show (Op1 op1 e0) = printf "(%s %s)" (show op1) (show e0)
     show (Op2 op2 e0 e1) = printf "(%s %s %s)" (show op2) (show e0) (show e1)
@@ -75,7 +75,7 @@ instance Show BVExpr where
 newtype BVProgram = BVProgram (BVId, BVExpr)
 
 instance Show BVProgram where
-    show (BVProgram (arg, e)) = printf "(lambda (%s) %s)" arg (show e)
+    show (BVProgram (arg, e)) = printf "(lambda (%c) %s)" arg (show e)
 
 enumFromShow :: (Show a, Enum a, Bounded a) => String -> Maybe a
 enumFromShow =
@@ -99,5 +99,5 @@ tfoldByTag s = if s == "tfold"
                else Nothing
 
 lambda2 :: BVExpr -> BVExpr -> BVExpr -> BVExpr
-lambda2 e1 bvfArg bvfInit = Fold $ BVFold { bvfLambda = ("y", "z", e1), .. }
+lambda2 e1 bvfArg bvfInit = Fold $ BVFold { bvfLambda = ('y', 'z', e1), .. }
 {-# INLINE lambda2 #-}

@@ -5,6 +5,7 @@ import random
 import json
 import subprocess
 import logging
+import itertools
 from icfpc_requests import *
 
 
@@ -47,7 +48,7 @@ def parse_lines(iter_lines):
         eq_size = int(next(iter_lines))
         eq_outputs = next(iter_lines).split()
         eq_output = [int(i, 16) for i in eq_outputs]
-        eq_hash = sum(eq_output)
+        eq_hash = hash(tuple(eq_output))
         eq_funcs = []
         for i in range(eq_size):
             eq_funcs.append(next(iter_lines))
@@ -63,7 +64,7 @@ def get_outputs(id_s, args):
         s = eval_id(id_s, args)
         if s:
             s = [int(i, 16) for i in s["outputs"]]
-            s_hash = sum(s)
+            s_hash = hash(tuple(s))
             break
     logging.debug("Outputs for %s are: %s" % (id_s, str(s)))
     logging.debug("END: getting outputs for %s" % id_s)
@@ -173,9 +174,8 @@ def run(dirname):
 
 
 def train(k):
-    i = 1
-    while True:
-        print("Test:", i)
+    for i in itertools.count():
+        print("Test:", i + 1)
         t = get_train(k)
         if t == None:
             continue
@@ -185,7 +185,6 @@ def train(k):
         print(t["challenge"])
         if not submitter(t["id"], inp):
             return
-        i += 1
         time.sleep(5)
 
 
@@ -199,5 +198,5 @@ if __name__ == "__main__":
     #prepare("problems", "preprocessed")
     #run_prepared("problems", "preprocessed")
     #run("problems")
-    train(9)
-    #test_current("w9a79P3FCt71KojxbGHw0HLH", 9, ["and", "if0", "shr4"])
+    #train(9)
+    #test_current("C434BFwU7gVLbeKAtQXXIu83", 9, ['if0', 'plus', 'shl1', 'shr1'])

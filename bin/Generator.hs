@@ -12,6 +12,7 @@ import Data.Word (Word64)
 import Numeric (showHex)
 import System.Random (getStdGen, randoms)
 
+import Control.Parallel.Strategies (using, parBuffer, rseq)
 import Data.Hashable (Hashable(..))
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.Vector.Unboxed as VU
@@ -33,11 +34,12 @@ main = do
     r    <- getStdGen
     let !inputs = meaningfulInputs ++
                   (take (256 - length meaningfulInputs) $ randoms r)
-        !eqCls = HashMap.fromListWith (\[expr] rest -> expr : rest) $!
-                 [ (VU.fromListN 256 [evalExpr expr [('x', x)] | x <- inputs],
-                    [expr])
-                 | expr <- genExpr ops (pred size)
-                 ]
+        !eqCls  = HashMap.fromListWith (\[expr] rest -> expr : rest) $!
+                  ([ (VU.fromListN 256 [evalExpr expr [('x', x)] | x <- inputs],
+                      [expr])
+                   | expr <- genExpr ops (pred size)
+                   ] `using` parBuffer (bit 16) rseq)
+
     printHex inputs
     print $ HashMap.size eqCls
     zipWithM_ (\eqId res ->

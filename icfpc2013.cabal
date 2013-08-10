@@ -18,7 +18,7 @@ executable bvi
 executable bvgen
   hs-source-dirs:      bin
   default-language:    Haskell2010
-  ghc-options:         -Wall -fno-warn-orphans -O2
+  ghc-options:         -Wall -fno-warn-orphans -O2 -threaded
   main-is:             Generator.hs
   other-modules:
 
@@ -27,6 +27,7 @@ executable bvgen
                      , vector               == 0.10.*
                      , hashable             == 1.2.*
                      , random               == 1.0.*
+                     , parallel             == 3.2.*
                      , bv
 
 library
@@ -47,6 +48,6 @@ library
   build-depends:       base       == 4.6.*
                      , bytestring == 0.10.*
                      , attoparsec == 0.10.4.*
-                     , containers == 0.5.*
+                     , containers == 0.5.2.*
                      , vector     == 0.10.*
                      , random     == 1.0.*                    

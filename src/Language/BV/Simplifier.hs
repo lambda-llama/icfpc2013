@@ -62,10 +62,6 @@ simplify expr = case go expr of
     go (Op2 Plus e0 e1) | e0 `like` e1 = Right (Op1 Shl1 e0)
     go e = mix e
 
-    like e0 e1 =
-        e0 == e1 ||
-        (isClosed e0 && isClosed e1 && evalExpr e0 [] == evalExpr e1 []) ||
-        slike (seval e0 stdcontext) (seval e1 stdcontext)
 
 mix :: BVExpr -> Either BVExpr BVExpr
 mix (If0 cond e1 e2) | isNotZero $ seval cond stdcontext = Right e2

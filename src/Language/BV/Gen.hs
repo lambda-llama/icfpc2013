@@ -6,10 +6,12 @@ module Language.BV.Gen where
 --import qualified Data.IntMap as IntMap
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Data.List(nubBy)
 
 import Language.BV.Types
 import Language.BV.Util
 import Language.BV.Simplifier (simplify)
+import Language.BV.Symbolic.SEval(like)
 
 genExpr :: [String] -> Int -> [BVExpr]
 genExpr ops =
@@ -62,7 +64,7 @@ genExpr ops =
     in \size -> specgen (size, 2)
 
 undup :: [BVExpr] -> [BVExpr]
-undup exprs = Set.toList . Set.fromList $ do
+undup exprs = nubBy like. Set.toList . Set.fromList $ do
     -- Note(superbobry): we don't distinguish between Left-Right at
     -- the moment.
     expr <- exprs

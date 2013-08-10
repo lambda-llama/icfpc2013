@@ -143,3 +143,8 @@ sxor a b= map xor_bit $ zip a b
 
 splus :: Sword -> Sword -> Sword
 splus a b = fst . foldr plus_bit ([], Szero)$ zip a b
+
+like :: BVExpr -> BVExpr -> Bool
+like e0 e1 =
+    e0 == e1 ||
+    slike (seval e0 stdcontext) (seval e1 stdcontext)

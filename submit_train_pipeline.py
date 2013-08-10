@@ -11,7 +11,7 @@ from icfpc_requests import *
 
 def prepare_now(id_s, inp):
     logging.debug("BEGIN: bvgen for %s" % id_s)
-    child = subprocess.Popen("./dist/build/bvgen/bvgen", stdin=subprocess.PIPE, 
+    child = subprocess.Popen("./dist/build/bvgen/bvgen +RTS -N4", stdin=subprocess.PIPE, 
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     m_out, m_err = child.communicate(inp.encode())
     logging.debug("bvgen stderr log: %s" % m_err)

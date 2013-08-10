@@ -38,7 +38,7 @@ main = do
                   ([ (VU.fromListN 256 [evalExpr expr [('x', x)] | x <- inputs],
                       [expr])
                    | expr <- genExpr ops (pred size)
-                   ] `using` parBuffer (bit 16) rseq)
+                   ] `using` parBuffer (bit 32) rseq)
 
     printHex inputs
     print $ HashMap.size eqCls

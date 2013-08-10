@@ -1,4 +1,4 @@
-{-# OPTIONS_GHC -funbox-strict-fields #-}
+{-# iOPTIONS_GHC -funbox-strict-fields #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE BangPatterns #-}
 

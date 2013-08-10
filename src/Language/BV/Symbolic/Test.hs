@@ -14,7 +14,7 @@ main :: IO ()
 main = do
     r <- getStdGen
     let ops = operators
-    let size = 8
+    let size = 7
     let exprs = genExpr ops size
     forM_ exprs $ \e ->
         let x = head $ randoms r
@@ -44,4 +44,4 @@ good s e x = if length s /= 64 || length e /= 64
         (Bot, _) -> True
         (B ii, jj) -> if ii > 0
                     then x !! (fromIntegral $ ii-1) == jj
-                    else x !! (fromIntegral $ (-ii)-1) == comp jj
+                    else x !! (fromIntegral $ (-ii)-1) == complementSbit jj

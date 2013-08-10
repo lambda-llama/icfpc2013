@@ -13,7 +13,7 @@ import Language.BV.Types
 
 evalProgram :: BVProgram -> Word64 -> Word64
 evalProgram (BVProgram (x, e)) v = evalExpr [(x, v)] e
-{-# INLINEABLE evalExpr #-}
+{-# INLINEABLE evalProgram #-}
 
 evalExpr :: [(BVId, Word64)] -> BVExpr -> Word64
 evalExpr env0 expr = go env0 expr where

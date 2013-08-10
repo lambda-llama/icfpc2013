@@ -46,9 +46,11 @@ library
     , Language.BV.Symbolic.Types
     , Language.BV.Symbolic.Test
 
-  build-depends:       base       == 4.6.*
-                     , bytestring == 0.10.*
-                     , attoparsec == 0.10.4.*
-                     , containers == 0.5.*
-                     , vector     == 0.10.*
-                     , random     == 1.0.*
+  build-depends:       base                 == 4.6.*
+                     , bytestring           == 0.10.*
+                     , attoparsec           == 0.10.4.*
+                     , containers           == 0.5.*
+                     , unordered-containers == 0.2.*
+                     , hashable             == 1.2.*
+                     , random               == 1.0.*
+                     , vector               == 0.10.*

@@ -3,8 +3,8 @@
 
 module Language.BV.Gen where
 
+import qualified Data.HashSet as HashSet
 import qualified Data.Map as Map
-import qualified Data.Set as Set
 
 import Language.BV.Types
 import Language.BV.Util
@@ -65,7 +65,7 @@ genExpr ops =
 
 undup :: [BVExpr] -> [BVExpr]
 undup exprs =
-    let simplifiedExprs = Set.toList . Set.fromList $ do
+    let simplifiedExprs = HashSet.toList . HashSet.fromList $ do
             -- Note(superbobry): we don't distinguish between Left-Right at
             -- the moment.
             expr <- exprs

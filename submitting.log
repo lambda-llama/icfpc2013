@@ -1,0 +1,75 @@
+connectionpool.py[LINE:202]# INFO     [2013-08-10 16:20:26,465]  Starting new HTTP connection (1): icfpc2013.cloudapp.net
+connectionpool.py[LINE:296]# DEBUG    [2013-08-10 16:20:27,441]  "POST /train?auth=0047qni4Jv0ErZcl53WtPweKjim6oLQ6dqDLc9SzvpsH1H HTTP/1.1" 200 None
+submit_train_pipeline.py[LINE:13]# DEBUG    [2013-08-10 16:20:27,442]  BEGIN: bvgen for WwCueX9R8hoY0xdqDAPwDpVc
+submit_train_pipeline.py[LINE:17]# DEBUG    [2013-08-10 16:20:29,216]  bvgen stderr log: b''
+submit_train_pipeline.py[LINE:19]# DEBUG    [2013-08-10 16:20:29,226]  END: bvgen for WwCueX9R8hoY0xdqDAPwDpVc
+submit_train_pipeline.py[LINE:46]# DEBUG    [2013-08-10 16:20:29,226]  BEGIN: parsing preprocessing
+submit_train_pipeline.py[LINE:60]# DEBUG    [2013-08-10 16:20:29,422]  END: parsing preprocessing
+submit_train_pipeline.py[LINE:65]# DEBUG    [2013-08-10 16:20:29,422]  BEGIN: getting outputs for WwCueX9R8hoY0xdqDAPwDpVc
+connectionpool.py[LINE:202]# INFO     [2013-08-10 16:20:29,423]  Starting new HTTP connection (1): icfpc2013.cloudapp.net
+connectionpool.py[LINE:296]# DEBUG    [2013-08-10 16:20:30,866]  "POST /eval?auth=0047qni4Jv0ErZcl53WtPweKjim6oLQ6dqDLc9SzvpsH1H HTTP/1.1" 200 None
+submit_train_pipeline.py[LINE:73]# DEBUG    [2013-08-10 16:20:30,869]  Outputs for WwCueX9R8hoY0xdqDAPwDpVc are: [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1]
+submit_train_pipeline.py[LINE:74]# DEBUG    [2013-08-10 16:20:30,869]  END: getting outputs for WwCueX9R8hoY0xdqDAPwDpVc
+submit_train_pipeline.py[LINE:114]# DEBUG    [2013-08-10 16:20:30,869]  BEGIN: Geussing '(lambda (x) (if0 (shl1 (shl1 (and (shl1 1) x))) 0 1))' as WwCueX9R8hoY0xdqDAPwDpVc
+connectionpool.py[LINE:202]# INFO     [2013-08-10 16:20:30,871]  Starting new HTTP connection (1): icfpc2013.cloudapp.net
+connectionpool.py[LINE:296]# DEBUG    [2013-08-10 16:20:32,784]  "POST /guess?auth=0047qni4Jv0ErZcl53WtPweKjim6oLQ6dqDLc9SzvpsH1H HTTP/1.1" 200 None
+submit_train_pipeline.py[LINE:118]# DEBUG    [2013-08-10 16:20:33,786]  Guessing result: {'status': 'win', 'lightning': False}
+submit_train_pipeline.py[LINE:119]# DEBUG    [2013-08-10 16:20:33,787]  END: Geussing '(lambda (x) (if0 (shl1 (shl1 (and (shl1 1) x))) 0 1))' as WwCueX9R8hoY0xdqDAPwDpVc
+connectionpool.py[LINE:202]# INFO     [2013-08-10 16:20:38,801]  Starting new HTTP connection (1): icfpc2013.cloudapp.net
+connectionpool.py[LINE:296]# DEBUG    [2013-08-10 16:20:39,909]  "POST /train?auth=0047qni4Jv0ErZcl53WtPweKjim6oLQ6dqDLc9SzvpsH1H HTTP/1.1" 200 None
+submit_train_pipeline.py[LINE:13]# DEBUG    [2013-08-10 16:20:39,911]  BEGIN: bvgen for 3yV8CapaWdqHc4q5bfUcXKXE
+submit_train_pipeline.py[LINE:17]# DEBUG    [2013-08-10 16:20:41,118]  bvgen stderr log: b''
+submit_train_pipeline.py[LINE:19]# DEBUG    [2013-08-10 16:20:41,120]  END: bvgen for 3yV8CapaWdqHc4q5bfUcXKXE
+submit_train_pipeline.py[LINE:46]# DEBUG    [2013-08-10 16:20:41,120]  BEGIN: parsing preprocessing
+submit_train_pipeline.py[LINE:60]# DEBUG    [2013-08-10 16:20:41,164]  END: parsing preprocessing
+submit_train_pipeline.py[LINE:65]# DEBUG    [2013-08-10 16:20:41,164]  BEGIN: getting outputs for 3yV8CapaWdqHc4q5bfUcXKXE
+connectionpool.py[LINE:202]# INFO     [2013-08-10 16:20:41,166]  Starting new HTTP connection (1): icfpc2013.cloudapp.net
+connectionpool.py[LINE:296]# DEBUG    [2013-08-10 16:20:42,577]  "POST /eval?auth=0047qni4Jv0ErZcl53WtPweKjim6oLQ6dqDLc9SzvpsH1H HTTP/1.1" 200 None
+submit_train_pipeline.py[LINE:73]# DEBUG    [2013-08-10 16:20:42,580]  Outputs for 3yV8CapaWdqHc4q5bfUcXKXE are: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 4, 8, 16, 32, 64, 128, 0, 28, 108, 102, 136, 132, 212, 123, 80, 146, 154, 64, 77, 249, 70, 181, 202, 83, 1, 171, 147, 167, 191, 78, 114, 199, 234, 92, 13, 8, 90, 229, 115, 144, 71, 243, 187, 106, 37, 175, 156, 254, 32, 244, 18, 181, 93, 246, 182, 23, 252, 135, 210, 115, 219, 21, 30, 205, 245, 64, 211, 129, 71, 3, 174, 172, 152, 11, 89, 64, 98, 73, 39, 163, 207, 19, 174, 206, 255, 192, 196, 147, 87, 58, 228, 185, 203, 117, 5, 108, 132, 221, 234, 23, 112, 79, 10, 244, 120, 109, 91, 217, 46, 138, 158, 94, 97, 97, 86, 19, 51, 60, 239, 68, 150, 60, 249, 121, 247, 54, 235, 69, 153, 146, 234, 240, 19, 163, 50, 132, 201, 61, 105, 117, 73, 35, 248, 190, 33, 24, 44, 24, 111, 63, 67, 218, 250, 104, 167, 116, 169, 149, 247, 120, 12, 65, 209, 44, 157, 101, 242, 78, 249, 158, 60, 168, 211, 130, 211, 246, 198, 149, 52, 170, 139, 224, 251, 64, 201, 130, 194, 223, 240, 244, 200, 177, 80, 145, 164, 110, 14]
+submit_train_pipeline.py[LINE:74]# DEBUG    [2013-08-10 16:20:42,580]  END: getting outputs for 3yV8CapaWdqHc4q5bfUcXKXE
+submit_train_pipeline.py[LINE:114]# DEBUG    [2013-08-10 16:20:42,580]  BEGIN: Geussing '(lambda (x) (if0 x 0 (fold x 0 (lambda (y z) y))))' as 3yV8CapaWdqHc4q5bfUcXKXE
+connectionpool.py[LINE:202]# INFO     [2013-08-10 16:20:42,582]  Starting new HTTP connection (1): icfpc2013.cloudapp.net
+connectionpool.py[LINE:296]# DEBUG    [2013-08-10 16:20:44,504]  "POST /guess?auth=0047qni4Jv0ErZcl53WtPweKjim6oLQ6dqDLc9SzvpsH1H HTTP/1.1" 200 None
+submit_train_pipeline.py[LINE:118]# DEBUG    [2013-08-10 16:20:45,506]  Guessing result: {'status': 'win', 'lightning': False}
+submit_train_pipeline.py[LINE:119]# DEBUG    [2013-08-10 16:20:45,507]  END: Geussing '(lambda (x) (if0 x 0 (fold x 0 (lambda (y z) y))))' as 3yV8CapaWdqHc4q5bfUcXKXE
+connectionpool.py[LINE:202]# INFO     [2013-08-10 16:20:50,516]  Starting new HTTP connection (1): icfpc2013.cloudapp.net
+connectionpool.py[LINE:296]# DEBUG    [2013-08-10 16:20:51,368]  "POST /train?auth=0047qni4Jv0ErZcl53WtPweKjim6oLQ6dqDLc9SzvpsH1H HTTP/1.1" 200 None
+submit_train_pipeline.py[LINE:13]# DEBUG    [2013-08-10 16:20:51,369]  BEGIN: bvgen for 4Wb8a9dnrZpjeV7bo0QdBcfo
+submit_train_pipeline.py[LINE:17]# DEBUG    [2013-08-10 16:20:51,743]  bvgen stderr log: b''
+submit_train_pipeline.py[LINE:19]# DEBUG    [2013-08-10 16:20:51,744]  END: bvgen for 4Wb8a9dnrZpjeV7bo0QdBcfo
+submit_train_pipeline.py[LINE:46]# DEBUG    [2013-08-10 16:20:51,744]  BEGIN: parsing preprocessing
+submit_train_pipeline.py[LINE:60]# DEBUG    [2013-08-10 16:20:51,750]  END: parsing preprocessing
+submit_train_pipeline.py[LINE:65]# DEBUG    [2013-08-10 16:20:51,750]  BEGIN: getting outputs for 4Wb8a9dnrZpjeV7bo0QdBcfo
+connectionpool.py[LINE:202]# INFO     [2013-08-10 16:20:51,751]  Starting new HTTP connection (1): icfpc2013.cloudapp.net
+connectionpool.py[LINE:296]# DEBUG    [2013-08-10 16:20:53,259]  "POST /eval?auth=0047qni4Jv0ErZcl53WtPweKjim6oLQ6dqDLc9SzvpsH1H HTTP/1.1" 200 None
+submit_train_pipeline.py[LINE:73]# DEBUG    [2013-08-10 16:20:53,262]  Outputs for 4Wb8a9dnrZpjeV7bo0QdBcfo are: [42, 1, 2, 4, 8, 16, 32, 64, 128, 1, 2, 4, 8, 16, 32, 64, 128, 1, 2, 4, 8, 16, 32, 64, 128, 1, 2, 4, 8, 16, 32, 64, 128, 1, 2, 4, 8, 16, 32, 64, 128, 1, 2, 4, 8, 16, 32, 64, 128, 1, 2, 4, 8, 16, 32, 64, 128, 1, 2, 4, 8, 16, 32, 64, 128, 0, 92, 227, 97, 154, 160, 176, 89, 62, 173, 93, 0, 212, 23, 224, 148, 81, 151, 101, 0, 249, 129, 210, 56, 121, 151, 115, 177, 139, 27, 197, 186, 181, 229, 124, 123, 123, 167, 13, 232, 1, 120, 223, 216, 175, 37, 36, 146, 22, 192, 244, 228, 39, 255, 80, 171, 217, 130, 172, 202, 210, 40, 199, 16, 115, 71, 185, 224, 89, 73, 0, 76, 133, 23, 126, 107, 135, 70, 74, 184, 128, 127, 255, 49, 96, 87, 254, 197, 202, 162, 151, 225, 17, 70, 226, 163, 177, 190, 63, 53, 235, 50, 249, 142, 207, 169, 222, 46, 227, 42, 68, 194, 184, 128, 197, 48, 114, 108, 32, 99, 139, 115, 138, 220, 145, 221, 161, 216, 95, 66, 50, 113, 28, 151, 68, 33, 29, 26, 200, 104, 129, 13, 47, 132, 247, 62, 244, 229, 172, 92, 179, 250, 158, 142, 6, 146, 138, 254, 231, 248, 23, 5, 162, 87, 99, 131, 224, 82, 95, 87, 58, 237, 244, 157, 187, 131, 182, 14, 89, 128, 148, 215, 213, 249, 67, 8, 184, 69, 61, 23, 95]
+submit_train_pipeline.py[LINE:74]# DEBUG    [2013-08-10 16:20:53,262]  END: getting outputs for 4Wb8a9dnrZpjeV7bo0QdBcfo
+submit_train_pipeline.py[LINE:114]# DEBUG    [2013-08-10 16:20:53,262]  BEGIN: Geussing '(lambda (x) (fold x 0 (lambda (y z) (xor z y))))' as 4Wb8a9dnrZpjeV7bo0QdBcfo
+connectionpool.py[LINE:202]# INFO     [2013-08-10 16:20:53,264]  Starting new HTTP connection (1): icfpc2013.cloudapp.net
+connectionpool.py[LINE:296]# DEBUG    [2013-08-10 16:20:55,209]  "POST /guess?auth=0047qni4Jv0ErZcl53WtPweKjim6oLQ6dqDLc9SzvpsH1H HTTP/1.1" 200 None
+submit_train_pipeline.py[LINE:118]# DEBUG    [2013-08-10 16:20:56,211]  Guessing result: {'status': 'win', 'lightning': False}
+submit_train_pipeline.py[LINE:119]# DEBUG    [2013-08-10 16:20:56,212]  END: Geussing '(lambda (x) (fold x 0 (lambda (y z) (xor z y))))' as 4Wb8a9dnrZpjeV7bo0QdBcfo
+connectionpool.py[LINE:202]# INFO     [2013-08-10 16:21:01,220]  Starting new HTTP connection (1): icfpc2013.cloudapp.net
+connectionpool.py[LINE:296]# DEBUG    [2013-08-10 16:21:01,888]  "POST /train?auth=0047qni4Jv0ErZcl53WtPweKjim6oLQ6dqDLc9SzvpsH1H HTTP/1.1" 200 None
+submit_train_pipeline.py[LINE:13]# DEBUG    [2013-08-10 16:21:01,889]  BEGIN: bvgen for Mu9O0xQzIyBsRwtH8GurheMt
+submit_train_pipeline.py[LINE:17]# DEBUG    [2013-08-10 16:21:02,539]  bvgen stderr log: b''
+submit_train_pipeline.py[LINE:19]# DEBUG    [2013-08-10 16:21:02,541]  END: bvgen for Mu9O0xQzIyBsRwtH8GurheMt
+submit_train_pipeline.py[LINE:46]# DEBUG    [2013-08-10 16:21:02,541]  BEGIN: parsing preprocessing
+submit_train_pipeline.py[LINE:60]# DEBUG    [2013-08-10 16:21:02,568]  END: parsing preprocessing
+submit_train_pipeline.py[LINE:65]# DEBUG    [2013-08-10 16:21:02,568]  BEGIN: getting outputs for Mu9O0xQzIyBsRwtH8GurheMt
+connectionpool.py[LINE:202]# INFO     [2013-08-10 16:21:02,570]  Starting new HTTP connection (1): icfpc2013.cloudapp.net
+connectionpool.py[LINE:296]# DEBUG    [2013-08-10 16:21:04,041]  "POST /eval?auth=0047qni4Jv0ErZcl53WtPweKjim6oLQ6dqDLc9SzvpsH1H HTTP/1.1" 200 None
+submit_train_pipeline.py[LINE:73]# DEBUG    [2013-08-10 16:21:04,046]  Outputs for Mu9O0xQzIyBsRwtH8GurheMt are: [84, 2, 4, 8, 16, 32, 64, 128, 256, 2, 4, 8, 16, 32, 64, 128, 256, 2, 4, 8, 16, 32, 64, 128, 256, 2, 4, 8, 16, 32, 64, 128, 256, 2, 4, 8, 16, 32, 64, 128, 256, 2, 4, 8, 16, 32, 64, 128, 256, 2, 4, 8, 16, 32, 64, 128, 256, 2, 4, 8, 16, 32, 64, 128, 256, 0, 1396, 1074, 956, 1646, 1388, 1070, 1088, 794, 1526, 1094, 1480, 636, 1392, 1316, 832, 852, 1282, 1136, 1234, 782, 1422, 1164, 1130, 662, 1406, 1026, 1046, 1076, 982, 1366, 1144, 520, 1090, 1742, 876, 1766, 792, 1460, 670, 1372, 1346, 1532, 1608, 1638, 1452, 1532, 1572, 780, 1058, 1406, 1084, 920, 1470, 1158, 508, 1090, 1108, 1082, 1156, 1362, 1270, 1024, 1238, 1322, 844, 1236, 862, 1002, 1490, 1588, 1440, 734, 1156, 956, 1136, 1288, 1268, 1492, 926, 1928, 664, 1236, 882, 512, 1408, 908, 1316, 1398, 300, 1388, 1986, 1204, 1364, 690, 1086, 1066, 1268, 496, 1632, 1102, 998, 798, 1484, 1200, 978, 1344, 1660, 1414, 1432, 1032, 1430, 814, 740, 1214, 1300, 1470, 884, 1648, 730, 1416, 1218, 1458, 1088, 1366, 1060, 952, 1478, 1400, 1202, 1172, 1124, 1710, 1048, 1298, 1634, 772, 1406, 1040, 1822, 1382, 1250, 1184, 1178, 930, 1006, 1668, 1402, 1172, 832, 1222, 1062, 884, 1064, 1840, 978, 1092, 886, 1436, 576, 1190, 1044, 1082, 1398, 1238, 540, 194, 1208, 1578, 1132, 1700, 1074, 1326, 1386, 574, 1440, 1068, 1412, 704, 1174, 1010, 1742, 1662, 1404, 1258, 1154, 1066, 1342, 1696, 780, 972]
+submit_train_pipeline.py[LINE:74]# DEBUG    [2013-08-10 16:21:04,046]  END: getting outputs for Mu9O0xQzIyBsRwtH8GurheMt
+submit_train_pipeline.py[LINE:114]# DEBUG    [2013-08-10 16:21:04,047]  BEGIN: Geussing '(lambda (x) (fold x 0 (lambda (y z) (plus (xor z y) y))))' as Mu9O0xQzIyBsRwtH8GurheMt
+connectionpool.py[LINE:202]# INFO     [2013-08-10 16:21:04,048]  Starting new HTTP connection (1): icfpc2013.cloudapp.net
+connectionpool.py[LINE:296]# DEBUG    [2013-08-10 16:21:08,444]  "POST /guess?auth=0047qni4Jv0ErZcl53WtPweKjim6oLQ6dqDLc9SzvpsH1H HTTP/1.1" 429 None
+connectionpool.py[LINE:202]# INFO     [2013-08-10 16:21:09,449]  Starting new HTTP connection (1): icfpc2013.cloudapp.net
+connectionpool.py[LINE:296]# DEBUG    [2013-08-10 16:21:11,523]  "POST /guess?auth=0047qni4Jv0ErZcl53WtPweKjim6oLQ6dqDLc9SzvpsH1H HTTP/1.1" 200 None
+submit_train_pipeline.py[LINE:118]# DEBUG    [2013-08-10 16:21:12,525]  Guessing result: {'status': 'win', 'lightning': False}
+submit_train_pipeline.py[LINE:119]# DEBUG    [2013-08-10 16:21:12,526]  END: Geussing '(lambda (x) (fold x 0 (lambda (y z) (plus (xor z y) y))))' as Mu9O0xQzIyBsRwtH8GurheMt
+submit_train_pipeline.py[LINE:29]# DEBUG    [2013-08-10 16:24:52,836]  BEGIN: preprocessing for 2WWg01oSBEdVi6e5IP7Tmsxu
+submit_train_pipeline.py[LINE:13]# DEBUG    [2013-08-10 16:24:52,836]  BEGIN: bvgen for 2WWg01oSBEdVi6e5IP7Tmsxu
+submit_train_pipeline.py[LINE:17]# DEBUG    [2013-08-10 16:25:56,236]  bvgen stderr log: b'bvgen: out of memory (requested 1048576 bytes)\n'
+submit_train_pipeline.py[LINE:19]# DEBUG    [2013-08-10 16:25:56,252]  END: bvgen for 2WWg01oSBEdVi6e5IP7Tmsxu
+submit_train_pipeline.py[LINE:22]# DEBUG    [2013-08-10 16:25:56,252]  Shit happend

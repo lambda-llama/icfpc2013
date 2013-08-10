@@ -201,5 +201,5 @@ if __name__ == "__main__":
     prepare("problems", "preprocessed")
     #run_prepared("problems", "preprocessed")
     #run("problems")
-    #train(11)
+    #train(10)
     #test_current("C434BFwU7gVLbeKAtQXXIu83", 9, ['if0', 'plus', 'shl1', 'shr1'])

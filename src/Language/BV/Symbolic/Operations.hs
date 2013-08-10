@@ -1,14 +1,12 @@
 module Language.BV.Symbolic.Operations where
 
-import qualified Data.Vector.Unboxed as VU
-
 import Language.BV.Symbolic.Types
 
 zero :: Sword
 zero = take 64 $ repeat Szero
 
 one :: Sword
-one = (tail zero) ++ [Sone]
+one = tail zero ++ [Sone]
 
 bot:: Sword
 bot = take 64 $ repeat Bot
@@ -27,25 +25,28 @@ snot = map complementSbit
 
 sshl1 :: Sword -> Sword
 sshl1 (_:sw) = sw ++ [Szero]
-sshl1 _ = error "Empty Sword o_O!"
+sshl1 _      = error "Empty Sword o_O!"
 
 sshr1 :: Sword -> Sword
-sshr1 sw = Szero : (init sw)
+sshr1 sw = Szero : init sw
 
 sshr4 :: Sword -> Sword
-sshr4 = sshr1 . sshr1 . sshr1 . sshr1
+sshr4 sw = Szero : Szero : Szero : Szero : take (64 - 4) sw
 
 sshr16 :: Sword -> Sword
-sshr16 = sshr4 . sshr4 . sshr4 . sshr4
+sshr16 sw = Szero : Szero : Szero : Szero :
+            Szero : Szero : Szero : Szero :
+            Szero : Szero : Szero : Szero :
+            Szero : Szero : Szero : Szero : take (64 - 16) sw
 
 and_bit :: (Sbit, Sbit) -> Sbit
 and_bit (_, Szero)      = Szero
 and_bit (Szero, _)      = Szero
 and_bit (a, Sone)       = a
 and_bit (Sone, a)       = a
-and_bit ((B i), (B j)) | i == j    = B i
-                       | i == -j   = Szero
-                       | otherwise = Bot
+and_bit (B i, B j) | i == j    = B i
+                   | i == -j   = Szero
+                   | otherwise = Bot
 and_bit (_, Bot)     = Bot
 and_bit (Bot, _)     = Bot
 

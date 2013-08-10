@@ -14,6 +14,8 @@ module Language.BV.Types
 
   , BVOpTags(..)
   , opTagsFromList
+  , operators
+  , operators_nofold
   ) where
 
 import Data.Maybe (mapMaybe)

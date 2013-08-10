@@ -6,14 +6,15 @@ import Control.Monad(forM_)
 
 import Language.BV.Gen
 import Language.BV.Eval
+import Language.BV.Types
 import Language.BV.Symbolic.SEval
 import Language.BV.Symbolic.Types
 
 main :: IO ()
 main = do
     r <- getStdGen
-    let ops = ["plus", "and", "or", "if0", "shl1", "shr1", "shr4", "xor", "shr16"]
-    let size = 4
+    let ops = operators
+    let size = 8
     let exprs = genExpr ops size
     forM_ exprs $ \e ->
         let x = head $ randoms r

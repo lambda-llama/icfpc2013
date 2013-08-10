@@ -5,7 +5,6 @@ module Language.BV.Simplifier
 import Language.BV.Eval (evalExpr)
 import Language.BV.Types
 
-import Language.BV.Symbolic.Types
 import Language.BV.Symbolic.SEval
 
 -- Transformations:
@@ -282,13 +281,14 @@ simplify expr = case go expr of
 
 
 mix :: BVExpr -> Either BVExpr BVExpr
-mix (If0 cond e1 e2) | isNotZero $ seval cond stdcontext = Right e2
-                     | isZero $ seval cond stdcontext = Right e1
+mix (If0 e0 e1 e2)
+    | isZero $ sevalExpr stdContext e0    = Right e1
+    | isNotZero $ sevalExpr stdContext e0 = Right e2
 mix (If0 Zero e1 _e2) = Right e1
 mix (If0 One _e1 e2)  = Right e2
 mix e =
     if isClosed e
-    then case evalExpr e [] of
+    then case evalExpr [] e of
         0    -> Right Zero
         1    -> Right One
         _res ->

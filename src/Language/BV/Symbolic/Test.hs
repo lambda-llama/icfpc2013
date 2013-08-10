@@ -19,10 +19,9 @@ main = do
     forM_ exprs $ \e ->
         let x = head $ randoms r
             ctx = [('x', x)]
-            ret = word2sword $ evalExpr e ctx
+            ret = word2sword $ evalExpr ctx e
 
-            sctx = [('x', input)]
-            sret = seval e sctx
+            sret = sevalExpr stdContext e
         in if good sret ret (word2sword x)
            then print("OK")
            else do print("!!!")
@@ -31,7 +30,7 @@ main = do
                    print(ret)
                    print(sret)
                    error("LOOBSTER!")
-        
+
 good :: Sword -> Sword -> Sword -> Bool
 good s e x = if length s /= 64 || length e /= 64
               then error "Length is not 64!!!!!!!!!!"

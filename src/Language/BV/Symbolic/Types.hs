@@ -4,9 +4,9 @@ import Data.Word(Word64)
 import Data.Bits(testBit)
 
 type Sword = [Sbit]
-           
-data Sbit = Szero|Sone|B Int|Bot
-          deriving (Eq, Show, Ord)
+
+data Sbit = Szero |Sone |B {-# UNPACK #-} !Int |Bot
+    deriving (Eq, Show, Ord)
 
 lb :: Sbit -> Sbit -> Sbit
 lb a b = case (a, b) of

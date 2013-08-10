@@ -35,7 +35,7 @@ main = do
     let !inputs = meaningfulInputs ++
                   (take (256 - length meaningfulInputs) $ randoms r)
         !eqCls  = HashMap.fromListWith (\[expr] rest -> expr : rest) $!
-                  ([ (VU.fromListN 256 [evalExpr expr [('x', x)] | x <- inputs],
+                  ([ (VU.fromListN 256 [evalExpr [('x', x)] expr | x <- inputs],
                       [expr])
                    | expr <- genExpr ops (pred size)
                    ] `using` parBuffer (bit 32) rseq)

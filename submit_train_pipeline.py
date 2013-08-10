@@ -17,6 +17,10 @@ def prepare_now(id_s, inp):
     logging.debug("bvgen stderr log: %s" % m_err)
     lines = iter(m_out.decode().splitlines())
     logging.debug("END: bvgen for %s" % id_s)
+    if m_err:
+        print("Shit happend")
+        logging.debug("Shit happend")
+        exit()
     return lines
 
 

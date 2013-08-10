@@ -15,7 +15,7 @@ genExpr ops =
     let specgen = (m Map.!)
         BVOpTags { .. } = opTagsFromList ops
         m       = Map.fromList [ ((i, flag), undup (go i flag))
-                               | i <- [1..42], flag <- [0, 1, 2]
+                               | i <- [1..30], flag <- [0, 1, 2]
                                ]
         -- go _ 0 -> exprs without fold with x, y, z ids
         -- go _ 1 -> exprs without fold with x ids
@@ -23,69 +23,45 @@ genExpr ops =
         go :: Int -> Int -> [BVExpr]
         go 1 0     = [Zero, One, Id 'x', Id 'y', Id 'z']
         go 1 _     = [Zero, One, Id 'x']
-        go i flag  =
-            [ Op1 op1 x
-            | op1 <- bvOp1s
-            , x   <- specgen (i - 1, flag)
-            ] ++
-            [ Op2 op2 x y
-            | op2    <- bvOp2s
-            , (j, k) <- partitions2 (pred i)
-            , x <- specgen (j, flag)
-            , y <- specgen (k, flag)
-            , x >= y
-            ] ++
-            [ if_ x y z
-            | if_ <- bvIfs
-            , (j, k, l) <- partitions3 (pred i)
-            , x <- specgen (j, flag)
-            , y <- specgen (k, flag)
-            , z <- specgen (l, flag)
-            ] ++ case flag of
-                0 -> []
-                1 -> []
-                2 -> [ f e1 e2 e3
-                     | f <- bvFolds
-                     , (j, k, l) <- partitions3 (i - 2)
-                     , e1 <- specgen (j, 0)
-                     , e2 <- specgen (k, 1)
-                     , e3 <- specgen (l, 1)
-                     ] ++
-                     [ f e1 e2
-                     | f <- bvTFolds
-                     , (j, k) <- partitions2 (i - 3)
-                     , e1 <- specgen (j, 0)
-                     , e2 <- specgen (k, 1)
-                     ]
+        go i flag  = concat [op1s, op2s, ifs, folds, tfolds] where
+          op1s = [ Op1 op1 x
+                 | op1 <- bvOp1s
+                 , x   <- specgen (i - 1, flag)
+                 ]
+          op2s = [ Op2 op2 x y
+                 | op2    <- bvOp2s
+                 , (j, k) <- partitions2 (pred i)
+                 , x <- specgen (j, flag)
+                 , y <- specgen (k, flag)
+                 , x >= y
+                 ]
+          ifs  = [ if_ x y z
+                 | if_ <- bvIfs
+                 , (j, k, l) <- partitions3 (pred i)
+                 , x <- specgen (j, flag)
+                 , y <- specgen (k, flag)
+                 , z <- specgen (l, flag)
+                 ]
+          (folds, tfolds) = case flag of
+              0 -> ([], [])
+              1 -> ([], [])
+              2 -> ([ f e1 e2 e3
+                    | f <- bvFolds
+                    , (j, k, l) <- partitions3 (i - 2)
+                    , e1 <- specgen (j, 0)
+                    , e2 <- specgen (k, 1)
+                    , e3 <- specgen (l, 1)
+                    ],
+                    [ f e1 e2
+                    | f <- bvTFolds
+                    , (j, k) <- partitions2 (i - 3)
+                    , e1 <- specgen (j, 0)
+                    , e2 <- specgen (k, 1)
+                    ])
     in \size -> specgen (size, 2)
 
-countExpr:: [String] -> Int -> Int
-countExpr ops =
-    let speccount = countExpr ops
-        BVOpTags { .. } = opTagsFromList ops
-        m    = IntMap.fromList [(i, go i) | i <- [1..42]]
-        go 1 = 3
-        go i = length bvOp1s * speccount (i - 1) +
-               length bvOp2s * sum [ x * y
-                                   | j  <- [1..i-1]
-                                   , k  <- [1..i-1]
-                                   , x  <- [speccount j]
-                                   , y  <- [speccount k]
-                                   , j + k == i - 1
-                                   ] +
-               length bvIfs * sum [ x * y * z
-                                  | j <- [1..i-1]
-                                  , k <- [1..i-1]
-                                  , l <- [1..i-1]
-                                  , x <- [speccount j]
-                                  , y <- [speccount k]
-                                  , z <- [speccount l]
-                                  , j + k + l == i - 1
-                                  ]
-    in \size -> m IntMap.! size
-
 undup :: [BVExpr] -> [BVExpr]
-undup !exprs = do
+undup exprs = do
     -- Note(superbobry): we don't distinguish between Left-Right at
     -- the moment.
     expr <- exprs

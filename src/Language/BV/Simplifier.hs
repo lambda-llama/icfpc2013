@@ -6,6 +6,7 @@ import Language.BV.Eval (evalExpr)
 import Language.BV.Types
 
 import Language.BV.Symbolic.SEval
+import Language.BV.Symbolic.Operations (isZero, isNotZero)
 
 -- Transformations:
 --
@@ -243,7 +244,7 @@ simplify expr = case go expr of
     go (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr16 (Op1 Shr16 e))))) = Right (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr16 (Op1 Shr16 e)))))
     go (Op1 Shr1 (Op1 Shr1 (Op1 Shr4 (Op1 Shr4 (Op1 Shr16 e))))) = Right (Op1 Shr1 (Op1 Shr1 (Op1 Shr4 (Op1 Shr4 (Op1 Shr16 e)))))
     go (Op1 Shr1 (Op1 Shr16 (Op1 Shr16 (Op1 Shr16 (Op1 Shr16 e))))) = Right (Op1 Shr1 (Op1 Shr16 (Op1 Shr16 (Op1 Shr16 (Op1 Shr16 e)))))
-    
+
     go (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 e)))) = Right (Op1 Shr16 e)
     go (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 e)))) = Right (Op1 Shr4 e)
 

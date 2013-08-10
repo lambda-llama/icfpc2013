@@ -41,6 +41,7 @@ library
     , Language.BV.Parser
     , Language.BV.Gen
     , Language.BV.Simplifier
+    , Language.BV.Symbolic.Operations
     , Language.BV.Symbolic.SEval
     , Language.BV.Symbolic.Types
     , Language.BV.Symbolic.Test

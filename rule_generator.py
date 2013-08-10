@@ -12,9 +12,11 @@ def f(it):
 
 m = {}
 l = ["Shr1", "Shr4", "Shr16"]
-for i in range(2, 10):
+for i in range(2, 7):
     for r in itertools.combinations_with_replacement(l, i):
-        m[tuple(r)] = sorted(r, key=(lambda x: int(x[3:])))
+        to_store = sorted(r, key=(lambda x: int(x[3:])))
+        for p in itertools.permutations(r):
+            m[tuple(p)] = to_store
 
 ll = []
 for rule in m:

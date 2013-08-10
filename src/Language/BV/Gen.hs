@@ -3,10 +3,7 @@
 
 module Language.BV.Gen where
 
---import qualified Data.IntMap as IntMap
 import qualified Data.Map as Map
-import qualified Data.Set as Set
-import Data.List(nubBy)
 
 import Language.BV.Types
 import Language.BV.Util
@@ -62,6 +59,7 @@ genExpr ops =
                     , e1 <- specgen (j, 0)
                     , e2 <- specgen (k, 1)
                     ])
+              _state -> error "genExpr.go: the impossible happened!"
     in \size -> specgen (size, 2)
 
 undup :: [BVExpr] -> [BVExpr]
@@ -77,6 +75,6 @@ undup exprs =
             (\k [x] acc -> if any (== Bot) k then x : acc else acc) $
             [(seval expr stdcontext, [expr]) | expr <- simplifiedExprs]
     in Map.foldlWithKey'
-       (\exprs k acc ->
-         if any (== Bot) k then acc ++ exprs else head acc : exprs)
+       (\mergedExprs k acc ->
+         if any (== Bot) k then acc ++ mergedExprs else head acc : mergedExprs)
        [] m

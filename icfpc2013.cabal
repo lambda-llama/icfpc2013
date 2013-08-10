@@ -48,3 +48,4 @@ library
                      , bytestring == 0.10.*
                      , attoparsec == 0.10.4.*
                      , containers == 0.5.*
+                     , vector     == 0.10.*

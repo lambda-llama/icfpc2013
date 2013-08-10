@@ -5,13 +5,14 @@
 module Main where
 
 import Control.Applicative ((<$>))
-import Control.Monad (forM_)
+import Control.Monad (forM_, zipWithM_)
 import Data.Bits (bit)
-import Data.Hashable (Hashable(..))
 import Data.List (intercalate)
 import Data.Word (Word64)
 import Numeric (showHex)
 import System.Random (getStdGen, randoms)
+
+import Data.Hashable (Hashable(..))
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.Vector.Unboxed as VU
 
@@ -37,14 +38,15 @@ main = do
                     [expr])
                  | expr <- genExpr ops (pred size)
                  ]
-
     printHex inputs
     print $ HashMap.size eqCls
-    forM_ (zip [1..] $ HashMap.toList eqCls) $ \(eqId, (res, exprs)) -> do
-        print $ (eqId :: Int)     -- eq. class ID
-        print $ length exprs      -- nr. of elements in eq. class
-        printHex $ VU.toList res  -- program output
-        forM_ exprs $ \expr -> print $ BVProgram ('x', expr)
+    zipWithM_ (\eqId res ->
+                let exprs = eqCls HashMap.! res in do
+                    print $ (eqId :: Int)     -- eq. class ID
+                    print $ length exprs      -- nr. of elements in eq. class
+                    printHex $ VU.toList res  -- program output
+                    forM_ exprs $ \expr -> print $ BVProgram ('x', expr))
+        [1..] (HashMap.keys eqCls)
   where
     printHex xs =
         putStrLn . intercalate " " $ ["0x" ++ showHex x "" | x <- xs]

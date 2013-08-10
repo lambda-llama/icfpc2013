@@ -14,7 +14,7 @@ genExpr :: [String] -> Int -> [BVExpr]
 genExpr ops =
     let specgen = \(size, f) -> m Map.! (size, f)
         BVOpTags { .. } = opTagsFromList ops
-        m       = Map.fromList [ ((i, flag), undup (go i f))
+        m       = Map.fromList [ ((i, flag), undup (go i flag))
                                | i <- [1..42], flag <- [0, 1, 2]
                                ]
         -- go _ 0 -> exprs without fold with x, y, z ids

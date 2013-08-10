@@ -11,7 +11,9 @@ seval :: BVExpr -> [(BVId, Sword)] -> Sword
 seval e env = case e of
     Zero -> zero
     One  -> one
-    Id x -> undefined
+    Id x -> case lookup x env of
+        Nothing -> error (x : " is not defined(Simbolic)!")
+        Just v  -> v
     If0  e0 e1 e2 ->
         let v0 = seval e0 env
             v1 = seval e1 env
@@ -24,9 +26,23 @@ seval e env = case e of
     Fold (BVFold { bvfLambda = (larg0, larg1, le0), .. }) ->
         bot
     Op1 op1 e0    ->
-        bot
+        let v0 = seval e0 env in
+        case op1 of
+            Not   -> snot v0
+            Shl1  -> sshl1 v0
+            Shr1  -> sshr1 v0
+            Shr4  -> sshr4 v0
+            Shr16 -> sshr16 v0
+
     Op2 op2 e0 e1 ->
-        bot
+        let v0 = seval e0 env
+            v1 = seval e1 env
+        in case op2 of
+            And  -> v0 `sand` v1
+            Or   -> v0 `sor` v1
+            Xor  -> v0 `sxor` v1
+            Plus -> v0 `splus` v1
+
 
 zero :: Sword
 zero = [Szero | _ <- [1..64]]
@@ -44,63 +60,59 @@ isNotZero :: Sword -> Bool
 isNotZero = any (==Sone)
 
 merge :: Sword -> Sword -> Sword
-merge = \_ _ -> bot
+merge a b = map (uncurry lb) (zip a b)
 
 
-
-liftop2 :: (a -> a -> a) -> (Sbit -> Sbit-> Sbit)
-liftop2 = undefined
-
-seval :: BVProgram -> Sword
-seval = undefined
-
-inv Zero  = One
-inv One   = Zero
-inv (B i) = B (-i)
-inv Bot   = Bot
-
-not sw = map inv sw
-shl1 (x:sw) = sw ++ [Zero]
-shr1 sw = Zero : (init sw)
-shr4 sw = shr1 $ shr1 $ shr1 $ shr1 sw
-shr16 sw = shr4 $ shr4 $ shr4 $ shr4 sw
+snot = map comp
+sshl1 (x:sw) = sw ++ [Szero]
+sshr1 sw = Szero : (init sw)
+sshr4 = sshr1 . sshr1 . sshr1 . sshr1
+sshr16 = sshr4 . sshr4 . sshr4 . sshr4
 
 
-and_bit (a, Zero)      = Zero
-and_bit (Zero, a)      = Zero
-and_bit (a, One)       = a
-and_bit (One, a)       = a
+and_bit (a, Szero)      = Szero
+and_bit (Szero, a)      = Szero
+and_bit (a, Sone)       = a
+and_bit (Sone, a)       = a
 and_bit ((B i), (B j)) | i == j    = (B i)
-                       | i == -j   = Zero
+                       | i == -j   = Szero
                        | otherwise = Bot
 and_bit (Bot, Bot)     = Bot
 
-or_bit (a, Zero)       = a
-or_bit (Zero, a)       = a
-or_bit (a, One)        = One
-or_bit (One, a)        = One
+or_bit (a, Szero)       = a
+or_bit (Szero, a)       = a
+or_bit (a, Sone)        = Sone
+or_bit (Sone, a)        = Sone
 or_bit ((B i), (B j))  | i == j    = (B i)
-                       | i == -j   = One
+                       | i == -j   = Sone
                        | otherwise = Bot
 or_bit (Bot, Bot)      = Bot
 
-xor_bit (a, Zero)      = a
-xor_bit (Zero, a)      = a
-xor_bit (a, One)       = inv a
-xor_bit (One, a)       = inv a
-xor_bit ((B i), (B j)) | i == j    = Zero
-                       | i == -j   = One
+xor_bit (a, Szero)      = a
+xor_bit (Szero, a)      = a
+xor_bit (a, Sone)       = comp a
+xor_bit (Sone, a)       = comp a
+xor_bit ((B i), (B j)) | i == j    = Szero
+                       | i == -j   = Sone
                        | otherwise = Bot
 xor_bit (Bot, Bot)     = Bot
 
-plus_bit (a, b) (acc, t) = ((xor_bit (xab, t)) : acc, or_bit (oa, abt))
+plus_bit :: (Sword, Sbit) -> (Sbit, Sbit) -> (Sword, Sbit)
+plus_bit (acc, t) (a, b) = ((xor_bit (xab, t)) : acc, or_bit (oa, abt))
     where xab = xor_bit (a, b)
-          aab = and (a, b)
-          aat = and (a, t)
-          abt = and (b, t)
-          oa  = or (aab, aat)
+          aab = and_bit (a, b)
+          aat = and_bit (a, t)
+          abt = and_bit (b, t)
+          oa  = or_bit (aab, aat)
 
-and = map and_bit . zip
-or  = map or_bit . zip
-xor = map xor_bit . zip
-plus = foldl` ([], Zero) plus_bit . zip
+sand :: Sword -> Sword -> Sword
+sand a b= map and_bit $ zip a b
+
+sor :: Sword -> Sword -> Sword
+sor  a b= map or_bit $ zip a b
+
+sxor :: Sword -> Sword -> Sword
+sxor a b= map xor_bit $ zip a b
+
+splus :: Sword -> Sword -> Sword
+splus a b = fst . foldl' plus_bit ([], Szero)$ zip a b

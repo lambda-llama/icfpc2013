@@ -99,6 +99,13 @@ data BVOpTags = BVOpTags { bvOp1s   :: ![BVOp1]
                          , bvTFolds :: ![BVExpr -> BVExpr -> BVExpr]
                          }
 
+operators :: [String]
+operators = "fold" : "tfold" : operators_nofold
+
+operators_nofold :: [String]
+operators_nofold = ["not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0"]
+
+
 opTagsFromList :: [String] -> BVOpTags
 opTagsFromList ops = BVOpTags { .. } where
   bvOp1s   = mapMaybe enumFromShow ops

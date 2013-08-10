@@ -3,7 +3,7 @@
 
 module Language.BV.Gen where
 
-import qualified Data.IntMap as IntMap
+--import qualified Data.IntMap as IntMap
 import qualified Data.Map as Map
 
 import Language.BV.Types

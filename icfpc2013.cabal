@@ -39,7 +39,7 @@ library
     , Language.BV.Gen
     , Language.BV.Simplifier
     , Language.BV.Symbolic.SEval
-    , Language.BV.Symbolic.Type
+    , Language.BV.Symbolic.Types
 
   build-depends:       base       == 4.6.*
                      , bytestring == 0.10.*

@@ -15,8 +15,8 @@ import Language.BV.Simplifier (simplify)
 genExpr :: [String] -> Int -> [BVExpr]
 genExpr ops =
     let specgen = \(size, f) -> m Map.! (size, f)
-        op1s    = map enumFromShow ops
-        op2s    = map enumFromShow ops
+        op1s    = mapMaybe enumFromShow ops
+        op2s    = mapMaybe enumFromShow ops
         ifs     = mapMaybe ifByTag ops
         folds   = mapMaybe foldByTag ops
         tfolds  = mapMaybe tfoldByTag ops
@@ -67,8 +67,8 @@ genExpr ops =
 countExpr:: [String] -> Int -> Int
 countExpr ops =
     let speccount = countExpr ops
-        op1s      = length $ (map enumFromShow ops :: [BVOp1])
-        op2s      = length $ (map enumFromShow ops :: [BVOp2])
+        op1s      = length $ (mapMaybe enumFromShow ops :: [BVOp1])
+        op2s      = length $ (mapMaybe enumFromShow ops :: [BVOp2])
         ifs       = length $ mapMaybe ifByTag ops
         m    = IntMap.fromList [(i, go i) | i <- [1..42]]
         go 1 = 3

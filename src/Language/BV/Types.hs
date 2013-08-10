@@ -77,12 +77,12 @@ newtype BVProgram = BVProgram (BVId, BVExpr)
 instance Show BVProgram where
     show (BVProgram (arg, e)) = printf "(lambda (%s) %s)" arg (show e)
 
-enumFromShow :: (Show a, Enum a, Bounded a) => String -> a
+enumFromShow :: (Show a, Enum a, Bounded a) => String -> Maybe a
 enumFromShow =
     let !m = Map.fromList [(show op, op) | op <- [minBound..]]
-    in (m Map.!)
-{-# SPECIALIZE INLINE enumFromShow :: String -> BVOp1 #-}
-{-# SPECIALIZE INLINE enumFromShow :: String -> BVOp2 #-}
+    in (flip Map.lookup m)
+{-# SPECIALIZE INLINE enumFromShow :: String -> Maybe BVOp1 #-}
+{-# SPECIALIZE INLINE enumFromShow :: String -> Maybe BVOp2 #-}
 
 -- Note(matklad): this is if0 type V
 ifByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr)

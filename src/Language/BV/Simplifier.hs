@@ -9,11 +9,11 @@ import Language.BV.Symbolic.SEval
 import Language.BV.Symbolic.Operations (isZero, isNotZero)
 
 mix :: BVExpr -> Either BVExpr BVExpr
+mix (If0 Zero e1 _e2) = Right e1
+mix (If0 One _e1 e2)  = Right e2
 mix (If0 e0 e1 e2)
     | isZero $ sevalExpr stdContext e0    = Right e1
     | isNotZero $ sevalExpr stdContext e0 = Right e2
-mix (If0 Zero e1 _e2) = Right e1
-mix (If0 One _e1 e2)  = Right e2
 mix e =
     if isClosed e
     then case evalExpr [] e of
@@ -24,6 +24,7 @@ mix e =
             -- 0 or 1 as terms.
             Left e
     else Left e
+{-# INLINE mix #-}
 
 -- Transformations:
 --

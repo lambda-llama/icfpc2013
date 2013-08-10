@@ -62,6 +62,7 @@ genExpr ops =
                     ])
               _state -> error "genExpr.go: the impossible happened!"
     in \size -> specgen (size, 2)
+{-# INLINE genExpr #-}
 
 undup :: [BVExpr] -> [BVExpr]
 undup exprs =
@@ -79,3 +80,4 @@ undup exprs =
        (\mergedExprs k acc ->
          if any (== Bot) k then acc ++ mergedExprs else head acc : mergedExprs)
        [] m
+{-# INLINE undup #-}

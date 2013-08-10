@@ -43,6 +43,6 @@ good s e x = if length s /= 64 || length e /= 64
         (Szero, Szero) -> True
         (Szero, _) -> False
         (Bot, _) -> True
-        (B i, j) -> if i > 0
-                    then x !! (fromIntegral $ i-1) == j
-                    else x !! (fromIntegral $ (-i)-1) == comp j
+        (B ii, jj) -> if ii > 0
+                    then x !! (fromIntegral $ ii-1) == jj
+                    else x !! (fromIntegral $ (-ii)-1) == comp jj

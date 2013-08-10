@@ -1,3 +1,5 @@
+{-# LANGUAGE RecordWildCards #-}
+
 module Language.BV.Symbolic.SEval where
 
 import Data.List
@@ -5,41 +7,46 @@ import Data.List
 import Language.BV.Symbolic.Types
 import Language.BV.Types
 
+seval :: BVExpr -> [(BVId, Sword)] -> Sword
+seval e env = case e of
+    Zero -> zero
+    One  -> one
+    Id x -> undefined
+    If0  e0 e1 e2 ->
+        let v0 = seval e0 env
+            v1 = seval e1 env
+            v2 = seval e2 env
+        in case (isZero v0, isNotZero v0) of
+            (True, _) -> v1
+            (_, True) -> v2
+            _ -> merge v1 v2
+           
+    Fold (BVFold { bvfLambda = (larg0, larg1, le0), .. }) ->
+        bot
+    Op1 op1 e0    ->
+        bot
+    Op2 op2 e0 e1 ->
+        bot
 
--- evalExpr e env = case e of
---     Zero -> 0
---     One  -> 1
---     Id x -> case lookup x env of
---         Nothing -> error (x : " is not defined!")
---         Just v  -> v
---     If0  e0 e1 e2 ->
---         let v0 = evalExpr e0 env
---             v1 = evalExpr e1 env
---             v2 = evalExpr e2 env
---         in if v0 == 0 then v1 else v2
---     Fold (BVFold { bvfLambda = (larg0, larg1, le0), .. }) ->
---         let init_ = evalExpr bvfInit env
---             arg = evalExpr bvfArg env
---             byte = 0xff
---             bytes = [ (shiftR arg shift) .&. byte | shift <- [0,8..56]]
---             aux b a = evalExpr le0 ((larg0, a):(larg1, b):env)
---         in foldl aux init_ bytes
---     Op1 op1 e0    ->
---         let v0 = evalExpr e0 env in
---         case op1 of
---             Not   -> complement v0
---             Shl1  -> shift v0 1
---             Shr1  -> shift v0 (-1)
---             Shr4  -> shift v0 (-4)
---             Shr16 -> shift v0 (-16)
---     Op2 op2 e0 e1 ->
---         let v0 = evalExpr e0 env
---             v1 = evalExpr e1 env
---         in case op2 of
---             And  -> v0 .&. v1
---             Or   -> v0 .|. v1
---             Xor  -> v0 `xor` v1
---             Plus -> v0 + v1
+zero :: Sword
+zero = [Szero | _ <- [1..64]]
+
+one :: Sword
+one = Sone:(tail zero)
+
+bot:: Sword
+bot = [Bot | _ <- [1..64]]
+
+isZero :: Sword -> Bool
+isZero = (==zero)
+
+isNotZero :: Sword -> Bool
+isNotZero = any (==Sone)
+
+merge :: Sword -> Sword -> Sword
+merge = \_ _ -> bot
+
+
 
 liftop2 :: (a -> a -> a) -> (Sbit -> Sbit-> Sbit)
 liftop2 = undefined

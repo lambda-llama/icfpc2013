@@ -1,4 +1,5 @@
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE BangPatterns #-}
 
 module Language.BV.Gen where
 
@@ -13,8 +14,8 @@ genExpr :: [String] -> Int -> [BVExpr]
 genExpr ops =
     let specgen = \(size, f) -> m Map.! (size, f)
         BVOpTags { .. } = opTagsFromList ops
-        m       = Map.fromList [ ((i, f), undup (go i f))
-                               | i <- [1..42], f <- [0, 1, 2]
+        m       = Map.fromList [ ((i, flag), undup (go i flag))
+                               | i <- [1..42], flag <- [0, 1, 2]
                                ]
         -- go _ 0 -> exprs without fold with x, y, z ids
         -- go _ 1 -> exprs without fold with x ids
@@ -84,7 +85,7 @@ countExpr ops =
     in \size -> m IntMap.! size
 
 undup :: [BVExpr] -> [BVExpr]
-undup exprs = do
+undup !exprs = do
     -- Note(superbobry): we don't distinguish between Left-Right at
     -- the moment.
     expr <- exprs

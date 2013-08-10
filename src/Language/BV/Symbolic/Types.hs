@@ -23,3 +23,10 @@ comp a = case a of
 
 word2sword :: Word64 -> Sword
 word2sword w = [if testBit w i then Sone else Szero |i <- [63,62..0]]
+
+slike :: Sword -> Sword -> Bool
+slike sw1 sw2 = all eq $ zip sw1 sw2
+    where
+        eq (Bot, _) = False
+        eq (_, Bot) = False
+        eq (a, b)   = a == b

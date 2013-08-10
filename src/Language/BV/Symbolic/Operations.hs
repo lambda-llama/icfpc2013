@@ -55,7 +55,7 @@ sshr4 = sshr1 . sshr1 . sshr1 . sshr1
 {-# INLINE sshr4 #-}
 
 sshr16 :: Sword -> Sword
-sshr16 = sshr4 . sshr4 . sshr4 . sshr4
+sshr16 !sw = V.replicate 16 Szero V.++ V.take (64 - 16) sw
 {-# INLINE sshr16 #-}
 
 sand :: Sword -> Sword -> Sword

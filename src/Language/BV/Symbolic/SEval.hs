@@ -50,7 +50,7 @@ sevalExpr env0 expr = go env0 expr where
           Or   -> v0 `sor` v1
           Xor  -> v0 `sxor` v1
           Plus -> v0 `splus` v1
-{-# INLINE sevalExpr #-}
+{-# INLINEABLE sevalExpr #-}
 
 stdContext :: [(BVId, Sword)]
 stdContext = [('x', inputx), ('y', inputy), ('z', inputz)] where

@@ -76,12 +76,3 @@ mix e =
             -- 0 or 1 as terms.
             Left e
     else Left e
-
-isClosed :: BVExpr -> Bool
-isClosed Zero = True
-isClosed One  = True
-isClosed (Id _id) = False
-isClosed (If0 e0 e1 e2)  = isClosed e0 && isClosed e1 && isClosed e2
-isClosed (Fold (BVFold { bvfLambda = (_larg0, _larg1, le) })) = isClosed le
-isClosed (Op1 _op e0)    = isClosed e0
-isClosed (Op2 _op e0 e1) = isClosed e0 && isClosed e1

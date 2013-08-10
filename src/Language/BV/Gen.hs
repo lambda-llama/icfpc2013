@@ -12,7 +12,7 @@ import Language.BV.Simplifier (simplify)
 
 genExpr :: [String] -> Int -> [BVExpr]
 genExpr ops =
-    let specgen = \(size, f) -> m Map.! (size, f)
+    let specgen = (m Map.!)
         BVOpTags { .. } = opTagsFromList ops
         m       = Map.fromList [ ((i, flag), undup (go i flag))
                                | i <- [1..42], flag <- [0, 1, 2]

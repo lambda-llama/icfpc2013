@@ -5,6 +5,7 @@
 module Language.BV.Types
   ( BVProgram(..)
   , BVExpr(..)
+  , isClosed
 
   , BVId
   , BVFold(..)
@@ -69,6 +70,14 @@ instance Show BVExpr where
     show (Op1 op1 e0) = printf "(%s %s)" (show op1) (show e0)
     show (Op2 op2 e0 e1) = printf "(%s %s %s)" (show op2) (show e0) (show e1)
 
+isClosed :: BVExpr -> Bool
+isClosed Zero = True
+isClosed One  = True
+isClosed (Id _id) = False
+isClosed (If0 e0 e1 e2)  = isClosed e0 && isClosed e1 && isClosed e2
+isClosed (Fold (BVFold { bvfLambda = (_larg0, _larg1, le) })) = isClosed le
+isClosed (Op1 _op e0)    = isClosed e0
+isClosed (Op2 _op e0 e1) = isClosed e0 && isClosed e1
 
 newtype BVProgram = BVProgram (BVId, BVExpr)
 

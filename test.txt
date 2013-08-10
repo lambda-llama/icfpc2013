@@ -1,0 +1,220 @@
+(lambda (x) (plus (if0 x x 0) (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (plus (shl1 (shr1 x)) (plus 1 x))))
+18446744073709551615
+(lambda (x) (shr1 (plus (if0 x x 1) (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (plus (if0 x x 0) (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (plus (if0 x 1 0) (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (plus (if0 x 0 1) (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (plus x (plus 1 (shl1 (shr1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (plus x (plus 1 x))))
+18446744073709551615
+(lambda (x) (shr1 (plus x (shl1 (shr1 (plus 1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (plus x (if0 (shr1 x) 1 x))))
+18446744073709551615
+(lambda (x) (shr1 (plus x (if0 (shl1 1) 1 x))))
+18446744073709551615
+(lambda (x) (shr1 (plus x (if0 (shl1 1) 0 x))))
+18446744073709551615
+(lambda (x) (shr1 (plus x (if0 x (shr1 x) x))))
+18446744073709551615
+(lambda (x) (shr1 (plus x (if0 x (shl1 x) x))))
+18446744073709551615
+(lambda (x) (shr1 (plus x (if0 x 0 x))))
+18446744073709551615
+(lambda (x) (shr1 (plus 1 (plus x (shl1 (shr1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (plus 1 (shl1 (shr1 (shl1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (plus 1 (shl1 (if0 x 0 x)))))
+18446744073709551615
+(lambda (x) (shr1 (plus 1 (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (plus 1 (if0 x x (shl1 x)))))
+18446744073709551615
+(lambda (x) (shr1 (plus 1 (if0 x 0 (shl1 x)))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (plus x (if0 x x 0)))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (shr1 (plus x (plus 1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (shr1 (plus 1 (shl1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (shr1 (shl1 (shr1 (shl1 x)))))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (shr1 (shl1 (if0 x 0 x))))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (shr1 (shl1 x)))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (shr1 (if0 x x (shl1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (shr1 (if0 x 1 (shl1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (shr1 (if0 x 0 (shl1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 (plus 1 x) 1 x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 (plus 1 x) 0 x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 (shr1 (shl1 x)) 0 x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 (shl1 (shl1 1)) 1 x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 (shl1 (shl1 1)) 0 x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 (shl1 x) (shl1 x) x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 (shl1 x) 0 x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 (shl1 1) (shr1 x) x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 (shl1 1) (shl1 x) x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 (shl1 1) (shl1 1) x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 (shl1 1) 1 x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 (shl1 1) 0 x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 x (shr1 (shr1 x)) x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 x (shr1 (shl1 x)) x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 x (shl1 (shr1 x)) x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 x (shl1 (shl1 x)) x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 x (shl1 x) x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 x x (shr1 (shl1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 x 0 (shr1 (shl1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 (if0 x 0 x))))
+18446744073709551615
+(lambda (x) (shr1 (shl1 x)))
+18446744073709551615
+(lambda (x) (shr1 (if0 (plus 1 x) x (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (plus 1 x) 1 (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (plus 1 x) 0 (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (shr1 (shl1 x)) 1 (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (shr1 (shl1 x)) 0 (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (shl1 (shl1 1)) x (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (shl1 (shl1 1)) 1 (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (shl1 (shl1 1)) 0 (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (shl1 x) 1 (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (shl1 x) 0 (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (shl1 1) (shr1 x) (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (shl1 1) (shl1 1) (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (shl1 1) x (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (shl1 1) 1 (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 (shl1 1) 0 (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x (plus 1 x) (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x (shr1 (shr1 x)) (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x (shr1 (shl1 x)) (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x (shr1 x) (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x (shl1 (shr1 x)) (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x (shl1 (shl1 x)) (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x x (plus 1 (shl1 x)))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x x (shl1 (shr1 (shl1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x x (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x 1 (plus 1 (shl1 x)))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x 1 (shl1 (shr1 (shl1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x 1 (shl1 x))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x 0 (plus 1 (shl1 x)))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x 0 (shl1 (shr1 (shl1 x))))))
+18446744073709551615
+(lambda (x) (shr1 (if0 x 0 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (plus 1 x) x (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (plus 1 x) 1 (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (plus 1 x) 0 (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shr1 (shr1 x)) x (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shr1 (shl1 x)) 0 (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shr1 x) x (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shl1 (shr1 x)) x (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shl1 (shl1 1)) x (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shl1 (shl1 1)) 1 (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shl1 (shl1 1)) 0 (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shl1 x) (shl1 x) (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shl1 x) 0 (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shl1 1) (shr1 x) (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shl1 1) (shl1 x) (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shl1 1) (shl1 1) (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shl1 1) x (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shl1 1) 1 (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 (shl1 1) 0 (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 x (shr1 (shr1 x)) (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 x (shr1 x) (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 x (shl1 (shr1 x)) (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 x (shl1 (shl1 x)) (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 x (shl1 x) (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 x x (shr1 (plus 1 (shl1 x)))))
+18446744073709551615
+(lambda (x) (if0 x x (shr1 (shl1 (shr1 (shl1 x))))))
+18446744073709551615
+(lambda (x) (if0 x x (shr1 (shl1 x))))
+18446744073709551615
+(lambda (x) (if0 x 0 (shr1 (plus 1 (shl1 x)))))
+18446744073709551615
+(lambda (x) (if0 x 0 (shr1 (shl1 (shr1 (shl1 x))))))
+18446744073709551615
+(lambda (x) (if0 x 0 (shr1 (shl1 x))))
+18446744073709551615

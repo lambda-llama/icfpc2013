@@ -12,7 +12,7 @@ seval e env = case e of
     Zero -> zero
     One  -> one
     Id x -> case lookup x env of
-        Nothing -> error (x : " is not defined(Simbolic)!")
+        Nothing -> error (x : " is not defined(Symbolic)!")
         Just v  -> v
     If0  e0 e1 e2 ->
         let v0 = seval e0 env

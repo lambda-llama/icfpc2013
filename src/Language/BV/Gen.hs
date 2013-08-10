@@ -27,8 +27,8 @@ genExpr ops =
         -- go _ 1 -> exprs without fold with x ids
         -- go _ 2 -> exprs with fold with x ids
         go :: Int -> Int -> [BVExpr]
-        go 1 0  = [Zero, One, Id "x", Id "y", Id "z"]
-        go 1 _  = [Zero, One, Id "x"]
+        go 1 0  = [Zero, One, Id 'x', Id 'y', Id 'z']
+        go 1 _  = [Zero, One, Id 'x']
         go i f  = [ Op1 op1 x
                   | op1 <- op1s
                   , x   <- specgen (i - 1, f)

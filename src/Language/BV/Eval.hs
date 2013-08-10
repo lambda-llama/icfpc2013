@@ -16,7 +16,7 @@ evalExpr e env = case e of
     Zero -> 0
     One  -> 1
     Id x -> case lookup x env of
-        Nothing -> error (x ++ " is not defined!")
+        Nothing -> error (x : " is not defined!")
         Just v  -> v
     If0  e0 e1 e2 ->
         let v0 = evalExpr e0 env

@@ -24,7 +24,12 @@ sevalExpr !env = go where
           (True, _) -> v1
           (_, True) -> v2
           _ -> v1 `merge` v2
-  go (Fold _bvf)  = bot
+  go (Fold (BVFold { bvfLambda = (larg0, larg1, le0), .. })) =
+      let init_ = go bvfInit
+          arg = go bvfArg
+          bytes = [(drop 8 zero) ++ take 8 (drop (64 - 8 -shift) arg)| shift <- [0,8..56]]
+          aux b a = sevalExpr ((larg0, a):(larg1, b):env) le0
+      in foldl aux init_ bytes
   go (Op1 op1 e0) =
       let !v0 = go e0 in
       case op1 of

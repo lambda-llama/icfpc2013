@@ -14,7 +14,7 @@ main :: IO ()
 main = do
     r <- getStdGen
     let ops = operators
-    let size = 7
+    let size = 8
     let exprs = genExpr ops size
     forM_ exprs $ \e ->
         let x = head $ randoms r

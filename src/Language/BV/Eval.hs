@@ -15,7 +15,7 @@ evalProgram :: BVProgram -> Word64 -> Word64
 evalProgram (BVProgram (x, e)) v = evalExpr [(x, v)] e
 
 evalExpr :: [(BVId, Word64)] -> BVExpr -> Word64
-evalExpr !env = go where
+evalExpr !env e = go e where
   go Zero   = 0
   go One    = 1
   go (Id x) = case lookup x env of

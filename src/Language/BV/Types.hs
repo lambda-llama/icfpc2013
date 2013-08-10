@@ -18,6 +18,7 @@ module Language.BV.Types
   , operators_nofold
   ) where
 
+import Data.Hashable (Hashable(..))
 import Data.Maybe (mapMaybe)
 import Text.Printf (printf)
 import qualified Data.Map as Map
@@ -31,6 +32,11 @@ data BVFold = BVFold { bvfArg    :: !BVExpr
                      }
     deriving (Eq, Ord)
 
+instance Hashable BVFold where
+    hashWithSalt salt (BVFold { .. }) =
+        hashWithSalt salt (bvfInit, bvfArg, bvfLambda)
+    {-# INLINE hashWithSalt #-}
+
 data BVOp1 = Not | Shl1 | Shr1 | Shr4 | Shr16
     deriving (Eq, Ord, Enum, Bounded)
 
@@ -41,8 +47,16 @@ instance Show BVOp1 where
     show Shr4  = "shr4"
     show Shr16 = "shr16"
 
+instance Hashable BVOp1 where
+    hashWithSalt salt = hashWithSalt salt . fromEnum
+    {-# INLINE hashWithSalt #-}
+
 data BVOp2 = And | Or | Xor | Plus
     deriving (Eq, Ord, Enum, Bounded)
+
+instance Hashable BVOp2 where
+    hashWithSalt salt = hashWithSalt salt . fromEnum
+    {-# INLINE hashWithSalt #-}
 
 instance Show BVOp2 where
     show And  = "and"
@@ -59,7 +73,6 @@ data BVExpr = Zero
             | Op2 !BVOp2 !BVExpr !BVExpr
     deriving (Eq, Ord)
 
-
 instance Show BVExpr where
     show Zero = "0"
     show One  = "1"
@@ -72,6 +85,17 @@ instance Show BVExpr where
     show (Op1 op1 e0) = printf "(%s %s)" (show op1) (show e0)
     show (Op2 op2 e0 e1) = printf "(%s %s %s)" (show op2) (show e0) (show e1)
 
+instance Hashable BVExpr where
+    hashWithSalt salt = go where
+      go Zero      = hashWithSalt salt (0 :: Int)
+      go One       = hashWithSalt salt (1 :: Int)
+      go (Id bvid) = hashWithSalt salt bvid
+      go (If0 e0 e1 e2)  = hashWithSalt salt (e0, e1, e2)
+      go (Fold bvf)      = hashWithSalt salt bvf
+      go (Op1 op1 e0)    = hashWithSalt salt (op1, e0)
+      go (Op2 op2 e0 e1) = hashWithSalt salt (op2, e0, e1)
+    {-# INLINE hashWithSalt #-}
+
 isClosed :: BVExpr -> Bool
 isClosed Zero = True
 isClosed One  = True
@@ -80,6 +104,7 @@ isClosed (If0 e0 e1 e2)  = isClosed e0 && isClosed e1 && isClosed e2
 isClosed (Fold (BVFold { bvfLambda = (_larg0, _larg1, le) })) = isClosed le
 isClosed (Op1 _op e0)    = isClosed e0
 isClosed (Op2 _op e0 e1) = isClosed e0 && isClosed e1
+{-# INLINE isClosed #-}
 
 newtype BVProgram = BVProgram (BVId, BVExpr)
 

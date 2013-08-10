@@ -5,6 +5,7 @@ module Language.BV.Gen where
 
 --import qualified Data.IntMap as IntMap
 import qualified Data.Map as Map
+import qualified Data.Set as Set
 
 import Language.BV.Types
 import Language.BV.Util
@@ -61,7 +62,7 @@ genExpr ops =
     in \size -> specgen (size, 2)
 
 undup :: [BVExpr] -> [BVExpr]
-undup exprs = do
+undup exprs = Set.toList . Set.fromList $ do
     -- Note(superbobry): we don't distinguish between Left-Right at
     -- the moment.
     expr <- exprs

@@ -50,4 +50,4 @@ library
                      , attoparsec == 0.10.4.*
                      , containers == 0.5.*
                      , vector     == 0.10.*
-                     , random     == 1.0.*                    
+                     , random     == 1.0.*

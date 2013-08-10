@@ -134,10 +134,3 @@ sxor a b= map xor_bit $ zip a b
 
 splus :: Sword -> Sword -> Sword
 splus a b = fst . foldl' plus_bit ([], Szero)$ zip a b
-
-
-main = do
-    let e = Op2 And (Id 'x') (Zero)
-    let ctx = [('x', input)]
-    let s = seval e ctx
-    print s

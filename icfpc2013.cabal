@@ -42,6 +42,7 @@ library
     , Language.BV.Simplifier
     , Language.BV.Symbolic.SEval
     , Language.BV.Symbolic.Types
+    , Language.BV.Symbolic.Test
 
   build-depends:       base       == 4.6.*
                      , bytestring == 0.10.*

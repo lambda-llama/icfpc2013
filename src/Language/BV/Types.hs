@@ -11,13 +11,11 @@ module Language.BV.Types
   , BVOp1(..)
   , BVOp2(..)
 
-  , enumFromShow
-  , ifByTag
-  , foldByTag
-  , tfoldByTag
-  , lambda2
+  , BVOpTags(..)
+  , opTagsFromList
   ) where
 
+import Data.Maybe (mapMaybe)
 import Text.Printf (printf)
 import qualified Data.Map as Map
 
@@ -77,6 +75,7 @@ newtype BVProgram = BVProgram (BVId, BVExpr)
 instance Show BVProgram where
     show (BVProgram (arg, e)) = printf "(lambda (%c) %s)" arg (show e)
 
+
 enumFromShow :: (Show a, Enum a, Bounded a) => String -> Maybe a
 enumFromShow =
     let !m = Map.fromList [(show op, op) | op <- [minBound..]]
@@ -84,20 +83,24 @@ enumFromShow =
 {-# SPECIALIZE INLINE enumFromShow :: String -> Maybe BVOp1 #-}
 {-# SPECIALIZE INLINE enumFromShow :: String -> Maybe BVOp2 #-}
 
--- Note(matklad): this is if0 type V
-ifByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr)
-ifByTag s = if s == "if0" then Just If0 else Nothing
+data BVOpTags = BVOpTags { bvOp1s   :: ![BVOp1]
+                         , bvOp2s   :: ![BVOp2]
+                         , bvIfs    :: ![BVExpr -> BVExpr -> BVExpr -> BVExpr]
+                         , bvFolds  :: ![BVExpr -> BVExpr -> BVExpr -> BVExpr]
+                         , bvTFolds :: ![BVExpr -> BVExpr -> BVExpr]
+                         }
 
-foldByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr -> BVExpr)
-foldByTag s = if s == "fold"
-              then Just lambda2
-              else Nothing
+opTagsFromList :: [String] -> BVOpTags
+opTagsFromList ops = BVOpTags { .. } where
+  bvOp1s   = mapMaybe enumFromShow ops
+  bvOp2s   = mapMaybe enumFromShow ops
+  bvIfs    = if "if0" `elem` ops then [If0] else []
+  bvFolds  = if "fold" `elem` ops
+             then [mkLambda]
+             else []
+  bvTFolds = if "tfold" `elem` ops
+             then [\e0 e1 -> mkLambda e0 e1 Zero]
+             else []
 
-tfoldByTag :: String -> Maybe (BVExpr -> BVExpr -> BVExpr)
-tfoldByTag s = if s == "tfold"
-               then Just $ \e1 e2 -> lambda2 e1 e2 Zero
-               else Nothing
-
-lambda2 :: BVExpr -> BVExpr -> BVExpr -> BVExpr
-lambda2 e1 bvfArg bvfInit = Fold $ BVFold { bvfLambda = ('y', 'z', e1), .. }
-{-# INLINE lambda2 #-}
+  mkLambda le bvfArg bvfInit = Fold $ BVFold { bvfLambda = ('y', 'z', le), .. }
+{-# INLINE opTagsFromList #-}

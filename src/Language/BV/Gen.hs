@@ -11,7 +11,8 @@ import Data.List(nubBy)
 import Language.BV.Types
 import Language.BV.Util
 import Language.BV.Simplifier (simplify)
-import Language.BV.Symbolic.SEval(like)
+import Language.BV.Symbolic.SEval (seval, stdcontext)
+import Language.BV.Symbolic.Types (Sbit(..))
 
 genExpr :: [String] -> Int -> [BVExpr]
 genExpr ops =
@@ -64,10 +65,18 @@ genExpr ops =
     in \size -> specgen (size, 2)
 
 undup :: [BVExpr] -> [BVExpr]
-undup exprs = nubBy like. Set.toList . Set.fromList $ do
-    -- Note(superbobry): we don't distinguish between Left-Right at
-    -- the moment.
-    expr <- exprs
-    return $ case simplify expr of
-        Left _e          -> expr
-        Right simplified -> simplified
+undup exprs =
+    let simplifiedExprs = do
+            -- Note(superbobry): we don't distinguish between Left-Right at
+            -- the moment.
+            expr <- exprs
+            return $ case simplify expr of
+                Left _e          -> expr
+                Right simplified -> simplified
+        m = Map.fromListWithKey
+            (\k [x] acc -> if any (== Bot) k then x : acc else acc) $
+            [(seval expr stdcontext, [expr]) | expr <- simplifiedExprs]
+    in Map.foldlWithKey'
+       (\exprs k acc ->
+         if any (== Bot) k then acc ++ exprs else head acc : exprs)
+       [] m

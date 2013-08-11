@@ -15,7 +15,7 @@ shutil.rmtree(inp_dir)
 if not os.path.exists(inp_dir):
     os.mkdir(inp_dir)
 
-for size in range(16, 43):
+for size in range(27, 44):
     generate_inputs_10(inp_dir, size)
 print("auto:   generated input file")
 

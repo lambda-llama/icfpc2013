@@ -11,7 +11,6 @@ import qualified Data.Vector.Unboxed as VU
 
 import Language.BV.Types
 
-
 evalProgram :: BVProgram -> Word64 -> Word64
 evalProgram (BVProgram (x, e)) v = evalExpr [(x, v)] e
 {-# INLINE evalProgram #-}

@@ -5,6 +5,7 @@ module Language.BV.Simplifier
   ) where
 
 import Language.BV.Types
+import Language.BV.Symbolic.Types (Sword, slike)
 import Language.BV.Symbolic.SEval (like, sevalExprStd)
 import Language.BV.Symbolic.Operations (isZero, isNotZero)
 
@@ -48,12 +49,12 @@ isNotRedundant context !e =
     isWrongOrder e context ||   -- good
     isSameIfStart e context ||  -- good
     isDeMorgan e context ||     -- good
-    isDrunk e context           -- good
+    isDrunk e context ||          -- good
     isPlusShr e context ||
     isClosedFold e context ||   -- good
     isLogicRepeat e context ||
     isTrivialIf e context ||
-    isSlike e context ||        -- good
+    isSlike e context        -- good
 {-# INLINE isNotRedundant #-}
 
 isNotNot :: BVExpr -> [String] -> Bool
@@ -129,13 +130,37 @@ isClosedFold e@(Fold (BVFold _ i (_, _, body))) context = ('y' `notElem` freeVar
 isClosedFold _ _ = False
 {-# INLINE isClosedFold #-}
 
+slikeConsts1 :: [BVExpr]
+slikeConsts1 = [Zero, One, Id 'x']
+
+slikeConsts1s :: [Sword]
+slikeConsts1s = map sevalExprStd slikeConsts1
+
+slikeConsts2 :: [BVExpr]
+slikeConsts2 = [Op1 Not Zero, Op1 Not One, Op1 Not (Id 'x')]
+
+slikeConsts2s :: [Sword]
+slikeConsts2s = map sevalExprStd slikeConsts2
+
+slikeConsts3 :: [BVExpr]
+slikeConsts3 = [Op1 Shr16 (Id 'x')]
+
+slikeConsts3s :: [Sword]
+slikeConsts3s = map sevalExprStd slikeConsts3
+
+slikeConsts4 :: [BVExpr]
+slikeConsts4 = [Op1 Shr16 (Op1 Not One)]
+
+slikeConsts4s :: [Sword]
+slikeConsts4s = map sevalExprStd slikeConsts4
+
 isSlike :: BVExpr -> [String] -> Bool
-isSlike e context = (f [Zero, One, Id 'x']) ||
-                    ((f [Op1 Not Zero, Op1 Not One, Op1 Not (Id 'x')]) && ("not" `elem` context)) ||
-                    ((f [Op1 Shr16 (Id 'x')]) && ("shr16" `elem` context)) ||
-                    ((f [Op1 Shr16 (Op1 Not One)]) && ("not" `elem` context) && ("shr16" `elem` context)) -- not shr16
-  where f = any (\c -> e /= c && slike se sevalExprStd c)
-        se = sevalExpr e
+isSlike e context = (f  $ zip slikeConsts1 slikeConsts1s) ||
+                    ((f $ zip slikeConsts2 slikeConsts2s) && ("not" `elem` context)) ||
+                    ((f $ zip slikeConsts3 slikeConsts3s) && ("shr16" `elem` context)) ||
+                    ((f $ zip slikeConsts4 slikeConsts4s) && ("not" `elem` context) && ("shr16" `elem` context)) -- not shr16
+  where f = any (\(c,s) -> e /= c && slike se s)
+        se = sevalExprStd e
 {-# INLINE isSlike #-}
 
 isDrunk :: BVExpr -> [String] -> Bool

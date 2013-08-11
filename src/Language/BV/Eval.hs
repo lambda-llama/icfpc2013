@@ -4,6 +4,7 @@
 module Language.BV.Eval where
 
 import Data.Bits ((.&.), (.|.), complement, shift, xor, shiftR)
+import Data.Maybe (fromMaybe)
 import Data.Word (Word64)
 
 import qualified Data.Vector.Unboxed as VU

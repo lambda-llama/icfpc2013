@@ -1,5 +1,5 @@
 module Language.BV.Simplifier
-  ( simplify
+  ( isNotRedundant
   ) where
 
 import Language.BV.Eval (evalExpr)
@@ -84,50 +84,51 @@ simplify expr = case go expr of
 
 
 isNotRedundant :: BVExpr -> Bool
-isNotRedundant e = any (\pred -> pred e) [isNotNot, isShr, isPlusShr, isTrivialIf, isOp2Zero, isLogicRepeat, isLogicNotZero, isWrongOrder, isConst]
+isNotRedundant e = not $ any ($ e) [isNotNot, isShr, isPlusShr, isTrivialIf, isOp2Zero, isLogicRepeat, isLogicNotZero, isWrongOrder, isConst]
 
+isNotNot :: BVExpr -> Bool
 isNotNot (Op1 Not (Op1 Not _)) = True
 isNotNot _ = False
 
+isShr :: BVExpr -> Bool
 isShr (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 _)))) = True
 isShr (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 _)))) = True
 isShr _ = False
 
-isPlusShr (Op2 Plus e1 e2)              | e1 'like' e2 = True
-isPlusShr (Op2 Plus e1 (Op2 Plus e2 _)) | e1 'like' e2 = True
+isPlusShr :: BVExpr -> Bool
+isPlusShr (Op2 Plus e1 e2)              | e1 `like` e2 = True
+isPlusShr (Op2 Plus e1 (Op2 Plus e2 _)) | e1 `like` e2 = True
 isPlusShr (Op2 Plus e1 (Op2 Plus e2 (Op2 Plus e3 e4)))              | all (like e1) [e2, e3, e4] = True
 isPlusShr (Op2 Plus e1 (Op2 Plus e2 (Op2 Plus e3 (Op2 Plus e4 _)))) | all (like e1) [e2, e3, e4] = True
 isPlusShr _ = False
 
-isTrivialIf (If0 _ e1 e2)  | e1 'like' e2 = True
+isTrivialIf :: BVExpr -> Bool
+isTrivialIf (If0 _ e1 e2)  | e1 `like` e2 = True
 isTrivialIf (If0 Zero _ _)                = True
 isTrivialIf _ = False
 
-isOp2Zero (Op2 And _ Zero)  = True
-isOp2Zero (Op2 And Zero _)  = True
-isOp2Zero (Op2 Or Zero _)   = True
-isOp2Zero (Op2 Or _ Zero)   = True
-isOp2Zero (Op2 Xor _ Zero)  = True
-isOp2Zero (Op2 Xor Zero _)  = True
-isOp2Zero (Op2 Plus Zero _) = True
-isOp2Zero (Op2 Plus _ Zero) = True
+isOp2Zero :: BVExpr -> Bool
+isOp2Zero (Op2 _ _ Zero)  = True
+isOp2Zero (Op2 _ Zero _)  = True
 isOp2Zero _ = False
 
-isLogicRepeat (Op2 And e1 e2) | e1 'like' e2 = True
-isLogicRepeat (Op2 Or e1 e2)  | e1 'like' e2 = True
-isLogicRepeat (Op2 Xor e1 e2) | e1 'like' e2 = True
+isLogicRepeat :: BVExpr -> Bool
+isLogicRepeat (Op2 And e1 e2) | e1 `like` e2 = True
+isLogicRepeat (Op2 Or e1 e2)  | e1 `like` e2 = True
+isLogicRepeat (Op2 Xor e1 e2) | e1 `like` e2 = True
+isLogicRepeat (Op2 op1 e1 (Op2 op2 e2 _)) | op1 == op2 && e1 `like` e2 = True
 isLogicRepeat _ = False
 
-isLogicNotZero (Op2 And _ (Op1 Not Zero)) = True
-isLogicNotZero (Op2 And (Op1 Not Zero) _) = True
-isLogicNotZero (Op2 Or _ (Op1 Not Zero)) = True
-isLogicNotZero (Op2 Or (Op1 Not Zero) _) = True
-isLogicNotZero (Op2 Xor _ (Op1 Not Zero)) = True
-isLogicNotZero (Op2 Xor (Op1 Not Zero) _) = True
+isLogicNotZero :: BVExpr -> Bool
+isLogicNotZero (Op2 _ _ (Op1 Not Zero)) = True
+isLogicNotZero (Op2 _ (Op1 Not Zero) _) = True
 isLogicNotZero _ = False
 
+isWrongOrder :: BVExpr -> Bool
 isWrongOrder (Op2 op1 e1 (Op2 op2 e2 _)) | op1 == op2 && e1 > e2 = True
+isWrongOrder (Op2 _ e1 e2)               | e1 > e2 = True
 isWrongOrder _ = False
 
+isConst :: BVExpr -> Bool
 isConst e | isClosed e && any (\c -> e /= c && evalExpr [] e == evalExpr [] c) [Zero, One, Op1 Not Zero, Op1 Not One] = True
 isConst _ = False

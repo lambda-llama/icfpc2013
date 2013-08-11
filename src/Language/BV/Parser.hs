@@ -13,7 +13,7 @@ import Control.Monad (void)
 import Data.Char (isAlpha, isAlphaNum)
 import qualified Data.ByteString.Char8 as S
 
-import Data.Attoparsec.ByteString.Char8 (Parser, choice, satisfy,
+import Data.Attoparsec.ByteString.Char8 (Parser, choice, satisfy, --
                                          peekChar, char, string, skipSpace)
 
 import Language.BV.Types
@@ -37,7 +37,7 @@ bvFoldP = between '(' ')' $ do
         (larg0, larg1) <- between '(' ')' $
                           (,) <$> spaced bvIdP <*> spaced bvIdP
         le <- spaced bvExprP
-        return $ BVFold { bvfLambda = (larg0, larg1, le), .. }
+        return $ BVFold { bvfLambda = (larg0, larg1, le), .. } --
 
 bvOp1P :: Parser BVOp1
 bvOp1P = choice

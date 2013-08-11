@@ -97,7 +97,7 @@ main :: IO ()
 main = real where
   _fake :: Int -> IO ()
   _fake size = forever $ do
-      response <- train size
+      response <- train (Size size)
       let id   = fromJust $ parseMaybe (.: "id") response
           ops  = fromJust $ parseMaybe (.: "operators") response
       solve id size ops

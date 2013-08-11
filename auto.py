@@ -4,6 +4,7 @@ import subprocess
 
 from icfpc_requests import dump_problems_list, generate_inputs_10
 
+dump_problems_list()
 
 inp_dir = "hack_problems"
 n_proc = sys.argv[1] if len(sys.argv) > 1 else 4

@@ -109,7 +109,7 @@ def generate_inputs_10(out, size=None):
         fd = open(os.path.join(out, str(size) + "_" + str(i)), "wt")
         fd.write(id_s + "\n")
         fd.write(str(10) + "\n")
-        fd.write(str(oper).replace("'", "\"") + "\n")
+        fd.write(str(map(str, oper)).replace("'", "\"") + "\n")
         fd.close()
 
 def find_solution(sdir, id_s):

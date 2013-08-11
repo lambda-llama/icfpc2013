@@ -14,8 +14,8 @@ module Language.BV.Types
 
   , BVOpTags(..)
   , opTagsFromList
+
   , operators
-  , operators_nofold
   ) where
 
 import Data.Hashable (Hashable(..))
@@ -115,7 +115,7 @@ instance Show BVProgram where
 enumFromShow :: (Show a, Enum a, Bounded a) => String -> Maybe a
 enumFromShow =
     let !m = Map.fromList [(show op, op) | op <- [minBound..]]
-    in (flip Map.lookup m)
+    in (`Map.lookup` m)
 {-# SPECIALIZE INLINE enumFromShow :: String -> Maybe BVOp1 #-}
 {-# SPECIALIZE INLINE enumFromShow :: String -> Maybe BVOp2 #-}
 
@@ -127,23 +127,19 @@ data BVOpTags = BVOpTags { bvOp1s   :: ![BVOp1]
                          }
 
 operators :: [String]
-operators = "fold" : "tfold" : operators_nofold
-
-operators_nofold :: [String]
-operators_nofold = ["not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0"]
+operators = [ "tfold", "fold", "not", "shl1", "shr1"
+            , "shr4", "shr16", "and", "or", "xor"
+            , "plus", "if0"
+            ]
 
 
 opTagsFromList :: [String] -> BVOpTags
 opTagsFromList ops = BVOpTags { .. } where
   bvOp1s   = mapMaybe enumFromShow ops
   bvOp2s   = mapMaybe enumFromShow ops
-  bvIfs    = if "if0" `elem` ops then [If0] else []
-  bvFolds  = if "fold" `elem` ops
-             then [mkLambda]
-             else []
-  bvTFolds = if "tfold" `elem` ops
-             then [\e0 e1 -> mkLambda e0 e1 Zero]
-             else []
+  bvIfs    = [If0 | "if0" `elem` ops]
+  bvFolds  = [mkLambda | "fold" `elem` ops]
+  bvTFolds = [\e0 e1 -> mkLambda e0 e1 Zero | "tfold" `elem` ops]
 
-  mkLambda le bvfArg bvfInit = Fold $ BVFold { bvfLambda = ('y', 'z', le), .. }
+  mkLambda le bvfArg bvfInit = Fold BVFold { bvfLambda = ('y', 'z', le), .. }
 {-# INLINE opTagsFromList #-}

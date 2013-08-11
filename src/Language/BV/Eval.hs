@@ -16,12 +16,10 @@ evalProgram (BVProgram (x, e)) v = evalExpr [(x, v)] e
 {-# INLINEABLE evalProgram #-}
 
 evalExpr :: [(BVId, Word64)] -> BVExpr -> Word64
-evalExpr env0 expr = go env0 expr where
+evalExpr = go where
   go _env Zero   = 0
   go _env One    = 1
-  go !env (Id x) = case lookup x env of
-      Nothing -> error $ x : " is not defined!"
-      Just v  -> v
+  go !env (Id x) = fromMaybe (error $ x : " is not defined!") $ lookup x env
   go !env (If0 e0 e1 e2) =
       let !v0 = go env e0
           v1  = go env e1
@@ -34,7 +32,7 @@ evalExpr env0 expr = go env0 expr where
           let !i      = go env bvfInit
               !arg    = go env bvfArg
               !bytes  = VU.fromList
-                        [(shiftR arg offset) .&. 0xff | offset <- [0,8..56]]
+                        [shiftR arg offset .&. 0xff | offset <- [0,8..56]]
           in VU.foldl' (\b a -> evalExpr ((larg0, a):(larg1, b):env) le) i bytes
   go !env (Op1 op1 e0) =
       let !v0 = go env e0 in

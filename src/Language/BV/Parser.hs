@@ -37,7 +37,7 @@ bvFoldP = between '(' ')' $ do
         (larg0, larg1) <- between '(' ')' $
                           (,) <$> spaced bvIdP <*> spaced bvIdP
         le <- spaced bvExprP
-        return $ BVFold { bvfLambda = (larg0, larg1, le), .. } --
+        return BVFold { bvfLambda = (larg0, larg1, le), .. } --
 
 bvOp1P :: Parser BVOp1
 bvOp1P = choice

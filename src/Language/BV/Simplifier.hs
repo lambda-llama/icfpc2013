@@ -6,7 +6,7 @@ import Language.BV.Eval (evalExpr)
 
 import Language.BV.Types
 import Language.BV.Symbolic.SEval
-import Language.BV.Symbolic.Operations (isZero, isNotZero)
+--import Language.BV.Symbolic.Operations (isZero, isNotZero)
 
 
 -- Transformations:
@@ -48,6 +48,7 @@ isNotRedundant e = not $ any ($ e)
                    , isLogicRepeat
                    , isLogicNotZero
                    , isWrongOrder
+                   , isDeMorgan
                    , isConst
                    ]
 
@@ -91,6 +92,11 @@ isWrongOrder :: BVExpr -> Bool
 isWrongOrder (Op2 op1 e1 (Op2 op2 e2 _)) = op1 == op2 && e1 > e2
 isWrongOrder (Op2 _ e1 e2)               = e1 > e2
 isWrongOrder _ = False
+
+isDeMorgan :: BVExpr -> Bool
+isDeMorgan (Op2 Or (Op1 Not _) (Op1 Not _))  = True
+isDeMorgan (Op2 And (Op1 Not _) (Op1 Not _)) = True
+isDeMorgan _ = False
 
 isConst :: BVExpr -> Bool
 isConst e = isClosed e &&

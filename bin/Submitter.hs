@@ -94,17 +94,16 @@ train (Operators ops) = sendRequest "train" ["operators" .= ops]
 
 
 main :: IO ()
-main = fake where
-  fake :: IO ()
-  fake = forever $ do
-    response <- train (Size 12)
-    let id   = fromJust $ parseMaybe (.: "id") response
-        size = fromJust $ parseMaybe (.: "size") response
-        ops  = fromJust $ parseMaybe (.: "operators") response
-    solve id size ops
+main = real where
+  _fake :: Int -> IO ()
+  _fake size = forever $ do
+      response <- train size
+      let id   = fromJust $ parseMaybe (.: "id") response
+          ops  = fromJust $ parseMaybe (.: "operators") response
+      solve id size ops
 
-  _real :: IO ()
-  _real = do
+  real :: IO ()
+  real = do
     id   <- getLine
     size <- read <$> getLine
     ops  <- read <$> getLine

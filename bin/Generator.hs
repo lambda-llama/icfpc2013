@@ -7,7 +7,7 @@ module Main where
 import Control.Applicative ((<$>))
 import Control.Monad (forM_, zipWithM_)
 import Data.Bits (bit)
-import Data.List (intercalate)
+import Data.List (intercalate, sort)
 import Data.Word (Word64)
 import Numeric (showHex)
 import System.Random (getStdGen, randoms)
@@ -32,23 +32,27 @@ main = do
     size <- read <$> getLine
     ops  <- read <$> getLine
     r    <- getStdGen
-    let !inputs = meaningfulInputs ++
+    let !inputs = map (\x -> [('x', x)]) $
+                  meaningfulInputs ++
                   (take (256 - length meaningfulInputs) $ randoms r)
         !eqCls  = HashMap.fromListWith (\[expr] rest -> expr : rest) $!
-                  ([ (VU.fromListN 256 [evalExpr [('x', x)] expr | x <- inputs],
+                  ([ (VU.fromListN 256 $ map (\env -> evalExpr env expr) inputs,
                       [expr])
                    | expr <- genExpr ops (pred size)
                    ] `using` parBuffer (bit 32) rseq)
 
-    printHex inputs
-    print $ HashMap.size eqCls
-    zipWithM_ (\eqId res ->
-                let exprs = eqCls HashMap.! res in do
-                    print $ (eqId :: Int)     -- eq. class ID
-                    print $ length exprs      -- nr. of elements in eq. class
-                    printHex $ VU.toList res  -- program output
-                    forM_ exprs $ \expr -> print $ BVProgram ('x', expr))
-        [1..] (HashMap.keys eqCls)
+    print $ sum $ map length (HashMap.elems eqCls)
+    print $ take 100 $ reverse $ sort $ map length (HashMap.elems eqCls)
+
+    -- printHex inputs
+    -- print $ HashMap.size eqCls
+    -- zipWithM_ (\eqId res ->
+    --             let exprs = eqCls HashMap.! res in do
+    --                 print $ (eqId :: Int)     -- eq. class ID
+    --                 print $ length exprs      -- nr. of elements in eq. class
+    --                 printHex $ VU.toList res  -- program output
+    --                 forM_ exprs $ \expr -> print $ BVProgram ('x', expr))
+    --     [1..] (HashMap.keys eqCls)
   where
     printHex xs =
         putStrLn . intercalate " " $ ["0x" ++ showHex x "" | x <- xs]

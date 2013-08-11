@@ -1,5 +1,5 @@
 module Language.BV.Simplifier
-  ( simplify
+  ( isRedundant
   ) where
 
 import Language.BV.Eval (evalExpr)
@@ -83,7 +83,7 @@ simplify expr = case go expr of
     go e = mix e
 
 
-isRedundand :: BVExpr -> Bool
+isRedundant :: BVExpr -> Bool
 isRedundant e = any (\pred -> pred e == False) [isNotNot, isShr, isPlusShr, isTrivialIf, isOp2Zero, isLogicRepeat, isLogicNotZero, isWrongOrder]
 
 isNotNot (Op1 Not (Op1 Not _)) = False

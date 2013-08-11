@@ -24,7 +24,7 @@ main = do
         let x    = head $ randoms r
             ctx  = [('x', x)]
             ret  = word2sword $ evalExpr ctx e
-            sret = sevalExpr stdContext e
+            sret = sevalExprStd e
         in if good sret ret (word2sword x)
            then print "OK"
            else do

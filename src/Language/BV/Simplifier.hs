@@ -7,7 +7,7 @@ module Language.BV.Simplifier
 import Language.BV.Eval (evalExpr)
 
 import Language.BV.Types
-import Language.BV.Symbolic.SEval (like, sevalExpr, stdContext)
+import Language.BV.Symbolic.SEval (like, sevalExprStd)
 import Language.BV.Symbolic.Operations (isZero, isNotZero)
 
 
@@ -76,7 +76,7 @@ isPlusShr _ = False
 
 isTrivialIf :: BVExpr -> Bool
 isTrivialIf (If0 e0 e1 e2) =
-    let !res = sevalExpr stdContext e0 in
+    let !res = sevalExprStd e0 in
     isZero res || isNotZero res || e1 `like` e2
 isTrivialIf _ = False
 {-# INLINE isTrivialIf #-}

@@ -73,8 +73,9 @@ isPlusShr _ = False
 {-# INLINE isPlusShr #-}
 
 isTrivialIf :: BVExpr -> Bool
-isTrivialIf (If0 e0 _ _) = (isZero $ sevalExpr stdContext e0) || (isNotZero $ sevalExpr stdContext e0)
-isTrivialIf (If0 _ e1 e2)  = e1 `like` e2
+isTrivialIf (If0 e0 e1 e2) =
+    let !res = sevalExpr stdContext e0 in
+    isZero res || isNotZero res || e1 `like` e2
 isTrivialIf _ = False
 {-# INLINE isTrivialIf #-}
 

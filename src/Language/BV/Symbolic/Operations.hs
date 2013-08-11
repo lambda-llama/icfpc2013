@@ -27,10 +27,6 @@ isNotZero :: Sword -> Bool
 isNotZero = V.any (== Sone)
 {-# INLINE isNotZero #-}
 
-isCombinat :: Sword -> Bool
-isCombinat = V.any (== Bot)
-{-# INLINE isCombinat #-}
-
 merge :: Sword -> Sword -> Sword
 merge = V.zipWith (\a b -> if a == b then a else Bot)
 {-# INLINE merge #-}

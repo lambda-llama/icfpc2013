@@ -45,7 +45,3 @@ main = do
                                      forM_ exprs' print)
     print $ HashMap.size eqCls
     print $ length exprs
-    
-  where
-    printHex xs =
-        putStrLn . intercalate " " $ ["0x" ++ showHex x "" | x <- xs]

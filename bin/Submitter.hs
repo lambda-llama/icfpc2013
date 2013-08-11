@@ -134,7 +134,12 @@ solve id size ops = do
     meaningfulInputs = 42 : map bit [0..64]
 
     bruteForce :: [BVExpr] -> IO ()
-    bruteForce [] = error "Exausted candidate list :("
+    bruteForce [] = do
+        putStrLn "  /==g           _ "
+        putStrLn " //      >>>/---{_ "
+        putStrLn " `==::[[[[|:     _ "
+        putStrLn "         >>>\\---{_"
+        error "Exausted candidate list, LOBSTERS!"
     bruteForce (candidate:exprs) = do
         status <- guess id (BVProgram ('x', candidate))
         putStrLn $ printf "%s %s %s" id (show status) (show candidate)

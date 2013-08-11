@@ -5,6 +5,7 @@ module Language.BV.Symbolic.SEval where
 
 import Data.Function (on)
 import Data.List (foldl')
+import Data.Maybe (fromMaybe)
 
 import qualified Data.Vector as V
 
@@ -13,12 +14,10 @@ import Language.BV.Symbolic.Operations
 import Language.BV.Types
 
 sevalExpr :: [(BVId, Sword)] -> BVExpr -> Sword
-sevalExpr env0 expr = go env0 expr where
+sevalExpr = go where
   go _env Zero   = zero
   go _env One    = one
-  go !env (Id x) = case lookup x env of
-      Nothing -> error (x : " is not defined!")
-      Just v  -> v
+  go !env (Id x) = fromMaybe (error $ x : " is not defined!") $ lookup x env
   go !env (If0 e0 e1 e2) =
       let !v0 = go env e0
           v1  = go env e1

@@ -3,8 +3,8 @@ module Language.BV.Simplifier
   ) where
 
 import Language.BV.Eval (evalExpr)
-import Language.BV.Types
 
+import Language.BV.Types
 import Language.BV.Symbolic.SEval
 import Language.BV.Symbolic.Operations (isZero, isNotZero)
 

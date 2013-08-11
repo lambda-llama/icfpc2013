@@ -52,6 +52,7 @@ isNotRedundant !e =
     isLogicNotZero e ||
     isWrongOrder e ||
     isDeMorgan e ||
+    isSameIfStart e ||
     isConst e
 {-# INLINE isNotRedundant #-}
 
@@ -105,10 +106,17 @@ isWrongOrder (Op2 _ e1 e2)               = e1 > e2
 isWrongOrder _ = False
 {-# INLINE isWrongOrder #-}
 
+isSameIfStart :: BVExpr -> Bool
+isSameIfStart (If0 _ (Op1 op1 _) (Op1 op2 _))     = op1 == op2
+isSameIfStart (If0 _ (Op2 op1 _ _) (Op2 op2 _ _)) = op1 == op2
+isSameIfStart _ = False
+{-# INLINE isSameIfStart #-}
+
 isDeMorgan :: BVExpr -> Bool
 isDeMorgan (Op2 Or (Op1 Not _) (Op1 Not _))  = True
 isDeMorgan (Op2 And (Op1 Not _) (Op1 Not _)) = True
 isDeMorgan _ = False
+{-# INLINE isDeMorgan #-}
 
 isConst :: BVExpr -> Bool
 isConst e = isClosed e &&

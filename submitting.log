@@ -1,0 +1,15 @@
+submit_train_pipeline.py[LINE:29]# DEBUG    [2013-08-11 13:49:49,846]  BEGIN: preprocessing for 2WWg01oSBEdVi6e5IP7Tmsxu
+submit_train_pipeline.py[LINE:13]# DEBUG    [2013-08-11 13:49:49,847]  BEGIN: bvgen for 2WWg01oSBEdVi6e5IP7Tmsxu
+submit_train_pipeline.py[LINE:17]# DEBUG    [2013-08-11 13:52:36,552]  bvgen stderr log: b''
+submit_train_pipeline.py[LINE:19]# DEBUG    [2013-08-11 13:52:36,561]  END: bvgen for 2WWg01oSBEdVi6e5IP7Tmsxu
+submit_train_pipeline.py[LINE:42]# DEBUG    [2013-08-11 13:52:36,565]  END: preprocessing for 2WWg01oSBEdVi6e5IP7Tmsxu
+submit_train_pipeline.py[LINE:29]# DEBUG    [2013-08-11 13:52:36,565]  BEGIN: preprocessing for gdldM9IYeVchlAN6MMROxR50
+submit_train_pipeline.py[LINE:13]# DEBUG    [2013-08-11 13:52:36,568]  BEGIN: bvgen for gdldM9IYeVchlAN6MMROxR50
+submit_train_pipeline.py[LINE:17]# DEBUG    [2013-08-11 13:57:28,973]  bvgen stderr log: b'bvgen: out of memory (requested 2097152 bytes)\n'
+submit_train_pipeline.py[LINE:19]# DEBUG    [2013-08-11 13:57:28,984]  END: bvgen for gdldM9IYeVchlAN6MMROxR50
+submit_train_pipeline.py[LINE:22]# DEBUG    [2013-08-11 13:57:29,007]  Shit happend
+submit_train_pipeline.py[LINE:29]# DEBUG    [2013-08-11 14:48:37,180]  BEGIN: preprocessing for BULx9tZKY8uKGcBir3CxBhhA
+submit_train_pipeline.py[LINE:13]# DEBUG    [2013-08-11 14:48:37,181]  BEGIN: bvgen for BULx9tZKY8uKGcBir3CxBhhA
+submit_train_pipeline.py[LINE:17]# DEBUG    [2013-08-11 14:55:25,710]  bvgen stderr log: b'bvgen: out of memory (requested 2097152 bytes)\n'
+submit_train_pipeline.py[LINE:19]# DEBUG    [2013-08-11 14:55:25,725]  END: bvgen for BULx9tZKY8uKGcBir3CxBhhA
+submit_train_pipeline.py[LINE:22]# DEBUG    [2013-08-11 14:55:25,726]  Shit happend

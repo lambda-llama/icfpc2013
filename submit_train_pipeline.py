@@ -11,7 +11,7 @@ from icfpc_requests import *
 
 def prepare_now(id_s, inp):
     logging.debug("BEGIN: bvgen for %s" % id_s)
-    child = subprocess.Popen("./dist/build/bvgen/bvgen +RTS -N4", stdin=subprocess.PIPE, 
+    child = subprocess.Popen("./dist/build/bvgen/bvgen +RTS -N4", stdin=subprocess.PIPE,
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     m_out, m_err = child.communicate(inp.encode())
     logging.debug("bvgen stderr log: %s" % m_err)
@@ -29,7 +29,7 @@ def prepare(dirname, predir):
         logging.debug("BEGIN: preprocessing for %s" % id_s)
         fd = open(os.path.join(dirname, id_s), "rt")
         inp = fd.readline() + fd.readline().replace("'", "\"")
-        # child = subprocess.Popen("./dist/build/bvgen/bvgen", stdin=subprocess.PIPE, 
+        # child = subprocess.Popen("./dist/build/bvgen/bvgen", stdin=subprocess.PIPE,
         #     stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         # m_out, m_err = child.communicate(inp.encode())
         fd.close()
@@ -79,7 +79,7 @@ def get_new_funcs_byone(vin, vout, funcs):
     logging.debug("BEGIN: searching [byone] for pair (%i -> %i)" % (vin, vout))
     newfuncs = []
     for variant in funcs:
-        child = subprocess.Popen("./dist/build/bvi/bvi", stdin=subprocess.PIPE, 
+        child = subprocess.Popen("./dist/build/bvi/bvi", stdin=subprocess.PIPE,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         to_send = variant.strip() + "\n" + str(vin) + "\n"
         m_out, m_err = child.communicate(to_send.encode())
@@ -97,7 +97,7 @@ def get_new_funcs_batch(vin, vout, funcs):
     to_send = ""
     for variant in funcs:
         to_send += variant.strip() + "\n" + str(vin) + "\n"
-    child = subprocess.Popen("./dist/build/bvi/bvi", stdin=subprocess.PIPE, 
+    child = subprocess.Popen("./dist/build/bvi/bvi", stdin=subprocess.PIPE,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     m_out, m_err = child.communicate(to_send.encode())
     anss = m_out.decode().splitlines()
@@ -198,7 +198,7 @@ def test_current(id_s, size, operators):
 if __name__ == "__main__":
     logging.basicConfig(format=u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s',
                     level=logging.DEBUG, filename="submitting.log")
-    prepare("problems", "preprocessed")
+    prepare("problems_12", "preprocessed_12")
     #run_prepared("problems", "preprocessed")
     #run("problems")
     #train(10)

@@ -48,7 +48,7 @@ def get_train(size=None, operators=None):
 
 def dump_problems_list():
     d = get_problem()
-    d = sorted(d, key=(lambda i: 0 if "solved" in i and i["solved"] == True else i["size"]))
+    d = sorted(d, key=(lambda i: 0 if "solved" in i and i["solved"] == True else i["size"] + 0.1 * len(i["operators"])))
     fd = open("problems.txt", "wt")
     for p in d:
         if "solved" in p and p["solved"] == True:
@@ -68,9 +68,10 @@ def load(size=None):
             continue
         if not size:
             size = p["size"]
-        if p["size"] != size:
+        if p["size"] > size:
             break
-        r.append((p["id"], p["size"], p["operators"]))
+        if p["size"] == size:
+            r.append((p["id"], p["size"], p["operators"]))
     fd.close()
     return r
 
@@ -93,6 +94,7 @@ def solve_3():
 
 def generate_inputs(out, size=None):
     results = load(size)
+    print(len(results))
     for id_s, size, oper in results:
         fd = open(os.path.join(out, id_s), "wt")
         fd.write(str(size) + "\n")

@@ -13,7 +13,7 @@ import Language.BV.Simplifier (isNotRedundant)
 type State = Map Int [BVExpr]
 
 genExpr :: [String] -> Int -> [BVExpr]
-genExpr ops size = concat $ Map.elems r3 where
+genExpr !ops size = concat $ Map.elems r3 where
     BVOpTags { .. } = opTagsFromList ops
 
     (_r1, _r2, r3) = go size undefined
@@ -66,4 +66,4 @@ genExpr ops size = concat $ Map.elems r3 where
         in (Map.insert i go1 s1,
             Map.insert i go2 s2,
             Map.insert i go3 s3)
-{-# INLINEABLE genExpr #-}
+{-# INLINE genExpr #-}

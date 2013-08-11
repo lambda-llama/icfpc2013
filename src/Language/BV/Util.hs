@@ -27,8 +27,10 @@ programSize (BVProgram (_arg, e)) = 1 + exprSize e
 
 partitions2 :: Int -> [(Int, Int)]
 partitions2 i = [(j, k) | j <- [1..i], k <- [1..i], j + k == i]
+{-# INLINE partitions2 #-}
 
 partitions3 :: Int -> [(Int, Int, Int)]
 partitions3 i = [ (j, k, l)
                 | j <- [1..i], k <- [1..i], l <- [1..i], j + k + l == i
                 ]
+{-# INLINE partitions3 #-}

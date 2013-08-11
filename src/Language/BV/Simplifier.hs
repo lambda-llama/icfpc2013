@@ -5,8 +5,8 @@ module Language.BV.Simplifier
 import Language.BV.Eval (evalExpr)
 
 import Language.BV.Types
-import Language.BV.Symbolic.SEval
---import Language.BV.Symbolic.Operations (isZero, isNotZero)
+import Language.BV.Symbolic.SEval (like, sevalExpr, stdContext)
+import Language.BV.Symbolic.Operations (isZero, isNotZero)
 
 
 -- Transformations:
@@ -67,7 +67,7 @@ isPlusShr (Op2 Plus e1 e2)              = e1 `like` e2
 isPlusShr _ = False
 
 isTrivialIf :: BVExpr -> Bool
-isTrivialIf (If0 Zero _ _) = True
+isTrivialIf (If0 e0 _ _) = (isZero $ sevalExpr stdContext e0) || (isNotZero $ sevalExpr stdContext e0)
 isTrivialIf (If0 _ e1 e2)  = e1 `like` e2
 isTrivialIf _ = False
 

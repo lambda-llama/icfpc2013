@@ -3,81 +3,67 @@
 
 module Language.BV.Gen where
 
-import qualified Data.HashSet as HashSet
+import Data.Map (Map)
 import qualified Data.Map as Map
 
 import Language.BV.Types
 import Language.BV.Util
-import Language.BV.Simplifier (simplify)
-import Language.BV.Symbolic.Operations (isCombinat)
-import Language.BV.Symbolic.SEval (sevalExpr, stdContext)
+import Language.BV.Simplifier (isRedundant)
+
+type State = Map Int [BVExpr]
 
 genExpr :: [String] -> Int -> [BVExpr]
-genExpr ops =
-    let specgen = (m Map.!)
-        BVOpTags { .. } = opTagsFromList ops
-        m       = Map.fromList [ ((i, flag), undup (go i flag))
-                               | i <- [1..30], flag <- [0, 1, 2]
-                               ]
-        -- go _ 0 -> exprs without fold with x, y, z ids
-        -- go _ 1 -> exprs without fold with x ids
-        -- go _ 2 -> exprs with fold with x ids
-        go :: Int -> Int -> [BVExpr]
-        go 1 0     = [Zero, One, Id 'x', Id 'y', Id 'z']
-        go 1 _     = [Zero, One, Id 'x']
-        go i flag  = concat [op1s, op2s, ifs, folds, tfolds] where
-          op1s = [ Op1 op1 x
-                 | op1 <- bvOp1s
-                 , x   <- specgen (i - 1, flag)
-                 ]
-          op2s = [ Op2 op2 x y
-                 | op2    <- bvOp2s
-                 , (j, k) <- partitions2 (pred i)
-                 , x <- specgen (j, flag)
-                 , y <- specgen (k, flag)
-                 , x >= y
-                 ]
-          ifs  = [ if_ x y z
-                 | if_ <- bvIfs
-                 , (j, k, l) <- partitions3 (pred i)
-                 , x <- specgen (j, flag)
-                 , y <- specgen (k, flag)
-                 , z <- specgen (l, flag)
-                 ]
-          (folds, tfolds) = case flag of
-              0 -> ([], [])
-              1 -> ([], [])
-              2 -> ([ f e1 e2 e3
-                    | f <- bvFolds
-                    , (j, k, l) <- partitions3 (i - 2)
-                    , e1 <- specgen (j, 0)
-                    , e2 <- specgen (k, 1)
-                    , e3 <- specgen (l, 1)
-                    ],
-                    [ f e1 e2
-                    | f <- bvTFolds
-                    , (j, k) <- partitions2 (i - 3)
-                    , e1 <- specgen (j, 0)
-                    , e2 <- specgen (k, 1)
-                    ])
-              _state -> error "genExpr.go: the impossible happened!"
-    in \size -> specgen (size, 2)
-{-# INLINE genExpr #-}
+genExpr ops size = concat $ Map.elems r3 where
+    BVOpTags { .. } = opTagsFromList ops
 
-undup :: [BVExpr] -> [BVExpr]
-undup exprs =
-    let simplifiedExprs = HashSet.toList . HashSet.fromList $ do
-            -- Note(superbobry): we don't distinguish between Left-Right at
-            -- the moment.
-            expr <- exprs
-            return $ case simplify expr of
-                Left _e          -> expr
-                Right simplified -> simplified
-        m = Map.fromListWithKey
-            (\k [x] acc -> if isCombinat k then x : acc else acc) $
-            [(sevalExpr stdContext expr, [expr]) | expr <- simplifiedExprs]
-    in Map.foldlWithKey'
-       (\mergedExprs k acc ->
-         if isCombinat k then acc ++ mergedExprs else head acc : mergedExprs)
-       [] m
-{-# INLINE undup #-}
+    (_r1, _r2, r3) = go size undefined
+
+    -- 1 -> exprs without fold with x, y, z ids
+    -- 2 -> exprs without fold with x ids
+    -- 3 -> exprs with fold with x ids
+    go :: Int -> (State, State, State) -> (State, State, State)
+    go 1 _states =
+        (Map.singleton 1 [Zero, One, Id 'x', Id 'y', Id 'z'],
+         Map.singleton 1 [Zero, One, Id 'x'],
+         Map.singleton 1 [Zero, One, Id 'x'])
+    go !i states =
+        let (!s1, !s2, !s3) = go (pred i) states
+            go0 m = filter (not . isRedundant) $ concat [op1s, op2s, ifs] where
+              op1s = [ Op1 op1 x
+                     | op1 <- bvOp1s
+                     , x   <- m Map.! pred i
+                     ]
+              op2s = [ Op2 op2 x y
+                     | op2    <- bvOp2s
+                     , (j, k) <- partitions2 (pred i)
+                     , x <- m Map.! j
+                     , y <- m Map.! k
+                     ]
+              ifs  = [ if_ x y z
+                     | if_ <- bvIfs
+                     , (j, k, l) <- partitions3 (pred i)
+                     , x <- m Map.! j
+                     , y <- m Map.! k
+                     , z <- m Map.! l
+                     ]
+            go1 = go0 s1
+            go2 = go0 s2
+            go3 = filter (not . isRedundant) $
+                  go0 s3 ++
+                  [ f e1 e2 e3
+                  | f <- bvFolds
+                  , (j, k, l) <- partitions3 (i - 2)
+                  , e1 <- s1 Map.! j
+                  , e2 <- s2 Map.! k
+                  , e3 <- s2 Map.! l
+                  ] ++
+                  [ f e1 e2
+                  | f <- bvTFolds
+                  , (j, k) <- partitions2 (i - 3)
+                  , e1 <- s1 Map.! j
+                  , e2 <- s2 Map.! k
+                  ]
+        in (Map.insert i go1 s1,
+            Map.insert i go2 s2,
+            Map.insert i go3 s3)
+{-# INLINEABLE genExpr #-}

@@ -1,2 +1,2 @@
-6
-["and", "if0", "not", "shl1", "shr16", "or", "xor"]
+11
+["and", "if0", "not", "shl1", "shr16", "shr4"]

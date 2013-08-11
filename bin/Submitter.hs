@@ -114,10 +114,10 @@ solve id size ops = do
     putStrLn $ printf "%s %s %s" id (show size) (show ops)
     r <- getStdGen
     let !inputs = meaningfulInputs ++
-                  (take (256 - length meaningfulInputs) $ randoms r)
+                  (take (128 - length meaningfulInputs) $ randoms r)
         !envs   = map (\x -> [('x', x)]) inputs
         !eqCls  = HashMap.fromListWith (\[expr] rest -> expr : rest) $!
-                  ([ (VU.fromListN 256 $ map (\env -> evalExpr env expr) envs,
+                  ([ (VU.fromListN 128 $ map (\env -> evalExpr env expr) envs,
                       [expr])
                    | expr <- genExpr ops (pred size)
                    ] `using` parBuffer (bit 32) rseq)

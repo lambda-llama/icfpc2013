@@ -53,6 +53,7 @@ isNotRedundant !e =
     isWrongOrder e ||
     isDeMorgan e ||
     isSameIfStart e ||
+    isClosedFold e ||
     isConst e
 {-# INLINE isNotRedundant #-}
 
@@ -117,6 +118,11 @@ isDeMorgan (Op2 Or (Op1 Not _) (Op1 Not _))  = True
 isDeMorgan (Op2 And (Op1 Not _) (Op1 Not _)) = True
 isDeMorgan _ = False
 {-# INLINE isDeMorgan #-}
+
+isClosedFold :: BVExpr -> Bool
+isClosedFold e@(Fold _) = isClosed e
+isClosedFold _ = False
+{-# INLINE isClosedFold #-}
 
 isConst :: BVExpr -> Bool
 isConst e = isClosed e &&

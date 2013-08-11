@@ -123,7 +123,11 @@ solve id size ops = do
                    ] `using` parBuffer (bit 32) rseq)
 
     outputs <- evalID id inputs
-    bruteForce $ eqCls HashMap.! VU.fromList outputs
+    bruteForce $ case HashMap.lookup (VU.fromList outputs) eqCls of
+        Just exprs -> exprs
+        Nothing    ->
+            error (printf "Failed to find eq. class for %s with outputs %s!"
+                   id (show outputs))
   where
     meaningfulInputs :: [Word64]
     meaningfulInputs = 42 : map bit [0..64]

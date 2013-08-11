@@ -43,17 +43,17 @@ isNotRedundant context !e =
     not $
     isNotNot e context ||
     isShr e context ||
-    isPlusShr e context ||
-    isTrivialIf e context ||
     isOp2Zero e context ||
-    isLogicRepeat e context ||
     isLogicNotZero e context || -- good
     isWrongOrder e context ||   -- good
-    isDeMorgan e context ||     -- good
     isSameIfStart e context ||  -- good
-    isClosedFold e context ||   -- good
-    isSlike e context ||        -- good
+    isDeMorgan e context ||     -- good
     isDrunk e context           -- good
+    isPlusShr e context ||
+    isClosedFold e context ||   -- good
+    isLogicRepeat e context ||
+    isTrivialIf e context ||
+    isSlike e context ||        -- good
 {-# INLINE isNotRedundant #-}
 
 isNotNot :: BVExpr -> [String] -> Bool
@@ -134,10 +134,12 @@ isSlike e context = (f [Zero, One, Id 'x']) ||
                     ((f [Op1 Not Zero, Op1 Not One, Op1 Not (Id 'x')]) && ("not" `elem` context)) ||
                     ((f [Op1 Shr16 (Id 'x')]) && ("shr16" `elem` context)) ||
                     ((f [Op1 Shr16 (Op1 Not One)]) && ("not" `elem` context) && ("shr16" `elem` context)) -- not shr16
-  where f = any (\c -> e /= c && like e c)
+  where f = any (\c -> e /= c && slike se sevalExprStd c)
+        se = sevalExpr e
+{-# INLINE isSlike #-}
 
 isDrunk :: BVExpr -> [String] -> Bool
 isDrunk (Op2 And _ (Op1 Not One)) context = ("shr1" `elem` context) && ("shl1" `elem` context) -- shr1 shl1
 isDrunk (Op2 And (Op1 Not One) _) context = ("shr1" `elem` context) && ("shl1" `elem` context) -- shr1 shl1
 isDrunk _ _ = False
-{-# INLINE isSlike #-}
+{-# INLINE isDrunk #-}

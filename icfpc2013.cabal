@@ -1,4 +1,4 @@
-name:                bv
+name:                icfpc2013
 version:             0.1.0.0
 cabal-version:       >= 1.12
 build-type:          Simple
@@ -20,7 +20,7 @@ executable bvs
                      , http-conduit         == 1.9.4.*
                      , aeson                == 0.6.*
                      , text                 == 0.11.*
-                     , bv
+                     , icfpc2013
 
 executable bvi
   hs-source-dirs:      bin
@@ -32,9 +32,9 @@ executable bvi
   build-depends:       base       == 4.6.*
                      , bytestring == 0.10.*
                      , attoparsec == 0.10.4.*
-                     , bv
+                     , icfpc2013
 
-executable bvgen
+executable bvg
   hs-source-dirs:      bin
   default-language:    Haskell2010
   ghc-options:         -Wall -fno-warn-orphans -optc-O3 -O2 -threaded
@@ -47,8 +47,7 @@ executable bvgen
                      , hashable             == 1.2.*
                      , random               == 1.0.*
                      , parallel             == 3.2.*
-                     , bv
-                     , containers
+                     , icfpc2013
 
 library
   hs-source-dirs:      src

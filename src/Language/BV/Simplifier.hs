@@ -130,36 +130,26 @@ isClosedFold e@(Fold (BVFold _ i (_, _, body))) context = ('y' `notElem` freeVar
 isClosedFold _ _ = False
 {-# INLINE isClosedFold #-}
 
-slikeConsts1 :: [BVExpr]
-slikeConsts1 = [Zero, One, Id 'x']
+slikeConsts1 :: [(BVExpr, Sword)]
+slikeConsts1 = [(expr, sevalExprStd expr) | expr <- [Zero, One, Id 'x']]
 
-slikeConsts1s :: [Sword]
-slikeConsts1s = map sevalExprStd slikeConsts1
+slikeConsts2 :: [(BVExpr, Sword)]
+slikeConsts2 = [ (expr, sevalExprStd expr)
+               | expr <- [Op1 Not Zero, Op1 Not One, Op1 Not (Id 'x')]
+               ]
 
-slikeConsts2 :: [BVExpr]
-slikeConsts2 = [Op1 Not Zero, Op1 Not One, Op1 Not (Id 'x')]
+slikeConsts3 :: [(BVExpr, Sword)]
+slikeConsts3 = [(expr, sevalExprStd expr) | expr <- [Op1 Shr16 (Id 'x')]]
 
-slikeConsts2s :: [Sword]
-slikeConsts2s = map sevalExprStd slikeConsts2
-
-slikeConsts3 :: [BVExpr]
-slikeConsts3 = [Op1 Shr16 (Id 'x')]
-
-slikeConsts3s :: [Sword]
-slikeConsts3s = map sevalExprStd slikeConsts3
-
-slikeConsts4 :: [BVExpr]
-slikeConsts4 = [Op1 Shr16 (Op1 Not One)]
-
-slikeConsts4s :: [Sword]
-slikeConsts4s = map sevalExprStd slikeConsts4
+slikeConsts4 :: [(BVExpr, Sword)]
+slikeConsts4 = [(expr, sevalExprStd expr) | expr <- [Op1 Shr16 (Op1 Not One)]]
 
 isSlike :: BVExpr -> [String] -> Bool
-isSlike e context = (f  $ zip slikeConsts1 slikeConsts1s) ||
-                    ((f $ zip slikeConsts2 slikeConsts2s) && ("not" `elem` context)) ||
-                    ((f $ zip slikeConsts3 slikeConsts3s) && ("shr16" `elem` context)) ||
-                    ((f $ zip slikeConsts4 slikeConsts4s) && ("not" `elem` context) && ("shr16" `elem` context)) -- not shr16
-  where f = any (\(c,s) -> e /= c && slike se s)
+isSlike e context = f slikeConsts1 ||
+                    (f slikeConsts2 && ("not" `elem` context)) ||
+                    (f slikeConsts3 && ("shr16" `elem` context)) ||
+                    (f slikeConsts4 && ("not" `elem` context) && ("shr16" `elem` context)) -- not shr16
+  where f  = any (\(c, s) -> e /= c && slike se s)
         se = sevalExprStd e
 {-# INLINE isSlike #-}
 

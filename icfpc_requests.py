@@ -102,6 +102,16 @@ def generate_inputs(out, size=None):
         fd.write(str(oper).replace("'", "\"") + "\n")
         fd.close()
 
+def generate_inputs_10(out, size=None):
+    results = load(size)
+    print(len(results))
+    for i, (id_s, size, oper) in enumerate(results):
+        fd = open(os.path.join(out, str(i)), "wt")
+        fd.write(id_s + "\n")
+        fd.write(str(10) + "\n")
+        fd.write(str(oper).replace("'", "\"") + "\n")
+        fd.close()
+
 def find_solution(sdir, id_s):
     flag = True
     fd = open(os.path.join(sdir, id_s), "rt")

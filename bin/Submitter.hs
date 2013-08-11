@@ -97,7 +97,7 @@ main :: IO ()
 main = fake where
   fake :: IO ()
   fake = forever $ do
-    response <- train (Size 10)
+    response <- train (Size 12)
     let id   = fromJust $ parseMaybe (.: "id") response
         size = fromJust $ parseMaybe (.: "size") response
         ops  = fromJust $ parseMaybe (.: "operators") response
@@ -112,6 +112,7 @@ main = fake where
 
 solve :: String -> Int -> [String] -> IO ()
 solve id size ops = do
+    putStrLn $ printf "%s %s %s" id (show size) (show ops)
     r <- getStdGen
     let !inputs = meaningfulInputs ++
                   (take (256 - length meaningfulInputs) $ randoms r)

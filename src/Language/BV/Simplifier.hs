@@ -83,48 +83,51 @@ simplify expr = case go expr of
     go e = mix e
 
 
-isRedundand :: BVExpr -> Bool
-isRedundant e = any (\pred -> pred e == False) [isNotNot, isShr, isPlusShr, isTrivialIf, isOp2Zero, isLogicRepeat, isLogicNotZero, isWrongOrder]
+isNotRedundant :: BVExpr -> Bool
+isNotRedundant e = any (\pred -> pred e) [isNotNot, isShr, isPlusShr, isTrivialIf, isOp2Zero, isLogicRepeat, isLogicNotZero, isWrongOrder, isConst]
 
-isNotNot (Op1 Not (Op1 Not _)) = False
-isNotNot _ = True
+isNotNot (Op1 Not (Op1 Not _)) = True
+isNotNot _ = False
 
-isShr (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 _)))) = False
-isShr (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 _)))) = False
-isShr _ = True
+isShr (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 _)))) = True
+isShr (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 _)))) = True
+isShr _ = False
 
-isPlusShr (Op2 Plus e1 e2)              | e1 == e2 = False
-isPlusShr (Op2 Plus e1 (Op2 Plus e2 _)) | e1 == e2 = False
-isPlusShr (Op2 Plus e1 (Op2 Plus e2 (Op2 Plus e3 e4)))              | all (==e1) [e2, e3, e4] = False
-isPlusShr (Op2 Plus e1 (Op2 Plus e2 (Op2 Plus e3 (Op2 Plus e4 _)))) | all (==e1) [e2, e3, e4] = False
-isPlusShr _ = True
+isPlusShr (Op2 Plus e1 e2)              | e1 'like' e2 = True
+isPlusShr (Op2 Plus e1 (Op2 Plus e2 _)) | e1 'like' e2 = True
+isPlusShr (Op2 Plus e1 (Op2 Plus e2 (Op2 Plus e3 e4)))              | all (like e1) [e2, e3, e4] = True
+isPlusShr (Op2 Plus e1 (Op2 Plus e2 (Op2 Plus e3 (Op2 Plus e4 _)))) | all (like e1) [e2, e3, e4] = True
+isPlusShr _ = False
 
-isTrivialIf (If0 _ e1 e2)  | e1 == e2 = False
-isTrivialIf (If0 Zero _ _)            = False
-isTrivialIf _ = True
+isTrivialIf (If0 _ e1 e2)  | e1 'like' e2 = True
+isTrivialIf (If0 Zero _ _)                = True
+isTrivialIf _ = False
 
-isOp2Zero (Op2 And _ Zero)  = False
-isOp2Zero (Op2 And Zero _)  = False
-isOp2Zero (Op2 Or Zero _)   = False
-isOp2Zero (Op2 Or _ Zero)   = False
-isOp2Zero (Op2 Xor _ Zero)  = False
-isOp2Zero (Op2 Xor Zero _)  = False
-isOp2Zero (Op2 Plus Zero _) = False
-isOp2Zero (Op2 Plus _ Zero) = False
-isOp2Zero _ = True
+isOp2Zero (Op2 And _ Zero)  = True
+isOp2Zero (Op2 And Zero _)  = True
+isOp2Zero (Op2 Or Zero _)   = True
+isOp2Zero (Op2 Or _ Zero)   = True
+isOp2Zero (Op2 Xor _ Zero)  = True
+isOp2Zero (Op2 Xor Zero _)  = True
+isOp2Zero (Op2 Plus Zero _) = True
+isOp2Zero (Op2 Plus _ Zero) = True
+isOp2Zero _ = False
 
-isLogicRepeat (Op2 And e1 e2)   | e1 == e2 = False
-isLogicRepeat (Op2 Or e1 e2)    | e1 == e2 = False
-isLogicRepeat (Op2 Xor e1 e2)   | e1 == e2 = False
-isLogicRepeat _ = True
+isLogicRepeat (Op2 And e1 e2) | e1 'like' e2 = True
+isLogicRepeat (Op2 Or e1 e2)  | e1 'like' e2 = True
+isLogicRepeat (Op2 Xor e1 e2) | e1 'like' e2 = True
+isLogicRepeat _ = False
 
-isLogicNotZero (Op2 And _ (Op1 Not Zero)) = False
-isLogicNotZero (Op2 And (Op1 Not Zero) _) = False
-isLogicNotZero (Op2 Or _ (Op1 Not Zero)) = False
-isLogicNotZero (Op2 Or (Op1 Not Zero) _) = False
-isLogicNotZero (Op2 Xor _ (Op1 Not Zero)) = False
-isLogicNotZero (Op2 Xor (Op1 Not Zero) _) = False
-isLogicNotZero _ = True
+isLogicNotZero (Op2 And _ (Op1 Not Zero)) = True
+isLogicNotZero (Op2 And (Op1 Not Zero) _) = True
+isLogicNotZero (Op2 Or _ (Op1 Not Zero)) = True
+isLogicNotZero (Op2 Or (Op1 Not Zero) _) = True
+isLogicNotZero (Op2 Xor _ (Op1 Not Zero)) = True
+isLogicNotZero (Op2 Xor (Op1 Not Zero) _) = True
+isLogicNotZero _ = False
 
-isWrongOrder (Op2 op1 e1 (Op2 op2 e2 _)) | op1 == op2 && e1 > e2 = False
-isWrongOrder _ = True
+isWrongOrder (Op2 op1 e1 (Op2 op2 e2 _)) | op1 == op2 && e1 > e2 = True
+isWrongOrder _ = False
+
+isConst e | isClosed e && any (\c -> e /= c && evalExpr [] e == evalExpr [] c) [Zero, One, Op1 Not Zero, Op1 Not One] = True
+isConst _ = False

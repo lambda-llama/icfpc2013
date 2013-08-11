@@ -8,23 +8,6 @@ import Language.BV.Types
 import Language.BV.Symbolic.SEval
 import Language.BV.Symbolic.Operations (isZero, isNotZero)
 
-mix :: BVExpr -> Either BVExpr BVExpr
-mix (If0 Zero e1 _e2) = Right e1
-mix (If0 One _e1 e2)  = Right e2
-mix (If0 e0 e1 e2)
-    | isZero $ sevalExpr stdContext e0    = Right e1
-    | isNotZero $ sevalExpr stdContext e0 = Right e2
-mix e =
-    if isClosed e
-    then case evalExpr [] e of
-        0    -> Right Zero
-        1    -> Right One
-        _res ->
-            -- Note(superbobry): we can also express constants other than
-            -- 0 or 1 as terms.
-            Left e
-    else Left e
-{-# INLINE mix #-}
 
 -- Transformations:
 --
@@ -55,36 +38,18 @@ mix e =
 -- Multiple-2 law
 -- (plus e e)              = (shl1 e)
 
-simplify :: BVExpr -> Either BVExpr BVExpr
-simplify expr = case go expr of
-    Left (Op2 op e0 e1) -> go (Op2 op e1 e0)
-    res                 -> res
-  where
-    go (Op1 Not (Op1 Not e))   = Right e
-    go (Op2 And _e Zero)       = Right Zero
-    go (Op2 And (Op1 Not e0) e1) | e0 `like` e1 = Right Zero
-    go (Op2 Or (Op1 Not e0) e1)  | e0 `like` e1 = Right (Op1 Not Zero)
-    go (Op2 Or e Zero)         = Right e
-    go (Op2 And e0 e1) | e0 `like` e1 = Right e0
-    go (Op2 Or e0 e1)  | e0 `like` e1 = Right e0
-    go (Op2 Xor e0 e1) | e0 `like` e1 = Right Zero
-    go (Op2 Plus Zero e)       = Right e
-    go (Op2 And (Op1 Not e0) (Op1 Not e1)) = Right (Op1 Not (Op2 And e0 e1))
-    go (Op2 Or (Op1 Not e0) (Op1 Not e1))  = Right (Op1 Not (Op2 Or e0 e1))
-    go (If0 _e0 e1 e2) | e1 `like` e2 = Right e1
-    go (Op2 And e (Op1 Not Zero)) = Right e
-    go (Op2 Or _e (Op1 Not Zero)) = Right (Op1 Not Zero)
-    go (Op2 Xor e (Op1 Not Zero)) = Right (Op1 Not e)
-    go (Op2 Plus e0 e1) | e0 `like` e1 = Right (Op1 Shl1 e0)
-
-    go (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 e)))) = Right (Op1 Shr16 e)
-    go (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 (Op1 Shr1 e)))) = Right (Op1 Shr4 e)
-
-    go e = mix e
-
-
 isNotRedundant :: BVExpr -> Bool
-isNotRedundant e = not $ any ($ e) [isNotNot, isShr, isPlusShr, isTrivialIf, isOp2Zero, isLogicRepeat, isLogicNotZero, isWrongOrder, isConst]
+isNotRedundant e = not $ any ($ e)
+                   [ isNotNot
+                   , isShr
+                   , isPlusShr
+                   , isTrivialIf
+                   , isOp2Zero
+                   , isLogicRepeat
+                   , isLogicNotZero
+                   , isWrongOrder
+                   , isConst
+                   ]
 
 isNotNot :: BVExpr -> Bool
 isNotNot (Op1 Not (Op1 Not _)) = True
@@ -96,13 +61,13 @@ isShr (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 (Op1 Shr4 _)))) = True
 isShr _ = False
 
 isPlusShr :: BVExpr -> Bool
-isPlusShr (Op2 Plus e1 e2)              | e1 `like` e2 = True
-isPlusShr (Op2 Plus e1 (Op2 Plus e2 _)) | e1 `like` e2 = True
+isPlusShr (Op2 Plus e1 (Op2 Plus e2 _)) = e1 `like` e2
+isPlusShr (Op2 Plus e1 e2)              = e1 `like` e2
 isPlusShr _ = False
 
 isTrivialIf :: BVExpr -> Bool
-isTrivialIf (If0 _ e1 e2)  | e1 `like` e2 = True
-isTrivialIf (If0 Zero _ _)                = True
+isTrivialIf (If0 Zero _ _) = True
+isTrivialIf (If0 _ e1 e2)  = e1 `like` e2
 isTrivialIf _ = False
 
 isOp2Zero :: BVExpr -> Bool
@@ -111,10 +76,10 @@ isOp2Zero (Op2 _ Zero _)  = True
 isOp2Zero _ = False
 
 isLogicRepeat :: BVExpr -> Bool
-isLogicRepeat (Op2 And e1 e2) | e1 `like` e2 = True
-isLogicRepeat (Op2 Or e1 e2)  | e1 `like` e2 = True
-isLogicRepeat (Op2 Xor e1 e2) | e1 `like` e2 = True
-isLogicRepeat (Op2 op1 e1 (Op2 op2 e2 _)) | op1 == op2 && e1 `like` e2 = True
+isLogicRepeat (Op2 And e1 e2) = e1 `like` e2
+isLogicRepeat (Op2 Or e1 e2)  = e1 `like` e2
+isLogicRepeat (Op2 Xor e1 e2) = e1 `like` e2
+isLogicRepeat (Op2 op1 e1 (Op2 op2 e2 _)) = op1 == op2 && e1 `like` e2
 isLogicRepeat _ = False
 
 isLogicNotZero :: BVExpr -> Bool
@@ -123,10 +88,11 @@ isLogicNotZero (Op2 _ (Op1 Not Zero) _) = True
 isLogicNotZero _ = False
 
 isWrongOrder :: BVExpr -> Bool
-isWrongOrder (Op2 op1 e1 (Op2 op2 e2 _)) | op1 == op2 && e1 > e2 = True
-isWrongOrder (Op2 _ e1 e2)               | e1 > e2 = True
+isWrongOrder (Op2 op1 e1 (Op2 op2 e2 _)) = op1 == op2 && e1 > e2
+isWrongOrder (Op2 _ e1 e2)               = e1 > e2
 isWrongOrder _ = False
 
 isConst :: BVExpr -> Bool
-isConst e | isClosed e && any (\c -> e /= c && evalExpr [] e == evalExpr [] c) [Zero, One, Op1 Not Zero, Op1 Not One] = True
-isConst _ = False
+isConst e = isClosed e &&
+            any (\c -> e /= c && evalExpr [] e == evalExpr [] c)
+            [Zero, One, Op1 Not Zero, Op1 Not One]

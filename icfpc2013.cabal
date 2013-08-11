@@ -44,6 +44,7 @@ executable bvgen
                      , random               == 1.0.*
                      , parallel             == 3.2.*
                      , bv
+                     , containers
 
 library
   hs-source-dirs:      src

@@ -28,7 +28,7 @@ genExpr !ops size = concat $ Map.elems r3 where
          Map.singleton 1 [Zero, One, Id 'x'])
     go !i states =
         let (!s1, !s2, !s3) = go (pred i) states
-            go0 m = filter isNotRedundant $ concat [op1s, op2s, ifs] where
+            go0 m = filter (isNotRedundant ops) $ concat [op1s, op2s, ifs] where
               op1s = [ Op1 op1 x
                      | op1 <- bvOp1s
                      , x   <- m Map.! pred i
@@ -48,7 +48,7 @@ genExpr !ops size = concat $ Map.elems r3 where
                      ]
             go1 = go0 s1
             go2 = go0 s2
-            go3 = filter isNotRedundant $
+            go3 = filter (isNotRedundant ops) $
                   go0 s3 ++
                   [ f e1 e2 e3
                   | f <- bvFolds

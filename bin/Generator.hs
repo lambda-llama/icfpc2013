@@ -5,12 +5,12 @@
 module Main where
 
 import Control.Applicative ((<$>))
-import Control.Monad (forM_, zipWithM_)
+import Control.Monad (forM_)
 import Data.Bits (bit)
-import Data.List (intercalate, sort)
+import Data.List (intercalate)
 import Data.Word (Word64)
 import Numeric (showHex)
-import System.Random (getStdGen, randoms)
+import System.Random (mkStdGen, randoms)
 
 import Control.Parallel.Strategies (using, parBuffer, rseq)
 import Data.Hashable (Hashable(..))
@@ -19,7 +19,6 @@ import qualified Data.Vector.Unboxed as VU
 
 import Language.BV.Eval (evalExpr)
 import Language.BV.Gen (genExpr)
-import Language.BV.Types (BVProgram(..))
 
 instance Hashable (VU.Vector Word64) where
     hashWithSalt = VU.foldl' hashWithSalt
@@ -31,28 +30,22 @@ main :: IO ()
 main = do
     size <- read <$> getLine
     ops  <- read <$> getLine
-    r    <- getStdGen
-    let !inputs = map (\x -> [('x', x)]) $
-                  meaningfulInputs ++
+    r    <- return $ mkStdGen 42
+    let exprs = genExpr ops (pred size)
+        !inputs = meaningfulInputs ++
                   (take (256 - length meaningfulInputs) $ randoms r)
         !eqCls  = HashMap.fromListWith (\[expr] rest -> expr : rest) $!
-                  ([ (VU.fromListN 256 $ map (\env -> evalExpr env expr) inputs,
+                  ([ (VU.fromListN 256 $ map (\x -> evalExpr [('x', x)] expr) inputs,
                       [expr])
-                   | expr <- genExpr ops (pred size)
+                   | expr <- exprs
                    ] `using` parBuffer (bit 32) rseq)
-
-    print $ sum $ map length (HashMap.elems eqCls)
-    print $ take 100 $ reverse $ sort $ map length (HashMap.elems eqCls)
-
-    -- printHex inputs
-    -- print $ HashMap.size eqCls
-    -- zipWithM_ (\eqId res ->
-    --             let exprs = eqCls HashMap.! res in do
-    --                 print $ (eqId :: Int)     -- eq. class ID
-    --                 print $ length exprs      -- nr. of elements in eq. class
-    --                 printHex $ VU.toList res  -- program output
-    --                 forM_ exprs $ \expr -> print $ BVProgram ('x', expr))
-    --     [1..] (HashMap.keys eqCls)
+    
+    forM_ (HashMap.keys eqCls) (\res ->
+                                 let exprs' = eqCls HashMap.! res in do
+                                     forM_ exprs' print)
+    print $ HashMap.size eqCls
+    print $ length exprs
+    
   where
     printHex xs =
         putStrLn . intercalate " " $ ["0x" ++ showHex x "" | x <- xs]

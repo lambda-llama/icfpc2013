@@ -16,8 +16,10 @@ module Language.BV.Types
   , opTagsFromList
 
   , operators
+  , freeVars
   ) where
 
+import Data.List ((\\))
 import Data.Hashable (Hashable(..))
 import Data.Maybe (mapMaybe)
 import Text.Printf (printf)
@@ -143,3 +145,12 @@ opTagsFromList ops = BVOpTags { .. } where
 
   mkLambda le bvfArg bvfInit = Fold BVFold { bvfLambda = ('y', 'z', le), .. }
 {-# INLINE opTagsFromList #-}
+
+freeVars :: BVExpr -> [BVId]
+freeVars Zero = []
+freeVars One  = []
+freeVars (Id x) = [x]
+freeVars (Op1 _ e)      = freeVars e
+freeVars (Op2 _ e1 e2)  = (freeVars e1) ++ (freeVars e2)
+freeVars (If0 e0 e1 e2) = (freeVars e0) ++ (freeVars e1) ++ (freeVars e2)
+freeVars (Fold (BVFold f i (y, z, body))) = (freeVars f) ++ (freeVars i) ++ (freeVars body \\ [y, z])

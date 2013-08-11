@@ -98,8 +98,6 @@ isShr _ = False
 isPlusShr :: BVExpr -> Bool
 isPlusShr (Op2 Plus e1 e2)              | e1 `like` e2 = True
 isPlusShr (Op2 Plus e1 (Op2 Plus e2 _)) | e1 `like` e2 = True
-isPlusShr (Op2 Plus e1 (Op2 Plus e2 (Op2 Plus e3 e4)))              | all (like e1) [e2, e3, e4] = True
-isPlusShr (Op2 Plus e1 (Op2 Plus e2 (Op2 Plus e3 (Op2 Plus e4 _)))) | all (like e1) [e2, e3, e4] = True
 isPlusShr _ = False
 
 isTrivialIf :: BVExpr -> Bool

@@ -6,6 +6,8 @@ module Language.BV.Util
 
   , partitions2
   , partitions3
+
+  , whileM_
   ) where
 
 import Language.BV.Types (BVProgram(..), BVExpr(..), BVFold(..))
@@ -34,3 +36,11 @@ partitions3 i = [ (j, k, l)
                 | j <- [1..i], k <- [1..i], l <- [1..i], j + k + l == i
                 ]
 {-# INLINE partitions3 #-}
+
+whileM_ :: (Monad m) => m Bool -> m a -> m ()
+whileM_ p f = do
+    x <- p
+    if x
+    then f >> whileM_ p f
+    else return ()
+{-# SPECIALIZE whileM_ :: IO Bool -> IO a -> IO () #-}

@@ -11,14 +11,7 @@ import qualified Data.ByteString.Char8 as S
 
 import Language.BV.Eval (evalProgram)
 import Language.BV.Parser (bvProgramP)
-
-whileM_ :: (Monad m) => m Bool -> m a -> m ()
-whileM_ p f = do
-    x <- p
-    if x
-    then f >> whileM_ p f
-    else return ()
-{-# SPECIALIZE whileM_ :: IO Bool -> IO a -> IO () #-}
+import Language.BV.Util (whileM_)
 
 main :: IO ()
 main = whileM_ (not <$> isEOF) $ do

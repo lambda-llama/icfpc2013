@@ -36,7 +36,7 @@ evalExpr env0 expr = go env0 expr where
           in VU.foldl' (\b a -> go ((larg0, a):(larg1, b):env) le) i bytes
   go env e@(Op1 op1 e0) =
       case op1 of
-          Not   -> complement $! go env e
+          Not   -> complement $! go env e0
           Shl1  -> fastShiftLeft1 env e
           Shr1  -> fastShiftRight env e
           Shr4  -> fastShiftRight env e

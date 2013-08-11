@@ -51,7 +51,9 @@ unsafeSendRequest uri o = do
 sendRequest :: String -> [Pair] -> IO Object
 sendRequest uri o =
     unsafeSendRequest uri o `E.catch` \(e :: HttpException) -> do
-        print e
+        putStrLn $ case e of
+            StatusCodeException status _hdrs _cookies -> show status
+            _other -> show e
         threadDelay 4000
         sendRequest uri o
 
@@ -101,8 +103,8 @@ main = fake where
         ops  = fromJust $ parseMaybe (.: "operators") response
     solve id size ops
 
-  real :: IO ()
-  real = do
+  _real :: IO ()
+  _real = do
     id   <- getLine
     size <- read <$> getLine
     ops  <- read <$> getLine
@@ -130,7 +132,7 @@ solve id size ops = do
     bruteForce [] = error "Exausted candidate list :("
     bruteForce (candidate:exprs) = do
         status <- guess id (BVProgram ('x', candidate))
-        print (candidate, status)
+        putStrLn $ printf "%s %s %s" id (show status) (show candidate)
         case status of
             Win -> return ()
             Mismatch (input, output, _answer) ->

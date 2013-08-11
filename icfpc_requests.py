@@ -97,6 +97,7 @@ def generate_inputs(out, size=None):
     print(len(results))
     for id_s, size, oper in results:
         fd = open(os.path.join(out, id_s), "wt")
+        fd.write(id_s + "\n")
         fd.write(str(size) + "\n")
         fd.write(str(oper).replace("'", "\"") + "\n")
         fd.close()

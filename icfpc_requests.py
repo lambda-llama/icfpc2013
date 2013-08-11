@@ -106,7 +106,7 @@ def generate_inputs_10(out, size=None):
     results = load(size)
     print(len(results))
     for i, (id_s, size, oper) in enumerate(results):
-        fd = open(os.path.join(out, str(i)), "wt")
+        fd = open(os.path.join(out, str(size) + "_" + str(i)), "wt")
         fd.write(id_s + "\n")
         fd.write(str(10) + "\n")
         fd.write(str(oper).replace("'", "\"") + "\n")

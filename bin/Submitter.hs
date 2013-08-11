@@ -25,6 +25,7 @@ import Data.Hashable (Hashable(..))
 import Network.HTTP.Conduit (HttpException(..), RequestBody(..),
                              requestBody, responseBody, method,
                              parseUrl, withManager, httpLbs)
+import Network.HTTP.Types (statusCode)
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.Vector.Unboxed as VU
 
@@ -52,7 +53,10 @@ sendRequest :: String -> [Pair] -> IO Object
 sendRequest uri o =
     unsafeSendRequest uri o `E.catch` \(e :: HttpException) -> do
         putStrLn $ case e of
-            StatusCodeException status _hdrs _cookies -> show status
+            StatusCodeException status _hdrs _cookies ->
+                if statusCode status `elem` [410, 412]
+                then error $ show status
+                else show status
             _other -> show e
         threadDelay 4000
         sendRequest uri o

@@ -75,7 +75,7 @@ isPlusShr _ _ = False
 
 
 isTrivialIf :: BVExpr -> [String] -> Bool
-isTrivialIf (If0 e0 e1 e2) context =
+isTrivialIf (If0 e0 e1 e2) _ =
     e0 `like` e1
     || e1 `like` e2
     ||  let !res = sevalExprStd e0

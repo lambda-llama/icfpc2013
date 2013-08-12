@@ -5,7 +5,7 @@
 
 ![lambda-llama](https://secure.gravatar.com/avatar/11ff8bcc12c392ad337115ca30a38fc1?s=250)
 
-## The solver
+## The [solver](https://github.com/superbobry/icfpc2013/blob/master/bin/Submitter.hs#L123)
 
 Unfortunately, we were too late to realize that most of the programs aren't
 very big in size (even after the hint was [posted](http://icfpc2013.cloudapp.net)

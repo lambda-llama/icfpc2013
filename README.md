@@ -35,7 +35,8 @@ bigger size with some redundant operations added. So the idea was to
 [find] [isNotRedundant] these redudant problems during dynamic programming
 and drop the bigger problem **early**. This was done by a set of rules,
 some obvious, like [De Morgan laws] [demorgan], others not so obvious.
-In all of the rules above we treat two terms as equivalent if they
+
+In all of the rules bellow we treat two terms as **equivalent** if they
 are either equal syntatically or end up in the same state after abstract
 interpretation (see next section).
 
@@ -129,6 +130,7 @@ the initial value.
 e = (fold e0 e1 (lambda (y z) e3)) = e3 iff y ∉ FV(e3)
                                          || e3 is a closed term
                                          || e ~ e1
+```
 
 ##### equivalent-to-known-constant
 
@@ -190,6 +192,10 @@ bitwise `&&` with two exceptions:
 
 #### Unused ideas
 
-* Translate BV into an extended representation, which allows n-ary functions.
+* Translate BV into an [extended][NBV] representation, which allows n-ary
+  functions.
+* Pre-compute programs for small sizes and build up on that.
 * Search for solution **while** generating problems (implicitly assumes that
-  the solution is not very big, which turned out to be a correct assumption).
+  the solution is not very big).
+
+[NBV]: https://github.com/superbobry/icfpc2013/tree/master/src/Language/NBV

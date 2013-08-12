@@ -1,4 +1,0 @@
-{'challenge': '(lambda (x_1914) (shl1 (shl1 x_1914)))',
- 'id': 'H9vMChOVdsegHWdRU0bzUHYU',
- 'operators': ['shl1'],
- 'size': 4}

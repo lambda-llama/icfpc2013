@@ -43,9 +43,10 @@ The trick is to use this set of rules efficiently. The straightforward
 approach (compare each pair of generated programs for equivalence) has
 an obvious drawback: it requires quadratic number of comparisons. Key
 observation for improving the running time is that **if** there is a
-program which **can** be simplified, it must be [discarded][filterRedundant],
-because, since we generate all problems, a simpler version (with smaller
-program size) must have been already generated.
+program which **can** be simplified, it must be [discarded] [filterRedundant].
+Since we generate all problems, increasing the size on each step, a
+simpler version (with smaller program size) **must** have been
+generated already.
 
 *Note*: in all of the rules bellow we treat two terms as **equivalent** if
 they are either equal syntactically or end up in the same state after

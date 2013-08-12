@@ -1,15 +1,13 @@
 λ-llama
 =======
 
-## The team
-
 ![lambda-llama](https://secure.gravatar.com/avatar/11ff8bcc12c392ad337115ca30a38fc1?s=250)
 
 ## The numbers
 
 * 3 team members,
-* 797 problems solved total, 400 in the last 3 hours,
-* 1046 lines in Haskell + 375 lines in Python,
+* 797 problems solved total, ~400 in the last 3 hours,
+* 1046 LOC Haskell, 375 LOC Python,
 * infinite awesomeness.
 
 ## The [solver](https://github.com/superbobry/icfpc2013/blob/master/bin/Submitter.hs#L123)

@@ -38,6 +38,12 @@ In all of the rules bellow we treat two terms as **equivalent** if they
 are either equal syntactically or end up in the same state after abstract
 interpretation (see next section).
 
+The trick is to use this rules effectively. The obvious way (compare pairs 
+of programs against each other) has an obvious drawback: it is quadratic in time. 
+The important observation is that if there is a program that can be simplified, 
+it can be simply [discarded][filterRedundant]. It is safe because all problems 
+are generated, so the simplified version already exists.
+
 ##### not-not
 
 Eliminate repeated `not` statements.
@@ -148,6 +154,7 @@ Clear the last bit with less operations.
 (or (and (not 1) e)) = (shr1 (shl1 e))
 ```
 
+[filterRedundant]: https://github.com/superbobry/icfpc2013/blob/master/src/Language/BV/Gen.hs#L31
 [isNotRedundant]: https://github.com/superbobry/icfpc2013/blob/master/src/Language/BV/Simplifier.hs#L42
 [demorgan]: http://en.wikipedia.org/wiki/De_Morgan's_laws
 

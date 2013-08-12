@@ -5,6 +5,13 @@
 
 ![lambda-llama](https://secure.gravatar.com/avatar/11ff8bcc12c392ad337115ca30a38fc1?s=250)
 
+## The numbers
+
+* 3 team members,
+* 797 problems solved total, 400 in the last 3 hours,
+* 1046 lines in Haskell + 375 lines in Python,
+* infinite awesomeness.
+
 ## The [solver](https://github.com/superbobry/icfpc2013/blob/master/bin/Submitter.hs#L123)
 
 Unfortunately, we were too late to realize that most of the programs aren't
@@ -34,15 +41,17 @@ bigger size with some redundant operations added. So the idea was to
 and drop the bigger problem **early**. This was done by a set of rules,
 some obvious, like [De Morgan laws] [demorgan], others not so obvious.
 
-In all of the rules bellow we treat two terms as **equivalent** if they
-are either equal syntactically or end up in the same state after abstract
-interpretation (see next section).
+The trick is to use this set of rules efficiently. The straightforward
+approach (compare each pair of generated programs for equivalence) has
+an obvious drawback: it requires quadratic number of comparisons. Key
+observation for improving the running time is that **if** there is a
+program which **can** be simplified, it must be [discarded][filterRedundant],
+because, since we generate all problems, a simpler version (with smaller
+program size) must have been already generated.
 
-The trick is to use this rules effectively. The obvious way (compare pairs 
-of programs against each other) has an obvious drawback: it is quadratic in time. 
-The important observation is that if there is a program that can be simplified, 
-it can be simply [discarded][filterRedundant]. It is safe because all problems 
-are generated, so the simplified version already exists.
+*Note*: in all of the rules bellow we treat two terms as **equivalent** if
+they are either equal syntactically or end up in the same state after
+abstract interpretation (see next section).
 
 ##### not-not
 
@@ -198,8 +207,10 @@ bitwise `&&` with two exceptions:
 
 * Translate BV into an [extended][NBV] representation, which allows n-ary
   functions.
+* Improve abstract interpreter to store a set of boolean expressions,
+  for each `Bot` bit. That way we can compare two abstract bit vectors
+  by comparing the corresponding boolean expression, even if some or all
+  bits are undefined.
 * Pre-compute small-sized programs and build up on that.
-* Search for solution **while** generating problems (implicitly assumes that
-  the solution is not very big).
 
 [NBV]: https://github.com/superbobry/icfpc2013/tree/master/src/Language/NBV

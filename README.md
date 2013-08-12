@@ -3,9 +3,7 @@
 
 ## The team
 
-* [Aleksey Kladov](https://github.com/matklad)
-* [Pavel Yakovlev](https://github.com/zmactep)
-* [Sergei Lebedev](https://github.com/superbobry)
+![lambda-llama](https://secure.gravatar.com/avatar/11ff8bcc12c392ad337115ca30a38fc1?s=250)
 
 ## The solver
 

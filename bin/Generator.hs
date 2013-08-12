@@ -5,11 +5,8 @@
 module Main where
 
 import Control.Applicative ((<$>))
-import Control.Monad (forM_)
 import Data.Bits (bit)
-import Data.List (intercalate)
 import Data.Word (Word64)
-import Numeric (showHex)
 import System.Random (mkStdGen, randoms)
 
 import Control.Parallel.Strategies (using, parBuffer, rseq)
@@ -39,9 +36,6 @@ main = do
                       [expr])
                    | expr <- exprs
                    ] `using` parBuffer (bit 32) rseq)
-    
-    forM_ (HashMap.keys eqCls) (\res ->
-                                 let exprs' = eqCls HashMap.! res in do
-                                     forM_ exprs' print)
+
     print $ HashMap.size eqCls
     print $ length exprs

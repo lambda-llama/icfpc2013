@@ -14,6 +14,7 @@ import Control.Monad (forever)
 import Data.Bits (bit)
 import Data.Maybe (fromMaybe, fromJust)
 import Data.Word (Word64)
+import System.Environment (getArgs)
 import System.Random (getStdGen, randoms)
 import Text.Printf (printf)
 import qualified Control.Exception as E
@@ -98,20 +99,26 @@ train (Operators ops) = sendRequest "train" ["operators" .= ops]
 
 
 main :: IO ()
-main = real where
-  _fake :: Int -> IO ()
-  _fake size = forever $ do
-      response <- train (Size size)
-      let id   = fromJust $ parseMaybe (.: "id") response
-          ops  = fromJust $ parseMaybe (.: "operators") response
-      solve id size ops
+main = do
+    args <- getArgs
+    case args of
+        ["f", n] -> fake $ read n
+        ["r"]    -> real
+        _other   -> putStrLn "usage: bvs [f N|r]"
+  where
+    fake :: Int -> IO ()
+    fake size = forever $ do
+        response <- train (Size size)
+        let id   = fromJust $ parseMaybe (.: "id") response
+            ops  = fromJust $ parseMaybe (.: "operators") response
+        solve id size ops
 
-  real :: IO ()
-  real = do
-    id   <- getLine
-    size <- read <$> getLine
-    ops  <- read <$> getLine
-    solve id size ops
+    real :: IO ()
+    real = do
+        id   <- getLine
+        size <- read <$> getLine
+        ops  <- read <$> getLine
+        solve id size ops
 
 solve :: String -> Int -> [String] -> IO ()
 solve id size ops = do

@@ -3,7 +3,7 @@
 
 module Language.BV.Eval where
 
-import Data.Bits ((.&.), (.|.), complement, shift, xor, shiftR, shiftL)
+import Data.Bits ((.&.), (.|.), complement, xor, shiftR, shiftL)
 import Data.Maybe (fromMaybe)
 import Data.Word (Word64)
 
@@ -75,4 +75,4 @@ evalExpr env0 expr = go env0 expr where
   fastShiftRight env (Op1 Shr1 (Op1 Shr1 e)) = go env e `shiftR` 2
   fastShiftRight env (Op1 Shr1 e) = go env e `shiftR` 1
   fastShiftRight env e = go env e
-{-#NLINE evalExpr #-}
+{-# INLINE evalExpr #-}

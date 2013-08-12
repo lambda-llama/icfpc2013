@@ -166,37 +166,42 @@ Clear the last bit with less operations.
 [isNotRedundant]: https://github.com/superbobry/icfpc2013/blob/master/src/Language/BV/Simplifier.hs#L42
 [demorgan]: http://en.wikipedia.org/wiki/De_Morgan's_laws
 
-#### Idea #2: abstract interpretation
+#### Idea #2: [abstract interpretation] [seval]
 
-Sometimes, we can [tell] [like] if the two programs are equivalent even if
-they aren't closed (i. e. contain unknown variables) by interpreting them
+Sometimes, we can [tell] [like] if the two expressions are equivalent even
+if they aren't closed (i. e. contain unknown variables) by interpreting them
 on **abstract** bit vectors and comparing final states.
 
 An abstract bit vector is a vector, where each bit can be in four possible
 [states] [Sbit]:
 
 * zero or one, just like ordinary bits,
-* undefined or `Bot`,
-* fresh, i. e. yet untouched by binary bitwise operations. Fresh bits are
-  indexed, for example a 8-bit abstract bit vector will be initialized as:
+* `Bot` aka undefined,
+* [fresh] [fresh], i. e. yet untouched by binary bitwise operations. Fresh
+  bits are indexed, for example an 8-bit abstract bit vector will be
+  initialized as:
 
   ```
-  [1|2|3|4|5|6|7|8]
+  [B 1, B 2, B 3, B 4, B 5, B 6, B 7, B 8]
    ^
    |
    each bit is fresh
   ```
-  Note, that, the above example is only the case for a newly initialized
+  Note, that, the above example is **only** the case for a newly initialized
   bit vector, because after a shift the `i`-th position in a bit vector
   no longer contains a fresh bit, indexed with `i`.
 
 Each bitwise [operation] [operations] on abstract bit vectors changes the
-bits in a special way, for example, [`andBit`] [andBit] works as the usual
+bits in a **special** way, for example, [`andBit`] [andBit] works as the usual
 bitwise `&&` with two exceptions:
 
 * if any of the bits is `Bot` the resulting bit is also `Bot`,
 * if any of the bits are fresh with different indexes the resulting bit is `Bot`.
 
+Similar exceptions can be formulated for the remaining operations.
+
+[seval]: https://github.com/superbobry/icfpc2013/blob/master/src/Language/BV/Symbolic/SEval.hs#L16
+[fresh]: https://github.com/superbobry/icfpc2013/blob/master/src/Language/BV/Symbolic/Types.hs#L10
 [like]: https://github.com/superbobry/icfpc2013/blob/master/src/Language/BV/Symbolic/SEval.hs#L61
 [sbit]: https://github.com/superbobry/icfpc2013/blob/master/src/Language/BV/Symbolic/Types.hs#L8
 [operations]: https://github.com/superbobry/icfpc2013/blob/master/src/Language/BV/Symbolic/Operations.hs

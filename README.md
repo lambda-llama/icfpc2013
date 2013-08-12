@@ -83,15 +83,14 @@ Collapse binary operations with 0.
 (plus e 0) = e
 ```
 
-##### not-zero
+##### logical-op-not-zero
 
-Collapse binary operations with `(not 0)`.
+Collapse logical binary operations with `(not 0)`.
 
 ```lisp
 (and e (not 0))  = e
 (or e (not 0))   = (not 0)
 (xor e (not 0))  = (not e)
-(plus e (not 0)) = (not e)
 ```
 
 ##### binary-op-equal-operands

@@ -9,8 +9,13 @@ This year the task was to guess a number of programs in a language called `\BV`.
 organizers set up a web server, which acted as a black box, answering queries of two
 types:
 
-* Tell me the outputs of program X on inputs `[1,2,3,...]`.
-* Does program X look like `(lambda (x) x)`?
+> User:   Tell me the outputs of program X on inputs [1,2,3,...].
+
+> Server: [4, 5, 6, ...]
+
+> User:   Does program X look like (lambda (x) x)?
+
+> Server: No, counterexample is ...
 
 Each program was given a **5 minute** time limit, which started ticking after
 any of the queries above. Bellow is the description of `\BV` language syntax and
@@ -37,7 +42,6 @@ being a notable exception.
 
   ```lisp
   P = (lambda (x) (fold x 0 (lambda (y z) (or y z))))
-
   P(0x1122334455667788) = (or 0x0000000000000011
                           (or 0x0000000000000022
                           (or 0x0000000000000033
@@ -60,7 +64,7 @@ For any problem in `\BV` we can define *size*
                       |(op1 e0)| = 1 + |e0|
                    |(op2 e0 e1)| = 1 + |e0| + |e1|
                 |(lambda (x) e)| = 1 + |e|
-``
+```
 
 and *operator set*
 

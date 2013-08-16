@@ -3,12 +3,86 @@
 
 ![lambda-llama](https://secure.gravatar.com/avatar/11ff8bcc12c392ad337115ca30a38fc1?s=250)
 
-## The numbers
+## The task
 
-* 3 team members,
-* 797 problems solved total, ~400 in the last 3 hours,
-* 1046 LOC Haskell, 375 LOC Python,
-* infinite awesomeness.
+This year the task was to guess a number of programs in a language called `\BV`. The
+organizers set up a web server, which acted as a black box, answering queries of two
+types:
+
+* Tell me the outputs of program X on inputs `[1,2,3,...]`.
+* Does program X look like `(lambda (x) x)`?
+
+Each program was given a **5 minute** time limit, which started ticking after
+any of the queries above. Bellow is the description of `\BV` language syntax and
+semantics:
+
+```
+ program    P ::= "(" "lambda" "(" id ")" e ")"
+ expression e ::= "0" | "1" | id
+               | "(" "if0" e e e ")"
+               | "(" "fold" e e "(" "lambda" "(" id id ")" e ")" ")"
+               | "(" op1 e ")"
+               | "(" op2 e e ")"
+          op1 ::= "not" | "shl1" | "shr1" | "shr4" | "shr16"
+          op2 ::= "and" | "or" | "xor" | "plus"
+          id  ::= [a-z][a-z_0-9]*
+```
+
+The language operates on 64-bit vectors (thus the name bit lambda) and has only
+two constants 0 and 1. All operators have the usual bitwise semantics, with `fold`
+being a notable exception.
+
+* A valid program in `\BV` can have **at most** one fold,
+* Fold works per-byte, example:
+
+  ```lisp
+  P = (lambda (x) (fold x 0 (lambda (y z) (or y z))))
+
+  P(0x1122334455667788) = (or 0x0000000000000011
+                          (or 0x0000000000000022
+                          (or 0x0000000000000033
+                          (or 0x0000000000000044
+                          (or 0x0000000000000055
+                          (or 0x0000000000000066
+                          (or 0x0000000000000077
+                          (or 0x0000000000000088
+                              0x0000000000000000))))))))
+  ```
+
+For any problem in `\BV` we can define *size*
+
+```
+                             |0| = 1
+                             |1| = 1
+                             |x| = 1
+                |(if0 e0 e1 e2)| = 1 + |e0| + |e1| + |e2|
+|(fold e0 e1 (lambda (x y) e2))| = 2 + |e0| + |e1| + |e2|
+                      |(op1 e0)| = 1 + |e0|
+                   |(op2 e0 e1)| = 1 + |e0| + |e1|
+                |(lambda (x) e)| = 1 + |e|
+``
+
+and *operator set*
+
+```
+                             Op 0 = {}
+                             Op 1 = {}
+                             Op x = {}
+                Op (if0 e0 e1 e2) = {"if0"}  U Op e0 U Op e1 U Op e2
+Op (fold e0 e1 (lambda (x y) e2)) = {"fold"} U Op e0 U Op e1 U Op e2
+                      Op (op1 e0) = {op1}    U Op e0
+                   Op (op2 e0 e1) = {op2}    U Op e0 U Op e1
+```
+
+Summing up, a team was given a number of randomly generated programs to guess.
+Programs varied in complexity, which was indicated by program size and operator
+set. Example:
+
+```json
+{"id":"dKdeIAoZMyb5y3a74iTcLXyr",
+ "size":30,
+ "operators":["shr16","if0","xor","plus","not","fold"]},
+```
 
 ## The [solver](https://github.com/superbobry/icfpc2013/blob/master/bin/Submitter.hs#L123)
 
